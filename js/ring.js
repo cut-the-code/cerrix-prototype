@@ -321,12 +321,12 @@ function updateParallax(dt) {
 
 // Scroll: the ring trails the page (moves down at a fraction of the scroll, so it drifts
 // behind the video), tips back a little, and its discs speed up in the scroll direction.
-const SCROLL = FOOT ? { follow: 0, tiltMax: 0, tiltPerPx: 0, boostPerPxs: 0.0016, boostMax: 2.2 }
+const SCROLL = FOOT ? { follow: 0, tiltMax: 0, tiltPerPx: 0, boostPerPxs: 0.0004, boostMax: 0.35 }
                     : { follow: 0.38, tiltMax: 0.35, tiltPerPx: 0.0006, boostPerPxs: 0.0016, boostMax: 2.2 };
 let hoverBoost = 0;
 if (FOOT) {
   const cta = document.querySelector('.ds-foot-cta');
-  cta.addEventListener('pointerenter', () => { hoverBoost = 1.4; });
+  cta.addEventListener('pointerenter', () => { hoverBoost = 0.12; });   // 03-11: was 1.4, te rap
   cta.addEventListener('pointerleave', () => { hoverBoost = 0; });
 }
 const scroll = { y: scrollY, last: scrollY, boost: 0, tilt: 0 };

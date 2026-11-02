@@ -16,7 +16,7 @@
   // Prototype-label linksonder
   const badge = document.createElement('div');
   badge.className = 'proto-badge';
-  badge.innerHTML = 'Prototype CERRIX · ontwerp 03-11<a href="index.html">Home</a><a href="sector-pensioenfondsen.html">Sector</a><a href="regelgeving-dora.html">Regelgeving</a>';
+  badge.innerHTML = 'Prototype CERRIX · ontwerp 03-11<a href="index.html">Home</a><a href="homepage-alternatief.html">Home (alternatief)</a><a href="sector-pensioenfondsen.html">Sector</a><a href="regelgeving-dora.html">Regelgeving</a>';
   document.body.append(badge);
 
   // Placeholderlinks (#) springen niet naar boven
@@ -56,7 +56,7 @@
   // ---------- scroll: koppen en kaarten komen binnen ----------
   if (!reduce) {
     const groups = [
-      '.wf-section-head', '.wf-section-head--bar', '.hp-trust', '.hp-logos', '.hp-regs', '.hp-product', '.hp-ai-wrap > .wf-eyebrow',
+      '.wf-section-head', '.wf-section-head--bar', '.hp-trust', '.hp-logos', '.hp-regs', '.hp-product', '.px-visual', '.hp-ai-wrap > .wf-eyebrow',
       '.hp-ai-wrap > .wf-h2', '.hp-ai-lead', '.hp-tabs', '.hp-compare', '.hp-s6 .wf-h2', '.hp-case', '.hp-case-tabs', '.tp-proof',
       '.tp-facts', '.tp-regs', '.tp-faq', '.cx-tl', '.tp-tl-panel', '.tp-table', '.tp-ruler',
     ];
@@ -111,6 +111,28 @@
         setTimeout(() => { img.src = M[current].img; img.onload = () => img.classList.remove('is-swapping'); }, 220);
       }
     });
+  }
+
+  // ---------- blok 4 (standaard homepage): scrollverhaal — de stap in het midden van het scherm is actief ----------
+  const story = $('.px-story');
+  if (story) {
+    const steps = $$('.px-step', story), bars = $$('.px-progress i', story), img = $('.px-frame img', story);
+    let cur = 0;
+    const activate = k => {
+      if (k === cur) return;
+      cur = k;
+      steps.forEach((s, i) => s.classList.toggle('is-active', i === k));
+      bars.forEach((b, i) => { b.classList.toggle('on', i <= k); b.classList.toggle('is-current', i === k); });
+      const src = steps[k].dataset.img;
+      if (!img.src.endsWith(src)) {
+        img.classList.add('is-swapping');
+        setTimeout(() => { img.src = src; img.onload = () => img.classList.remove('is-swapping'); }, 200);
+      }
+    };
+    bars[0].classList.add('is-current');
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) activate(steps.indexOf(e.target)); }),
+      { rootMargin: '-45% 0px -45% 0px' });
+    steps.forEach(s => io.observe(s));
   }
 
   // ---------- blok 5: AI — vraag typt zich uit, antwoord en grafiek bouwen zich op; tabs spelen opnieuw af ----------

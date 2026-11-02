@@ -139,3 +139,30 @@
 .proto .proto-grid::after { content: ""; position: absolute; inset: 0; background: linear-gradient(#031033 2%, #03103300 26%), radial-gradient(45% 30% at 50% 0%, #1a5a7a55 0%, transparent 100%); }
 @keyframes grid-move { to { background-position: 50% 120px; } }
 @media (prefers-reduced-motion: reduce) { .proto .proto-grid::before { animation: none; } }
+
+/* ---------- 03-11: hero, footer en andere donkere vlakken lopen door tot de rand van het scherm ---------- */
+.proto .wf-frame { max-width: none; }
+
+/* ---------- 03-11: blok 4 als scrollverhaal (wireframe-alternatief P3) ---------- */
+.proto .px-story { display: grid; grid-template-columns: 1.2fr 1fr; gap: 72px; margin-top: 56px; align-items: start; }
+.proto .px-visual { position: sticky; top: 112px; display: flex; flex-direction: column; gap: 20px; align-items: flex-start; }
+.proto .px-frame { width: 100%; border-radius: 20px; overflow: hidden; box-shadow: 0 24px 48px #050f321f; background: #031033; }
+.proto .px-frame img { width: 100%; display: block; transition: opacity .35s ease, transform .5s cubic-bezier(.2, .7, .2, 1); }
+.proto .px-frame img.is-swapping { opacity: 0; transform: scale(.985); }
+.proto .px-progress { width: 100%; display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; }
+.proto .px-progress i { height: 4px; border-radius: 2px; background: var(--wf-line); transition: background-color .3s ease; }
+.proto .px-progress i.on { background: var(--ds-ink); }
+.proto .px-progress i.is-current { background: var(--ds-teal); }
+.proto .px-steps { display: flex; flex-direction: column; padding-bottom: 18vh; }
+.proto .px-step { min-height: 58vh; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 16px;
+  opacity: .32; transition: opacity .45s ease; }
+.proto .px-step.is-active { opacity: 1; }
+.proto .px-step:first-child { justify-content: flex-start; padding-top: 24px; }   /* even hoog als de rest, zodat Ruler eerst actief is */
+.proto .px-num { font-size: 13px; font-weight: 600; letter-spacing: .08em; color: #0a7560; }
+.proto .px-title { display: flex; align-items: center; gap: 16px; }
+.proto .px-title .ds-tile { width: 48px; height: 48px; border-radius: 12px; flex: none; }
+.proto .px-step.is-active .px-title .ds-tile { background: var(--ds-teal); }
+.proto .px-title .ds-tile svg { fill: var(--ds-ink); color: var(--ds-ink); }
+.proto .px-title h3 { margin: 0; font-size: 28px; font-weight: 600; line-height: 1.2; letter-spacing: -.4px; color: var(--ds-ink); }
+.proto .px-step .hp-mod-desc { margin: 0; font-size: 17px; line-height: 1.55; color: var(--wf-text-2); max-width: 46ch; }
+.proto .px-step .hp-usps { margin: 0; }
