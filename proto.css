@@ -166,6 +166,7 @@
 
 /* 03-11 (2): knoppen per module naast elkaar */
 .proto .px-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 4px; }
-/* label 'Nieuw' zoals in het ontwerp (oranje, ink-tekst 8:1), direct achter de titel */
-.proto .px-title h3 { flex: 0 1 auto; }
-.proto .px-title .cx-tag { vertical-align: 4px; margin-left: 8px; background: #ff8a3d; border-color: #ff8a3d; color: var(--ds-ink); font-weight: 600; font-size: 13px; padding: 4px 10px; border-radius: 999px; }
+/* label 'Nieuw' zoals in het ontwerp (oranje, ink-tekst 8:1), naast het nummer '01 / 10' */
+.proto .px-num { display: inline-flex; align-items: center; gap: 10px; }
+.proto .px-num .cx-tag { margin: 0; background: #ff8a3d; border-color: #ff8a3d; color: var(--ds-ink); font-weight: 600; font-size: 12px;
+  letter-spacing: .02em; line-height: 1.2; padding: 3px 10px; border-radius: 999px; }
