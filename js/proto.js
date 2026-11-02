@@ -116,20 +116,18 @@
   // ---------- blok 4 (standaard homepage): scrollverhaal — de stap in het midden van het scherm is actief ----------
   const story = $('.px-story');
   if (story) {
-    const steps = $$('.px-step', story), bars = $$('.px-progress i', story), img = $('.px-frame img', story);
+    const steps = $$('.px-step', story), img = $('.px-frame img', story);
     let cur = 0;
     const activate = k => {
       if (k === cur) return;
       cur = k;
       steps.forEach((s, i) => s.classList.toggle('is-active', i === k));
-      bars.forEach((b, i) => { b.classList.toggle('on', i <= k); b.classList.toggle('is-current', i === k); });
       const src = steps[k].dataset.img;
       if (!img.src.endsWith(src)) {
         img.classList.add('is-swapping');
         setTimeout(() => { img.src = src; img.onload = () => img.classList.remove('is-swapping'); }, 200);
       }
     };
-    bars[0].classList.add('is-current');
     const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) activate(steps.indexOf(e.target)); }),
       { rootMargin: '-45% 0px -45% 0px' });
     steps.forEach(s => io.observe(s));
