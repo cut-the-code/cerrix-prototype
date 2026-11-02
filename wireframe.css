@@ -1,0 +1,466 @@
+/* Cut the Code wireframe kit
+   Stijl afgeleid van UTS Bags — Wireframes 2 (Figma VN0gx9ITJqX84iD94qOVSg, node 16154:129).
+   Alleen basispatronen; klantspecifieke vondsten horen hier niet in.
+   Iconen: Material Symbols Outlined (Google Fonts), zie .wf-icon.
+   Eén bron voor HTML, Claude-artifacts en (via capture) Figma.
+   Desktop-ontwerp op 1440 breed; zakt netjes in tot telefoonbreedte. */
+
+:root {
+  color-scheme: light;
+
+  /* Kleur: warme grijswaarden, geen merkkleuren */
+  --wf-page:        #faf9f8; /* paginagrond, inputvelden */
+  --wf-card:        #ffffff; /* kaarten die van de grond loskomen */
+  --wf-surface:     #f2f0ee; /* panelen, topbalk, beeldvlakken */
+  --wf-surface-2:   #e7e4e1; /* avatars, diepere vlakken */
+  --wf-line:        #d6d3d1; /* randen, scheidingslijnen */
+  --wf-line-strong: #a8a29e; /* secundaire knoppen, actieve randen */
+  --wf-muted:       #8a827c; /* labels, meta, placeholdertekst */
+  --wf-text-2:      #57534e; /* lead en bodytekst op tweede niveau */
+  --wf-ink:         #1c1917; /* koppen, body, primaire knop */
+  --wf-on-ink:      #faf9f8;
+
+  /* Functionele uitzondering: ALLEEN voor validatie en systeemmeldingen, nooit decoratief */
+  --wf-error:       #b42318;
+  --wf-success:     #2f6b3f;
+
+  /* Type: DM Sans, één familie */
+  --wf-font: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --wf-icons: "Material Symbols Outlined";
+
+  /* Maat */
+  --wf-frame: 1440px;
+  --wf-container: 1240px;
+  --wf-gutter: 32px;
+  --wf-section: 96px;
+  --wf-radius: 3px;
+  --wf-radius-pill: 999px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--wf-page);
+  color: var(--wf-ink);
+  font-family: var(--wf-font);
+  font-size: 14px;
+  line-height: 1.6;
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+}
+img { display: block; max-width: 100%; }
+a { color: inherit; }
+p { margin: 0; }
+h1, h2, h3, h4 { margin: 0; font-weight: 600; }
+
+/* ---------- Iconen (Material Symbols Outlined) ----------
+   <span class="wf-icon">search</span> — de naam van het icoon is de tekst.
+   Namen: https://fonts.google.com/icons */
+.wf-icon, .wf-icon-before::before, .wf-icon-after::after {
+  font-family: var(--wf-icons);
+  font-weight: 300; font-style: normal; font-size: 20px; line-height: 1;
+  letter-spacing: normal; text-transform: none; white-space: nowrap; direction: ltr;
+  display: inline-block; vertical-align: middle;
+  font-feature-settings: "liga"; -webkit-font-feature-settings: "liga";
+  font-variation-settings: "FILL" 0, "wght" 300, "GRAD" 0, "opsz" 20;
+  -webkit-font-smoothing: antialiased;
+}
+.wf-icon--sm { font-size: 16px; }
+.wf-icon--lg { font-size: 28px; }
+.wf-icon--fill { font-variation-settings: "FILL" 1, "wght" 300, "GRAD" 0, "opsz" 20; }
+
+/* ---------- Type ---------- */
+.wf-h1, .wf-h2, .wf-h3, .wf-h4 { font-weight: 600; }
+.wf-h1   { font-size: 46px; line-height: 1.15; letter-spacing: -0.01em; }
+.wf-h2   { font-size: 28px; line-height: 1.15; letter-spacing: -0.01em; }
+.wf-h3   { font-size: 22px; line-height: 1.15; letter-spacing: -0.01em; }
+.wf-h4   { font-size: 17px; line-height: 1.15; letter-spacing: -0.01em; }
+.wf-lead { font-size: 17px; line-height: 1.55; color: var(--wf-text-2); }
+.wf-body { font-size: 14px; line-height: 1.6; }
+.wf-small{ font-size: 13px; line-height: 1.6; color: var(--wf-muted); letter-spacing: 0.02em; }
+.wf-caption { font-size: 12px; line-height: 1.6; color: var(--wf-text-2); }
+.wf-eyebrow {
+  font-size: 11px; line-height: 1.6; font-weight: 500;
+  text-transform: uppercase; letter-spacing: 0.14em; color: var(--wf-muted);
+}
+.wf-link { font-size: 13px; color: var(--wf-text-2); text-decoration: underline; text-underline-offset: 3px; }
+.wf-arrow-link { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 500; text-decoration: none; }
+.wf-arrow-link::after { content: "arrow_forward"; font-family: var(--wf-icons); font-size: 16px; font-weight: 300; font-feature-settings: "liga"; line-height: 1; }
+.wf-breadcrumb { display: flex; flex-wrap: wrap; gap: 6px; font-size: 12px; color: var(--wf-muted); }
+.wf-breadcrumb a { text-decoration: none; }
+.wf-breadcrumb > * + *::before { content: "/"; margin-right: 6px; }
+
+/* ---------- Layout ---------- */
+.wf-frame   { max-width: var(--wf-frame); margin: 0 auto; background: var(--wf-page); }
+.wf-container { max-width: var(--wf-container); margin: 0 auto; padding: 0 var(--wf-gutter); }
+.wf-section { padding: var(--wf-section) 0; }
+.wf-section--tight { padding: 48px 0; }
+.wf-section--surface { background: var(--wf-surface); }
+.wf-section-head {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+  align-items: end; margin-bottom: 32px;
+}
+.wf-section-head--bar { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 24px; }
+.wf-split  { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+.wf-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; }
+.wf-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+.wf-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+.wf-stack  { display: flex; flex-direction: column; gap: 16px; }
+.wf-row    { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+
+/* ---------- Beeldvlak ----------
+   Altijd met een label dat zegt WAT er komt: "Foto — teamlid, herkenbaar en benaderbaar". */
+.wf-img {
+  position: relative; display: grid; place-items: center;
+  background: var(--wf-surface); border: 1px solid var(--wf-line);
+  min-height: 120px; aspect-ratio: var(--ratio, 4 / 3);
+  color: var(--wf-muted); font-size: 13px; letter-spacing: 0.02em; text-align: center;
+  padding: 8px;
+}
+.wf-img--video::before { content: "play_circle"; font-family: var(--wf-icons); font-size: 48px; font-weight: 300; font-feature-settings: "liga"; line-height: 1; color: var(--wf-text-2); display: block; }
+.wf-img-tag { /* wit labeltje linksonder op een beeldvlak: "Katoen", "Nieuw" */
+  position: absolute; left: 10px; bottom: 10px;
+  background: var(--wf-card); color: var(--wf-ink); font-size: 11px; padding: 2px 7px; border-radius: 2px;
+}
+.wf-logo { /* logoplaatsing in een rij: "Logo — meubelzaak" */
+  display: grid; place-items: center; height: 56px; padding: 0 16px;
+  border: 1px solid var(--wf-line); color: var(--wf-muted); font-size: 11px; text-align: center;
+}
+.wf-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--wf-surface-2); border: 1px solid var(--wf-line-strong); flex: none; }
+
+/* ---------- Knoppen ---------- */
+.wf-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: 44px; padding: 0 22px; border-radius: var(--wf-radius);
+  font: 500 14px/1 var(--wf-font); text-decoration: none; cursor: pointer;
+  border: 1px solid var(--wf-ink); background: var(--wf-ink); color: var(--wf-on-ink);
+}
+.wf-btn--secondary { background: transparent; color: var(--wf-ink); border-color: var(--wf-line-strong); }
+.wf-btn--sm { height: 36px; padding: 0 14px; font-size: 13px; }
+.wf-btn--block { width: 100%; }
+.wf-icon-btn {
+  position: relative; display: inline-grid; place-items: center; width: 36px; height: 36px; padding: 0;
+  border: 1px solid var(--wf-line); border-radius: var(--wf-radius); background: transparent; color: var(--wf-ink); cursor: pointer;
+}
+.wf-icon-btn--plain { border-color: transparent; }
+.wf-icon-btn:disabled { color: var(--wf-line-strong); cursor: default; }
+.wf-badge {
+  position: absolute; top: -6px; right: -6px; min-width: 17px; height: 17px; padding: 0 4px;
+  border-radius: var(--wf-radius-pill); background: var(--wf-ink); color: var(--wf-on-ink);
+  font-size: 10px; font-weight: 600; display: grid; place-items: center;
+}
+
+/* ---------- Header ---------- */
+.wf-topbar { background: var(--wf-surface); border-bottom: 1px solid var(--wf-line); font-size: 12px; color: var(--wf-text-2); }
+.wf-topbar .wf-container { display: flex; justify-content: space-between; align-items: center; min-height: 34px; gap: 24px; }
+.wf-topbar ul { display: flex; gap: 40px; list-style: none; margin: 0; padding: 0; }
+.wf-topbar li { display: flex; align-items: center; gap: 6px; }
+.wf-topbar li::before { content: "check"; font-family: var(--wf-icons); font-size: 16px; font-feature-settings: "liga"; color: var(--wf-ink); line-height: 1; }
+.wf-lang { display: flex; gap: 12px; }
+.wf-lang [aria-current] { color: var(--wf-ink); font-weight: 600; border-bottom: 1px solid var(--wf-ink); }
+
+.wf-header { background: var(--wf-page); border-bottom: 1px solid var(--wf-line); }
+.wf-header .wf-container { display: flex; align-items: center; gap: 28px; min-height: 64px; }
+.wf-wordmark { font-weight: 600; font-size: 17px; text-decoration: none; }
+.wf-nav { display: flex; gap: 28px; font-size: 14px; }
+.wf-nav a { display: inline-flex; align-items: center; gap: 2px; text-decoration: none; }
+.wf-nav .has-sub::after { content: "expand_more"; font-family: var(--wf-icons); font-size: 18px; font-weight: 300; font-feature-settings: "liga"; color: var(--wf-text-2); line-height: 1; }
+.wf-header-actions { margin-left: auto; display: flex; align-items: center; gap: 12px; font-size: 14px; }
+.wf-header-actions .wf-phone { display: inline-flex; align-items: center; gap: 6px; }
+
+.wf-megamenu { background: var(--wf-page); border-bottom: 1px solid var(--wf-line); box-shadow: 0 12px 24px rgb(28 25 23 / 0.08); padding: 40px 0; }
+.wf-megamenu .wf-container { display: grid; grid-template-columns: repeat(var(--cols, 4), 1fr); gap: 28px; }
+.wf-megamenu ul { list-style: none; margin: 12px 0 0; padding: 0 0 12px; border-bottom: 1px solid var(--wf-line); display: grid; gap: 10px; }
+.wf-megamenu a { text-decoration: none; }
+.wf-megamenu .wf-all { display: block; margin-top: 12px; font-size: 13px; color: var(--wf-muted); }
+
+/* ---------- Hero ----------
+   Basisvarianten. Kies op inhoud; een bijzondere hero is een ontwerpbeslissing, geen wireframe-standaard. */
+.wf-hero { padding: 80px 0; }
+.wf-hero .wf-split { gap: 64px; }
+.wf-hero--surface { background: var(--wf-surface); border-bottom: 1px solid var(--wf-line); }
+.wf-hero--surface .wf-img { background: var(--wf-surface-2); }
+.wf-hero--center { text-align: center; }
+.wf-hero--center .wf-hero-copy { max-width: 780px; margin: 0 auto; align-items: center; }
+.wf-hero--center .wf-img { margin-top: 56px; --ratio: 21 / 9; }
+.wf-hero--page { padding: 56px 0 48px; }
+.wf-hero-copy { display: flex; flex-direction: column; gap: 20px; }
+.wf-hero--page .wf-hero-copy { max-width: 780px; }
+
+/* ---------- Panelen en kaarten ---------- */
+.wf-panel { background: var(--wf-surface); border: 1px solid var(--wf-line); border-radius: var(--wf-radius); padding: 28px; }
+.wf-panel--lg { padding: 48px; }
+.wf-card { background: var(--wf-card); border: 1px solid var(--wf-line); border-radius: var(--wf-radius); display: flex; flex-direction: column; text-decoration: none; }
+.wf-card .wf-img { border: 0; border-bottom: 1px solid var(--wf-line); }
+.wf-card-body { padding: 16px; display: flex; flex-direction: column; gap: 12px; flex: 1; }
+.wf-card-foot { margin-top: auto; padding-top: 12px; border-top: 1px solid var(--wf-line); display: flex; justify-content: space-between; align-items: center; }
+.wf-person { display: flex; gap: 12px; align-items: center; font-size: 12px; }
+.wf-person strong { display: block; font-size: 12px; font-weight: 600; }
+.wf-feature { display: flex; flex-direction: column; gap: 10px; }
+.wf-feature > .wf-icon { font-size: 28px; color: var(--wf-ink); }
+
+/* Productkaart: beeld zonder kader eromheen, titel + kenmerk eronder */
+.wf-product { display: flex; flex-direction: column; gap: 8px; text-decoration: none; }
+.wf-product .wf-img { --ratio: 1 / 1; }
+
+/* ---------- Lijsten ---------- */
+.wf-checklist { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; font-size: 13px; }
+.wf-checklist li { display: grid; grid-template-columns: 18px 1fr; gap: 8px; align-items: start; }
+.wf-checklist li::before {
+  content: "check"; font-family: var(--wf-icons); font-feature-settings: "liga"; font-size: 12px; line-height: 1;
+  display: grid; place-items: center; width: 16px; height: 16px; margin-top: 2px; border-radius: 50%; background: var(--wf-surface-2);
+}
+.wf-checklist--solid li::before { background: var(--wf-ink); color: var(--wf-on-ink); }
+
+.wf-specs { display: grid; margin: 0; font-size: 13px; }
+.wf-specs > div { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--wf-line); }
+.wf-specs dt { color: var(--wf-muted); }
+.wf-specs dd { margin: 0; font-weight: 500; }
+
+/* Accordion, optioneel genummerd */
+.wf-accordion { border-top: 1px solid var(--wf-line); }
+.wf-accordion details { border-bottom: 1px solid var(--wf-line); }
+.wf-accordion summary {
+  list-style: none; cursor: pointer; display: grid; grid-template-columns: 1fr 20px; gap: 12px; align-items: center;
+  padding: 12px 0; font-size: 13px;
+}
+.wf-accordion--numbered summary { grid-template-columns: 32px 1fr 20px; gap: 0; }
+.wf-accordion summary::-webkit-details-marker { display: none; }
+.wf-accordion summary::after { content: "expand_more"; font-family: var(--wf-icons); font-size: 20px; font-weight: 300; font-feature-settings: "liga"; line-height: 1; color: var(--wf-text-2); }
+.wf-accordion details[open] summary::after { content: "expand_less"; }
+.wf-accordion .wf-num { color: var(--wf-muted); font-size: 11px; }
+.wf-accordion .wf-answer { padding: 0 0 16px; color: var(--wf-text-2); font-size: 13px; }
+.wf-accordion--numbered .wf-answer { padding-left: 32px; }
+
+/* Tabs / filterpillen */
+.wf-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.wf-pill { height: 32px; padding: 0 14px; border: 1px solid var(--wf-line); border-radius: var(--wf-radius-pill); background: transparent; font: 400 12px/30px var(--wf-font); color: var(--wf-ink); cursor: pointer; }
+.wf-pill[aria-selected="true"], .wf-pill.is-active { background: var(--wf-ink); border-color: var(--wf-ink); color: var(--wf-on-ink); }
+
+/* Slider: rij kaarten die rechts doorloopt, met pijlen (geen scrollbalk) */
+.wf-slider-nav { display: flex; align-items: center; gap: 8px; }
+.wf-slider-nav .wf-link { margin-right: 8px; }
+.wf-slider { display: grid; grid-auto-flow: column; grid-auto-columns: var(--item, 270px); gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; }
+.wf-slider > * { scroll-snap-align: start; }
+.wf-slider::-webkit-scrollbar { display: none; }
+
+/* ---------- Formulieren ---------- */
+.wf-form { display: grid; gap: 12px; }
+.wf-form .wf-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.wf-input, .wf-select, .wf-textarea {
+  width: 100%; height: 44px; padding: 0 14px; border: 1px solid var(--wf-line); border-radius: var(--wf-radius);
+  background: var(--wf-page); font: 400 13px var(--wf-font); color: var(--wf-ink);
+}
+.wf-input::placeholder, .wf-textarea::placeholder { color: var(--wf-muted); }
+.wf-textarea { height: 96px; padding: 12px 14px; resize: vertical; }
+.wf-search { position: relative; }
+.wf-search .wf-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--wf-muted); }
+.wf-search .wf-input { padding-left: 40px; }
+.wf-check { display: flex; gap: 8px; align-items: center; font-size: 11px; color: var(--wf-text-2); }
+.wf-steps { display: grid; grid-template-columns: repeat(var(--steps, 2), 1fr); gap: 8px; margin-bottom: 4px; }
+.wf-step { display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 10px; border: 1px solid var(--wf-line); border-radius: var(--wf-radius); font-size: 12px; color: var(--wf-muted); }
+.wf-step b { display: grid; place-items: center; width: 18px; height: 18px; border: 1px solid currentColor; border-radius: 50%; font-size: 10px; font-weight: 400; }
+.wf-step.is-active { border-color: var(--wf-ink); color: var(--wf-ink); font-weight: 500; }
+
+/* ---------- Footer ---------- */
+.wf-usps { border-top: 1px solid var(--wf-line); padding: 32px 0; }
+.wf-usps .wf-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; font-size: 12px; color: var(--wf-text-2); }
+.wf-usps strong { display: flex; align-items: center; gap: 6px; color: var(--wf-ink); font-size: 13px; }
+.wf-footer { border-top: 1px solid var(--wf-line); padding: 48px 0 24px; font-size: 13px; }
+.wf-footer-cols { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 32px; }
+.wf-footer ul { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 6px; }
+.wf-footer a { text-decoration: none; }
+.wf-legal { display: flex; justify-content: space-between; gap: 24px; margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--wf-line); font-size: 11px; color: var(--wf-muted); }
+.wf-legal nav { display: flex; gap: 24px; }
+
+/* ---------- Annotaties (niet-ontwerp) ----------
+   Notities voor de klant staan BUITEN het ontwerp: boven een sectie, of als gele sticky. */
+.wf-note { max-width: var(--wf-container); margin: 0 auto 8px; padding: 0 var(--wf-gutter); font-size: 11px; color: var(--wf-muted); }
+.wf-note b { color: var(--wf-text-2); font-weight: 600; }
+.wf-sticky { background: #fef3a3; color: #3f3a1a; padding: 16px; width: 240px; font-size: 13px; line-height: 1.5; box-shadow: 0 2px 6px rgb(0 0 0 / 0.12); }
+.wf-overlay { position: relative; }
+.wf-overlay::after { content: ""; position: absolute; inset: 0; background: rgb(28 25 23 / 0.45); pointer-events: none; }
+
+/* =====================================================================
+   Standaardpagina's: checkout, formulieren, zoeken, FAQ, blog, 404, juridisch
+   Zie references/playbooks/ voor het waarom per patroon.
+   ===================================================================== */
+
+/* ---------- Velden met label, hulp en validatie ---------- */
+.wf-field { display: grid; gap: 6px; }
+.wf-label { font-size: 13px; font-weight: 500; color: var(--wf-ink); }
+.wf-label .wf-optional { font-weight: 400; color: var(--wf-muted); }
+.wf-help { font-size: 12px; color: var(--wf-muted); }
+.wf-field.is-error .wf-input, .wf-field.is-error .wf-select { border-color: var(--wf-error); }
+.wf-field.is-error .wf-msg { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--wf-error); }
+.wf-field.is-error .wf-msg::before { content: "error"; font-family: var(--wf-icons); font-size: 16px; font-feature-settings: "liga"; line-height: 1; }
+.wf-field.is-valid .wf-input { border-color: var(--wf-line-strong); padding-right: 40px; }
+.wf-field.is-valid { position: relative; }
+.wf-field.is-valid::after { content: "check"; position: absolute; right: 12px; bottom: 12px; font-family: var(--wf-icons); font-size: 20px; font-feature-settings: "liga"; line-height: 1; color: var(--wf-success); }
+.wf-msg { display: none; }
+.wf-fieldset { border: 0; margin: 0; padding: 0; display: grid; gap: 12px; }
+.wf-fieldset legend { padding: 0; margin-bottom: 4px; }
+.wf-form-actions { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 8px; }
+.wf-back { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; color: var(--wf-text-2); text-decoration: none; }
+.wf-back::before { content: "arrow_back"; font-family: var(--wf-icons); font-size: 16px; font-feature-settings: "liga"; line-height: 1; }
+.wf-alert { display: flex; gap: 10px; align-items: start; padding: 12px 14px; border: 1px solid var(--wf-line); border-left: 3px solid var(--wf-ink); background: var(--wf-card); font-size: 13px; border-radius: var(--wf-radius); }
+.wf-alert--error { border-left-color: var(--wf-error); }
+
+/* Keuzekaart (radio/checkbox als kaart): verzendmethode, betaalmethode, keuze in formulierstap 1 */
+.wf-choice { display: grid; gap: 8px; }
+.wf-choice label {
+  display: grid; grid-template-columns: 20px 1fr auto; gap: 12px; align-items: center;
+  padding: 14px 16px; border: 1px solid var(--wf-line); border-radius: var(--wf-radius); background: var(--wf-card); cursor: pointer; font-size: 13px;
+}
+.wf-choice label:has(input:checked), .wf-choice label.is-active { border-color: var(--wf-ink); box-shadow: inset 0 0 0 1px var(--wf-ink); }
+.wf-choice input { margin: 0; accent-color: var(--wf-ink); }
+.wf-choice strong { display: block; font-weight: 500; }
+.wf-choice--tiles { grid-template-columns: repeat(var(--cols, 3), 1fr); }
+.wf-choice--tiles label { grid-template-columns: 1fr; justify-items: start; gap: 6px; padding: 18px; }
+.wf-choice--tiles input { position: absolute; opacity: 0; }
+
+/* ---------- Checkout ---------- */
+.wf-header--minimal .wf-container { min-height: 64px; display: flex; align-items: center; gap: 24px; }
+.wf-header--minimal .wf-secure { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--wf-text-2); }
+.wf-checkout { display: grid; grid-template-columns: 1fr 400px; gap: 48px; align-items: start; padding: 40px 0 96px; }
+.wf-checkout-main { display: grid; gap: 32px; min-width: 0; }
+.wf-checkout-aside { position: sticky; top: 24px; display: grid; gap: 16px; }
+
+.wf-progress-steps { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; list-style: none; margin: 0; padding: 0; font-size: 13px; color: var(--wf-muted); }
+.wf-progress-steps li { display: flex; align-items: center; gap: 8px; }
+.wf-progress-steps li + li::before { content: ""; width: 32px; height: 1px; background: var(--wf-line); margin-right: 0; }
+.wf-progress-steps b { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; border: 1px solid currentColor; font-size: 11px; font-weight: 500; }
+.wf-progress-steps .is-done { color: var(--wf-text-2); }
+.wf-progress-steps .is-done b { background: var(--wf-text-2); border-color: var(--wf-text-2); color: var(--wf-on-ink); font-size: 0; }
+.wf-progress-steps .is-done b::before { content: "check"; font-family: var(--wf-icons); font-size: 14px; font-feature-settings: "liga"; }
+.wf-progress-steps .is-current { color: var(--wf-ink); font-weight: 500; }
+.wf-progress-steps .is-current b { background: var(--wf-ink); border-color: var(--wf-ink); color: var(--wf-on-ink); }
+
+.wf-summary { background: var(--wf-surface); border: 1px solid var(--wf-line); border-radius: var(--wf-radius); padding: 24px; display: grid; gap: 16px; font-size: 13px; }
+.wf-line-item { display: grid; grid-template-columns: 64px 1fr auto; gap: 12px; align-items: start; }
+.wf-line-item .wf-img { min-height: 0; aspect-ratio: 1; padding: 2px; font-size: 10px; }
+.wf-line-item .wf-qty-badge { font-size: 12px; color: var(--wf-muted); }
+.wf-totals { display: grid; gap: 6px; padding-top: 12px; border-top: 1px solid var(--wf-line); }
+.wf-totals > div { display: flex; justify-content: space-between; }
+.wf-totals .wf-total { font-size: 17px; font-weight: 600; padding-top: 8px; border-top: 1px solid var(--wf-line); margin-top: 6px; }
+.wf-totals .wf-total small { display: block; font-size: 11px; font-weight: 400; color: var(--wf-muted); }
+
+.wf-cart-row { display: grid; grid-template-columns: 112px 1fr auto auto; gap: 20px; align-items: start; padding: 20px 0; border-bottom: 1px solid var(--wf-line); }
+.wf-cart-row .wf-img { min-height: 0; aspect-ratio: 1; font-size: 11px; }
+.wf-qty { display: inline-grid; grid-template-columns: 32px 40px 32px; height: 36px; border: 1px solid var(--wf-line); border-radius: var(--wf-radius); align-items: center; text-align: center; font-size: 13px; }
+.wf-qty button { height: 100%; border: 0; background: transparent; font-family: var(--wf-icons); font-size: 18px; font-feature-settings: "liga"; cursor: pointer; }
+.wf-trust { display: grid; gap: 8px; font-size: 12px; color: var(--wf-text-2); }
+.wf-trust > div { display: flex; align-items: center; gap: 8px; }
+.wf-paylogos { display: flex; flex-wrap: wrap; gap: 6px; }
+.wf-paylogos span { display: grid; place-items: center; height: 24px; padding: 0 8px; border: 1px solid var(--wf-line); border-radius: 2px; background: var(--wf-card); font-size: 10px; color: var(--wf-muted); }
+.wf-express { display: grid; grid-template-columns: repeat(var(--cols, 3), 1fr); gap: 8px; }
+.wf-express span { display: grid; place-items: center; height: 44px; border-radius: var(--wf-radius); background: var(--wf-surface-2); font-size: 12px; color: var(--wf-text-2); }
+.wf-divider-text { display: flex; align-items: center; gap: 12px; font-size: 12px; color: var(--wf-muted); }
+.wf-divider-text::before, .wf-divider-text::after { content: ""; flex: 1; height: 1px; background: var(--wf-line); }
+.wf-review-block { display: grid; grid-template-columns: 1fr auto; gap: 4px 16px; padding: 14px 0; border-bottom: 1px solid var(--wf-line); font-size: 13px; }
+.wf-review-block .wf-link { grid-row: 1 / span 2; grid-column: 2; align-self: start; }
+
+/* ---------- Zijbalk-layouts (FAQ, juridisch, zoeken met filters) ---------- */
+.wf-with-aside { display: grid; grid-template-columns: 260px 1fr; gap: 64px; align-items: start; }
+.wf-with-aside > aside { position: sticky; top: 24px; }
+.wf-toc { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; font-size: 13px; border-left: 1px solid var(--wf-line); }
+.wf-toc a { display: block; padding: 6px 0 6px 14px; text-decoration: none; color: var(--wf-text-2); margin-left: -1px; border-left: 1px solid transparent; }
+.wf-toc a[aria-current] { color: var(--wf-ink); font-weight: 500; border-left-color: var(--wf-ink); }
+
+/* ---------- Lange tekst: blogartikel, juridisch ---------- */
+.wf-prose { max-width: 680px; font-size: 16px; line-height: 1.7; color: var(--wf-ink); }
+.wf-prose > * + * { margin-top: 20px; }
+.wf-prose h2 { font-size: 24px; line-height: 1.2; letter-spacing: -0.01em; margin-top: 48px; }
+.wf-prose h3 { font-size: 18px; line-height: 1.3; margin-top: 32px; }
+.wf-prose ul, .wf-prose ol { padding-left: 20px; }
+.wf-prose blockquote { margin: 32px 0; padding-left: 20px; border-left: 2px solid var(--wf-ink); font-size: 20px; line-height: 1.45; }
+.wf-prose figure { margin: 32px 0; }
+.wf-prose figcaption { margin-top: 8px; font-size: 12px; color: var(--wf-muted); }
+.wf-prose .wf-inline-cta { margin: 40px 0; }
+.wf-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; font-size: 13px; color: var(--wf-muted); }
+.wf-meta > span { display: inline-flex; align-items: center; gap: 4px; }
+.wf-updated { font-size: 12px; color: var(--wf-muted); }
+
+/* ---------- Tabs (onderstreept) en paginering ---------- */
+.wf-tabs { display: flex; gap: 24px; border-bottom: 1px solid var(--wf-line); font-size: 14px; overflow-x: auto; }
+.wf-tabs a { padding: 10px 0; text-decoration: none; color: var(--wf-text-2); border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; }
+.wf-tabs a[aria-current] { color: var(--wf-ink); font-weight: 500; border-bottom-color: var(--wf-ink); }
+.wf-tabs .wf-count { color: var(--wf-muted); font-weight: 400; }
+.wf-pagination { display: flex; justify-content: center; align-items: center; gap: 6px; margin-top: 48px; font-size: 13px; }
+.wf-pagination > a, .wf-pagination > span { display: grid; place-items: center; min-width: 36px; height: 36px; padding: 0 8px; border: 1px solid var(--wf-line); border-radius: var(--wf-radius); text-decoration: none; }
+.wf-pagination [aria-current] { background: var(--wf-ink); border-color: var(--wf-ink); color: var(--wf-on-ink); }
+.wf-pagination .wf-gap { border: 0; }
+
+/* ---------- Zoeken ---------- */
+.wf-search--lg .wf-input { height: 56px; font-size: 16px; padding-left: 48px; padding-right: 120px; }
+.wf-search--lg > .wf-icon { left: 16px; font-size: 24px; }
+.wf-search--lg .wf-btn { position: absolute; right: 6px; top: 6px; height: 44px; }
+.wf-search-panel { background: var(--wf-page); border-bottom: 1px solid var(--wf-line); box-shadow: 0 12px 24px rgb(28 25 23 / 0.08); padding: 32px 0 40px; }
+.wf-suggest { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 40px; margin-top: 24px; }
+.wf-suggest ul { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 4px; font-size: 14px; }
+.wf-suggest li a { display: flex; align-items: center; gap: 10px; padding: 6px 0; text-decoration: none; }
+.wf-suggest li a.is-active { background: var(--wf-surface); margin: 0 -8px; padding: 6px 8px; }
+.wf-suggest mark { background: none; color: inherit; font-weight: 600; }
+.wf-suggest .wf-img { min-height: 0; width: 44px; aspect-ratio: 1; padding: 0; font-size: 0; flex: none; }
+.wf-facets { display: grid; gap: 24px; font-size: 13px; }
+.wf-facets fieldset { border: 0; margin: 0; padding: 0 0 20px; border-bottom: 1px solid var(--wf-line); display: grid; gap: 8px; }
+.wf-facets legend { font-weight: 600; margin-bottom: 6px; padding: 0; }
+.wf-facets label { display: flex; align-items: center; gap: 8px; }
+.wf-facets label .wf-count { margin-left: auto; color: var(--wf-muted); }
+.wf-chips { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.wf-chip { display: inline-flex; align-items: center; gap: 4px; height: 28px; padding: 0 6px 0 12px; border: 1px solid var(--wf-line-strong); border-radius: var(--wf-radius-pill); font-size: 12px; }
+.wf-chip::after { content: "close"; font-family: var(--wf-icons); font-size: 16px; font-feature-settings: "liga"; line-height: 1; }
+.wf-result { display: grid; gap: 4px; padding: 20px 0; border-bottom: 1px solid var(--wf-line); }
+.wf-result mark { background: var(--wf-surface-2); color: inherit; }
+.wf-result .wf-path { font-size: 12px; color: var(--wf-muted); }
+.wf-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 16px; font-size: 13px; color: var(--wf-text-2); }
+.wf-toolbar .wf-select { width: auto; height: 36px; }
+
+/* ---------- Lege staten, 404, bevestiging ---------- */
+.wf-empty { max-width: 640px; margin: 0 auto; text-align: center; display: grid; gap: 16px; justify-items: center; padding: 64px 0; }
+.wf-empty > .wf-icon { font-size: 40px; color: var(--wf-text-2); }
+.wf-empty .wf-search { width: 100%; text-align: left; }
+.wf-linklist { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; border-top: 1px solid var(--wf-line); }
+.wf-linklist a { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--wf-line); text-decoration: none; font-size: 14px; }
+.wf-linklist a::after { content: "arrow_forward"; font-family: var(--wf-icons); font-size: 18px; font-feature-settings: "liga"; line-height: 1; color: var(--wf-text-2); }
+.wf-confirm-icon { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: var(--wf-ink); color: var(--wf-on-ink); }
+.wf-timeline { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; counter-reset: s; }
+.wf-timeline li { position: relative; padding: 0 0 20px 36px; font-size: 13px; color: var(--wf-text-2); counter-increment: s; }
+.wf-timeline li::before { content: counter(s); position: absolute; left: 0; top: 0; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--wf-line-strong); font-size: 11px; color: var(--wf-ink); background: var(--wf-page); }
+.wf-timeline li::after { content: ""; position: absolute; left: 11px; top: 24px; bottom: 2px; width: 1px; background: var(--wf-line); }
+.wf-timeline li:last-child::after { display: none; }
+.wf-timeline strong { display: block; color: var(--wf-ink); font-weight: 500; }
+
+/* Contactkanalen */
+.wf-channel { display: grid; gap: 8px; padding: 24px; border: 1px solid var(--wf-line); border-radius: var(--wf-radius); background: var(--wf-card); text-decoration: none; }
+.wf-channel > .wf-icon { font-size: 28px; }
+.wf-status { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--wf-text-2); }
+.wf-status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--wf-success); }
+
+/* ---------- Klein scherm ---------- */
+@media (max-width: 900px) {
+  .wf-split, .wf-section-head, .wf-grid-2, .wf-grid-3, .wf-checkout, .wf-with-aside, .wf-suggest { grid-template-columns: 1fr; }
+  .wf-checkout-aside, .wf-with-aside > aside { position: static; }
+  .wf-checkout-aside { order: -1; }
+  .wf-choice--tiles { grid-template-columns: 1fr 1fr; }
+  .wf-cart-row { grid-template-columns: 80px 1fr; }
+  .wf-grid-4, .wf-usps .wf-container { grid-template-columns: 1fr 1fr; }
+  .wf-footer-cols { grid-template-columns: 1fr 1fr; }
+  .wf-megamenu .wf-container { grid-template-columns: 1fr 1fr; }
+  .wf-nav, .wf-topbar ul li:nth-child(n+2) { display: none; }
+  .wf-hero { padding: 48px 0; }
+  .wf-h1 { font-size: 34px; }
+  .wf-h2 { font-size: 24px; }
+  .wf-section { padding: 64px 0; }
+}
+@media (max-width: 560px) {
+  :root { --wf-gutter: 16px; }
+  .wf-grid-4, .wf-usps .wf-container, .wf-footer-cols, .wf-form .wf-row-2 { grid-template-columns: 1fr; }
+  .wf-header-actions .wf-hide-sm, .wf-header-actions.wf-hide-sm { display: none; }
+  .wf-section-head--bar { flex-direction: column; align-items: start; }
+  .wf-legal { flex-direction: column; }
+  .wf-express, .wf-choice--tiles { grid-template-columns: 1fr; }
+  .wf-progress-steps li + li::before { width: 12px; }
+  .wf-cart-row { grid-template-columns: 64px 1fr; gap: 12px; }
+  .wf-checkout { padding-top: 24px; }
+}

@@ -1,0 +1,87 @@
+/* CERRIX-specifieke aanvullingen op de wireframe-kit. Alleen kit-tokens, geen merkkleuren. */
+
+/* Frame: vaste hoogte voor menustaten */
+.cx-frame { position: relative; height: 760px; overflow: hidden; }
+
+/* Actief menu-item */
+.cx-header { position: relative; z-index: 2; }
+.wf-nav a.is-open { font-weight: 600; box-shadow: inset 0 -2px 0 var(--wf-ink); }
+.wf-nav a { padding: 22px 0; }
+
+/* Dropdown onder het menu-item, zoals op cerrix.com: een paneel, geen schermbrede balk */
+.cx-dd-wrap { position: relative; height: 0; z-index: 3; }
+.cx-dropdown {
+  position: absolute; top: 8px; left: 32px;
+  background: var(--wf-card); border: 1px solid var(--wf-line); border-radius: var(--wf-radius);
+  box-shadow: 0 16px 32px rgb(28 25 23 / 0.10);
+}
+.cx-panel { display: grid; }
+.cx-panel--1 { grid-template-columns: 320px; }
+.cx-panel--2 { grid-template-columns: 300px 300px; }
+.cx-panel--3 { grid-template-columns: 300px 200px 280px; }
+.cx-panel--feat { grid-template-columns: 320px 300px; }
+.cx-col { padding: 24px; display: flex; flex-direction: column; gap: 12px; }
+.cx-col + .cx-col { border-left: 1px solid var(--wf-line); }
+.cx-list { display: grid; gap: 4px; }
+
+.cx-item { display: grid; grid-template-columns: 24px 1fr; gap: 12px; align-items: start; padding: 8px; margin: 0 -8px; border-radius: var(--wf-radius); text-decoration: none; }
+.cx-item .wf-icon { margin-top: 1px; color: var(--wf-text-2); }
+.cx-item strong { display: block; font-size: 14px; font-weight: 500; line-height: 1.4; }
+.cx-item span span, .cx-item strong + span { display: block; font-size: 12px; line-height: 1.5; color: var(--wf-muted); }
+.cx-item.is-active { background: var(--wf-surface); }
+.cx-item.is-active .wf-icon { color: var(--wf-ink); }
+.cx-tag { display: inline-block; margin-left: 6px; padding: 0 6px; border: 1px solid var(--wf-line-strong); border-radius: var(--wf-radius-pill); font-size: 10px; font-weight: 500; vertical-align: 1px; }
+
+.cx-plain { display: block; padding: 5px 0; font-size: 14px; text-decoration: none; }
+.cx-all { display: inline-flex; align-items: center; gap: 4px; margin-top: 8px; font-size: 13px; color: var(--wf-text-2); text-decoration: none; }
+
+/* Uitgelicht item rechts in de dropdown, zoals de huidige site */
+.cx-featured { padding: 24px; background: var(--wf-surface); border-left: 1px solid var(--wf-line); display: flex; flex-direction: column; gap: 12px; align-items: start; }
+.cx-featured .wf-img { width: 100%; min-height: 0; background: var(--wf-surface-2); }
+.cx-pill { font-size: 11px; font-weight: 500; padding: 2px 8px; border: 1px solid var(--wf-line-strong); border-radius: var(--wf-radius-pill); }
+.cx-feat-title { font-size: 14px; font-weight: 500; line-height: 1.4; }
+
+/* Pagina onder het menu iets terug laten treden */
+.cx-under { opacity: 0.45; }
+
+/* Iconen als inline SVG (Figma kent de ligatures van Material Symbols niet) */
+.cx-ic { flex: none; display: inline-block; vertical-align: middle; }
+.wf-nav .has-sub::after { content: none; }
+.wf-nav a .cx-ic { color: var(--wf-text-2); margin-left: 2px; }
+.wf-nav a.is-open .cx-ic { color: var(--wf-ink); }
+.cx-item .cx-ic { margin-top: 1px; color: var(--wf-text-2); }
+.cx-item.is-active .cx-ic { color: var(--wf-ink); }
+.cx-link { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 500; text-decoration: none; }
+.cx-video { display: grid; justify-items: center; gap: 8px; color: var(--wf-muted); }
+.cx-video .cx-ic { color: var(--wf-text-2); }
+
+/* Scanbaarheid: elk item even hoog, één regel omschrijving, scheidingslijn ertussen.
+   Rijen lopen zo gelijk over de kolommen heen. */
+.cx-list { gap: 0; }
+.cx-item { height: 60px; align-items: center; margin: 0 -8px; padding: 0 8px; border-radius: 0; border-bottom: 1px solid var(--wf-line); }
+.cx-list > .cx-item:last-child { border-bottom: 0; }
+.cx-item .cx-ic { margin-top: 0; }
+.cx-item strong, .cx-item strong + span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cx-item--plain { grid-template-columns: 1fr; }
+.cx-plain { height: 40px; display: flex; align-items: center; padding: 0; border-bottom: 1px solid var(--wf-line); }
+.cx-list > .cx-plain:last-child { border-bottom: 0; }
+.cx-col--span { grid-column: 1 / -1; border-left: 0 !important; border-top: 1px solid var(--wf-line); background: var(--wf-page); }
+.cx-list--row { display: grid; grid-template-columns: 1fr 1fr; column-gap: 40px; }
+.cx-list--row > .cx-item { border-bottom: 0; }
+
+/* Uitlegkaart per richting */
+.cx-intro { width: 720px; height: 760px; padding: 72px 64px; background: var(--wf-surface); display: flex; flex-direction: column; gap: 20px; }
+.cx-intro .wf-h1 { margin-bottom: 4px; }
+.cx-intro-menu { font-size: 14px; font-weight: 500; color: var(--wf-text-2); padding: 12px 16px; background: var(--wf-card); border: 1px solid var(--wf-line); border-radius: var(--wf-radius); }
+.cx-intro .wf-checklist { font-size: 17px; line-height: 1.5; gap: 14px; margin-top: 8px; }
+.cx-intro .wf-checklist li { grid-template-columns: 22px 1fr; gap: 12px; }
+.cx-intro .wf-checklist li::before { width: 20px; height: 20px; margin-top: 3px; font-size: 14px; }
+.cx-intro-watch { margin-top: auto; padding-top: 20px; border-top: 1px solid var(--wf-line-strong); font-size: 15px; line-height: 1.5; color: var(--wf-text-2); }
+.cx-intro-watch strong { display: block; font-size: 11px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--wf-muted); margin-bottom: 6px; }
+/* Geen icoonfont in de kaart (komt in Figma als tekst): simpele stip */
+.cx-intro .wf-checklist li::before { content: ""; width: 8px; height: 8px; margin-top: 9px; border-radius: 50%; background: var(--wf-ink); }
+/* Kleurcode per richting op de uitlegkaart (16 px links) */
+.cx-intro { border-left: 16px solid var(--cx-code, var(--wf-ink)); }
+.cx-intro[data-frame^="Navigatie A"] { --cx-code: #3b82f6; }
+.cx-intro[data-frame^="Navigatie B"] { --cx-code: #f59e0b; }
+.cx-intro[data-frame^="Navigatie C"] { --cx-code: #10b981; }

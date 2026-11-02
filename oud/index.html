@@ -1,0 +1,1082 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>CERRIX — homepage prototype (hero, video, logo's, sectoren)</title>
+<style>
+  @font-face { font-family: "Inter 18 Pt"; font-weight: 400; font-display: swap;
+    src: url(https://cdn.prod.website-files.com/680635202bcf9a66844338c8/6853bafec488ee61eb4d2d8e_Inter18pt-Regular.woff2) format("woff2"); }
+  @font-face { font-family: "Inter 18 Pt"; font-weight: 500; font-display: swap;
+    src: url(https://cdn.prod.website-files.com/680635202bcf9a66844338c8/6853bafe8015e4866c4f475f_Inter18pt-Medium.woff2) format("woff2"); }
+  @font-face { font-family: "Inter 18 Pt"; font-weight: 600; font-display: swap;
+    src: url(https://cdn.prod.website-files.com/680635202bcf9a66844338c8/6853bafe503a4c0914e09944_Inter18pt-SemiBold.woff2) format("woff2"); }
+
+  :root {
+    --swatch--primary: #50e3c2;
+    --swatch--dark: #050f32;
+    --swatch--dark-blue: #040c28;
+    --swatch--light-gray: #d0d2d8;
+    --font: "Inter 18 Pt", Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: var(--font); background: #fff; color: #fff; -webkit-font-smoothing: antialiased; }
+
+  /* ---- hero, rebuilt from cerrix.webflow.shared.css ---- */
+  .section_home_hero-header {
+    position: relative;
+    background-color: var(--swatch--dark-blue);
+    background-image:
+      url(https://cdn.prod.website-files.com/680635202bcf9a66844338c8/681d577fd6731330b9f21f12_Ellipse%2011.avif),
+      url(https://cdn.prod.website-files.com/680635202bcf9a66844338c8/681d5674d6731330b9f13ea1_Stars.avif),
+      url(https://cdn.prod.website-files.com/680635202bcf9a66844338c8/681d5433d6731330b9efb0af_Group%201321316742.avif);
+    background-position: 0 0, 100% 0, 100% -20vh;
+    background-repeat: no-repeat;
+    background-size: contain, 33em, contain;
+    border-bottom-left-radius: 2.25rem; border-bottom-right-radius: 2.25rem;
+    padding: 11rem 0 17rem;
+    overflow: hidden;
+  }
+  /* in 3D mode the static star layer is replaced by animated dust */
+  body.mode-3d .section_home_hero-header {
+    background-image:
+      url(https://cdn.prod.website-files.com/680635202bcf9a66844338c8/681d577fd6731330b9f21f12_Ellipse%2011.avif),
+      url(https://cdn.prod.website-files.com/680635202bcf9a66844338c8/681d5433d6731330b9efb0af_Group%201321316742.avif);
+    background-position: 0 0, 100% -20vh;
+    background-size: contain, contain;
+  }
+  #dust { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; display: none; }
+  body.mode-3d #dust { display: block; }
+
+  .nav {
+    position: absolute; top: 26px; left: 40px; right: 40px; z-index: 5;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 40px; border: 1px solid #fff3; border-radius: .75em;
+    background: #ffffff0d; backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
+  }
+  .nav svg { display: block; }
+  .nav ul { display: flex; gap: 30px; list-style: none; margin: 0; padding: 0; font-size: 16px; font-weight: 500; }
+  .nav ul li::after { content: ""; display: inline-block; width: 6px; height: 6px; margin-left: 10px;
+    border-right: 1.6px solid #fff; border-bottom: 1.6px solid #fff; transform: translateY(-3px) rotate(45deg); }
+  .nav ul li.plain::after { display: none; }
+  .nav .right { display: flex; align-items: center; gap: 30px; font-weight: 500; }
+
+  .container { max-width: 90rem; margin: 0 auto; padding: 0 2.5rem; position: relative; z-index: 1; }
+  .home_hero-header_content {
+    display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    align-items: center; margin-top: -42px;
+  }
+  .home_hero_title { font-size: 4rem; font-weight: 600; letter-spacing: -1.64px; line-height: 1.1; margin: 10px 0 0; max-width: 25ch; }
+  .home_hero_text { font-size: 18px; line-height: 1.5; color: var(--swatch--light-gray); margin: 2rem 0 0; }
+  .button {
+    display: inline-block; margin: 3rem 0 0 5px; padding: .875rem 1.5rem; border-radius: 6.25rem;
+    background: var(--swatch--primary); color: var(--swatch--dark); font-size: 1rem; font-weight: 500;
+    letter-spacing: .0225rem; text-decoration: none;
+  }
+  .home_hero-header_image-wrapper { max-width: 547px; width: 100%; aspect-ratio: 1; position: relative; }
+  .home_hero-header_image { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  /* the 3D canvases bleed 15% past the image frame on every side, so the ring can drift
+     with the cursor without being clipped (the camera compensates, the ring keeps its size) */
+  #donut, #donut-blur { position: absolute; inset: -15%; width: 130%; height: 130%; display: block; pointer-events: none; }
+  .home_hero-header_image { object-fit: contain; }
+  body.mode-3d .home_hero-header_image { display: none; }
+  body:not(.mode-3d) #donut { visibility: hidden; }
+  /* depth of field: the top-left of the ring is slightly out of focus, like the original
+     render. A blurred copy fades in towards the top-left while the sharp canvas fades out
+     (but never fully — the sharp layer keeps 45% at the core, which keeps it subtle). */
+  .home_hero-header_image-wrapper { --depth-blur: 1.8px; }
+  #donut-blur {
+    filter: blur(var(--depth-blur));
+    -webkit-mask-image: radial-gradient(46% 46% at 17% 19%, rgba(0,0,0,.55) 0%, rgba(0,0,0,.55) 20%, transparent 100%);
+            mask-image: radial-gradient(46% 46% at 17% 19%, rgba(0,0,0,.55) 0%, rgba(0,0,0,.55) 20%, transparent 100%);
+  }
+  #donut {
+    -webkit-mask-image: radial-gradient(46% 46% at 17% 19%, rgba(0,0,0,.45) 0%, rgba(0,0,0,.45) 20%, #000 100%);
+            mask-image: radial-gradient(46% 46% at 17% 19%, rgba(0,0,0,.45) 0%, rgba(0,0,0,.45) 20%, #000 100%);
+  }
+  body:not(.mode-3d) #donut-blur { display: none; }
+
+  /* ---- comparison toggle (prototype only) ---- */
+  .compare {
+    position: fixed; right: 20px; bottom: 20px; z-index: 10; display: flex; gap: 4px; padding: 4px;
+    background: #ffffffee; border-radius: 999px; box-shadow: 0 6px 24px #0004; font: 500 13px/1 system-ui, sans-serif;
+  }
+  .compare button { border: 0; background: none; padding: 9px 14px; border-radius: 999px; cursor: pointer; color: #050f32; font: inherit; }
+  .compare button[aria-pressed="true"] { background: #050f32; color: #fff; }
+
+  /* ---- hero content (wireframe blok 1) ---- */
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 10px; padding: 8px 16px 8px 12px; border-radius: 999px;
+    background: #ffffff12; border: 1px solid #ffffff26; font-size: 14px; font-weight: 500;
+  }
+  .hero-badge svg { width: 20px; height: 20px; }
+  .hero-team { display: flex; align-items: center; gap: 10px; margin-top: 1.25rem; font-size: 14px; color: #b9bdc8; }
+  .hero-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; margin-top: 2.5rem; }
+  .hero-actions .button { margin: 0; }
+  .button.is-outline { background: transparent; color: #fff; border: 1px solid #ffffff59; display: inline-flex; align-items: center; gap: 10px; }
+  .hero-stats { display: flex; margin-left: 14px; }
+  .hero-stats div { padding: 0 20px; border-left: 1px solid #ffffff33; }
+  .hero-stats strong { display: block; font-size: 22px; font-weight: 600; line-height: 1.1; }
+  .hero-stats span { font-size: 13px; color: #b9bdc8; }
+
+  /* ---- the dark hero continues behind the video and the logos; the rounded
+     bottom edge moves to the end of the logo strip ---- */
+  .dark-block {
+    background: var(--swatch--dark-blue); border-bottom-left-radius: 2.25rem; border-bottom-right-radius: 2.25rem;
+    margin-bottom: 3rem; overflow: hidden;   /* clips the ring's scroll parallax and the glows at the rounded edge */
+  }
+  /* the hero no longer clips, so the ring can drift down behind the video while you scroll */
+  .section_home_hero-header { border-radius: 0; padding-bottom: 6rem; overflow: visible; z-index: 1; }
+  .home_hero-header_image-wrapper { will-change: transform; }
+  .section_video { position: relative; z-index: 2; }
+  .section_video .container { position: relative; }
+
+  /* soft spotlights beside the video, drifting slowly for depth */
+  .video-glow { position: absolute; z-index: -1; border-radius: 50%; pointer-events: none; filter: blur(60px); mix-blend-mode: screen; }
+  .video-glow.g1 { width: 520px; height: 520px; left: -140px; top: 18%; background: radial-gradient(circle, #50e3c259 0%, #50e3c200 65%); animation: drift1 14s ease-in-out infinite alternate; }
+  .video-glow.g2 { width: 640px; height: 640px; right: -200px; top: -12%; background: radial-gradient(circle, #3a6dff66 0%, #3a6dff00 65%); animation: drift2 18s ease-in-out infinite alternate; }
+  .video-glow.g3 { width: 420px; height: 420px; right: 6%; bottom: -22%; background: radial-gradient(circle, #8fb0ff40 0%, #8fb0ff00 65%); animation: drift3 11s ease-in-out infinite alternate; }
+  @keyframes drift1 { 0% { transform: translate(0, 0) scale(1); opacity: .8; } 50% { opacity: 1; } 100% { transform: translate(60px, -90px) scale(1.15); opacity: .6; } }
+  @keyframes drift2 { 0% { transform: translate(0, 0) scale(1.1); opacity: .7; } 100% { transform: translate(-80px, 110px) scale(.9); opacity: 1; } }
+  @keyframes drift3 { 0% { transform: translate(0, 0); opacity: .5; } 100% { transform: translate(-120px, -40px); opacity: .9; } }
+  @media (prefers-reduced-motion: reduce) { .video-glow { animation: none; } }
+  .video-frame {
+    position: relative; max-width: 1176px; margin: 0 auto; aspect-ratio: 16 / 9; border-radius: 1.5rem; overflow: hidden;
+    background:
+      radial-gradient(60% 80% at 75% 30%, #1c3a8a66 0%, transparent 70%),
+      radial-gradient(50% 60% at 20% 80%, #50e3c222 0%, transparent 70%),
+      linear-gradient(160deg, #0b1a45 0%, #050f32 60%, #040c28 100%);
+    border: 1px solid #ffffff24; box-shadow: 0 30px 80px #040c2840; display: grid; place-items: center; color: #fff; cursor: pointer;
+  }
+  .video-frame .play {
+    width: 88px; height: 88px; border-radius: 50%; display: grid; place-items: center;
+    background: #ffffff1f; border: 1px solid #ffffff4d; backdrop-filter: blur(6px); transition: transform .3s ease;
+  }
+  .video-frame:hover .play { transform: scale(1.06); }
+  .video-frame .label { position: absolute; left: 32px; bottom: 28px; font-size: 14px; color: #ffffffb3; }
+
+  /* ---- logo strip (wireframe blok 2), logos as on the live marquee ---- */
+  .section_logos { position: relative; z-index: 2; padding: 5rem 0 4.5rem; color: #fff; text-align: center; }
+  .section_logos p { font-size: 18px; font-weight: 500; margin: 0 0 2.25rem; }
+  .marquee { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); }
+  .marquee-track { display: flex; width: max-content; animation: marquee 45s linear infinite; }
+  .marquee:hover .marquee-track { animation-play-state: paused; }
+  .marquee img { height: 40px; width: 118px; object-fit: contain; margin: 0 28px; opacity: .8; }
+  @keyframes marquee { to { transform: translateX(-50%); } }
+
+  /* ---- sectors (wireframe blok 3) ---- */
+  .sectors { position: relative; padding: 4.5rem 0 7rem; color: var(--swatch--dark); }
+  .sectors .inner { max-width: 1176px; margin: 0 auto; position: relative; z-index: 1; }
+  /* same columns as the rows, so the intro starts where the row descriptions start */
+  .sectors-head { display: grid; grid-template-columns: 72px minmax(0, 1.15fr) minmax(0, 1fr) 40px; column-gap: 24px; align-items: end; margin-bottom: 2rem; }
+  .sectors-head h2 { grid-column: 1 / 3; font-size: 1.75rem; font-weight: 600; letter-spacing: -.5px; margin: 0; }
+  .sectors-head p { grid-column: 3 / 5; font-size: 17px; line-height: 1.5; color: #4b5470; margin: 0; max-width: 46ch; }
+  .sector-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid #0310331f; }
+  .sector-row {
+    display: grid; grid-template-columns: 72px minmax(0, 1.15fr) minmax(0, 1fr) 40px; column-gap: 24px; align-items: center;
+    padding: 1.75rem 0; border-bottom: 1px solid #0310331f; cursor: pointer; transition: background .25s ease;
+  }
+  .sector-row:hover { background: #f4f6fa; }
+  .sector-row .icon { padding-left: 12px; color: var(--swatch--dark); }
+  .sector-row .icon svg { width: 28px; height: 28px; display: block; }
+  .sector-row h3 { font-size: 2.5rem; font-weight: 600; letter-spacing: -1.1px; line-height: 1.05; margin: 0; }
+  .sector-row .sub { font-size: 16px; color: #5b6380; margin-top: 8px; }
+  .sector-row .desc { font-size: 17px; line-height: 1.5; margin: 0; max-width: 46ch; }
+  .sector-row .arrow { transition: transform .25s ease; }
+  .sector-row:hover .arrow { transform: translateX(6px); }
+  .sector-row .concept { display: inline-block; margin-left: 8px; font-size: 11px; font-weight: 500; letter-spacing: .04em; text-transform: uppercase; color: #8a91a8; border: 1px dashed #b8bed0; border-radius: 4px; padding: 2px 6px; vertical-align: middle; }
+  .reg-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 1.75rem; font-size: 14px; }
+  .reg-chips span { color: #7a819a; margin-right: 6px; }
+  .reg-chips a { padding: 8px 16px; border: 1px solid #0310332e; border-radius: 999px; color: var(--swatch--dark); text-decoration: none; }
+  .reg-chips a:hover { border-color: var(--swatch--dark); }
+  /* the 3D layer sits above the rows and never catches the mouse */
+  #sector-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; }
+
+  @media (max-width: 991px) {
+    .sectors-head { grid-template-columns: 1fr; row-gap: 12px; }
+    .sectors-head h2, .sectors-head p { grid-column: 1 / -1; }
+    .sector-row { grid-template-columns: 56px 1fr 32px; }
+    .sector-row .desc { grid-column: 2 / 3; margin-top: 12px; }
+    .sector-row h3 { font-size: 2rem; }
+    #sector-canvas { display: none; }
+    .hero-stats { margin: 1rem 0 0; }
+  }
+
+  @media (max-width: 991px) {
+    .nav ul { display: none; }
+    .home_hero-header_content { grid-template-columns: 1fr; gap: 4rem; }
+    .section_home_hero-header { padding-top: 10rem; }
+  }
+</style>
+<script type="importmap">
+{ "imports": {
+  "three": "https://unpkg.com/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://unpkg.com/three@0.170.0/examples/jsm/"
+} }
+</script>
+</head>
+<body class="mode-3d">
+
+<div class="dark-block">
+<header class="section_home_hero-header">
+  <canvas id="dust"></canvas>
+  <nav class="nav">
+    <svg width="108" height="30" viewBox="0 0 108 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M39.0547 4.34389L75.6673 3.10278V5.58499L39.0547 4.34389Z" fill="#50E3C2"/>
+<path d="M83.1133 3.10278L101.73 4.34389L83.1133 5.58499V3.10278Z" fill="#50E3C2"/>
+<path d="M79.3906 0C81.7896 0 83.7343 1.94475 83.7344 4.34375C83.7344 6.7428 81.7897 8.6875 79.3906 8.6875C76.9916 8.68744 75.0469 6.74276 75.0469 4.34375C75.0469 1.94479 76.9917 6.36506e-05 79.3906 0ZM79.3916 2.08496C78.1441 2.08497 77.1329 3.09629 77.1328 4.34375C77.1328 5.59125 78.1441 6.60253 79.3916 6.60254C80.6391 6.60254 81.6504 5.59126 81.6504 4.34375C81.6503 3.09628 80.6391 2.08496 79.3916 2.08496Z" fill="#50E3C2"/>
+<path d="M97.4555 29.7865L91.8519 22.0749L86.3284 29.7865H83.2598L90.2776 20.2071L83.6867 11.1079H86.7287L91.9587 18.2858L107.135 1.10791L100.044 11.1079L93.453 20.127L100.524 29.7865H97.4555Z" fill="url(#paint0_linear_485_3832)"/>
+<path d="M77.4551 11.1079H80.1235V29.7865H77.4551V11.1079Z" fill="#fff"/>
+<path d="M70.5564 29.7865L66.5271 24.0495C66.029 24.0851 65.6377 24.1029 65.353 24.1029H60.7367V29.7865H58.0684V11.1079H65.353C67.7724 11.1079 69.6758 11.6861 71.0634 12.8424C72.4509 13.9987 73.1447 15.5908 73.1447 17.6187C73.1447 19.0597 72.7889 20.2871 72.0773 21.3011C71.3658 22.3151 70.3518 23.0533 69.0354 23.5159L73.4649 29.7865H70.5564ZM65.273 21.8348C66.9629 21.8348 68.2527 21.4701 69.1421 20.7408C70.0316 20.0114 70.4763 18.9707 70.4763 17.6187C70.4763 16.2668 70.0316 15.235 69.1421 14.5234C68.2527 13.7941 66.9629 13.4294 65.273 13.4294H60.7367V21.8348H65.273Z" fill="#fff"/>
+<path d="M51.1677 29.7865L47.1384 24.0495C46.6403 24.0851 46.249 24.1029 45.9644 24.1029H41.3481V29.7865H38.6797V11.1079H45.9644C48.3837 11.1079 50.2871 11.6861 51.6747 12.8424C53.0622 13.9987 53.756 15.5908 53.756 17.6187C53.756 19.0597 53.4002 20.2871 52.6887 21.3011C51.9771 22.3151 50.9631 23.0533 49.6467 23.5159L54.0762 29.7865H51.1677ZM45.8843 21.8348C47.5743 21.8348 48.864 21.4701 49.7534 20.7408C50.6429 20.0114 51.0876 18.9707 51.0876 17.6187C51.0876 16.2668 50.6429 15.235 49.7534 14.5234C48.864 13.7941 47.5743 13.4294 45.8843 13.4294H41.3481V21.8348H45.8843Z" fill="#fff"/>
+<path d="M34.36 27.4651V29.7865H20.8047V11.1079H33.9865V13.4294H23.4731V19.1664H32.8391V21.4345H23.4731V27.4651H34.36Z" fill="#fff"/>
+<path d="M9.87299 30C8.00513 30 6.31516 29.5908 4.80308 28.7725C3.30879 27.9364 2.1347 26.7979 1.28082 25.357C0.42694 23.8983 0 22.2617 0 20.4472C0 18.6327 0.42694 17.005 1.28082 15.5641C2.1347 14.1054 3.31768 12.9668 4.82976 12.1485C6.34184 11.3125 8.03181 10.8944 9.89968 10.8944C11.3584 10.8944 12.6926 11.1435 13.9022 11.6416C15.1119 12.1219 16.1437 12.8423 16.9976 13.8029L15.2631 15.484C13.8578 14.0075 12.1055 13.2693 10.0064 13.2693C8.61886 13.2693 7.36472 13.5806 6.244 14.2032C5.12328 14.8258 4.24272 15.6886 3.60231 16.7915C2.97969 17.8767 2.66838 19.0952 2.66838 20.4472C2.66838 21.7992 2.97969 23.0266 3.60231 24.1296C4.24272 25.2147 5.12328 26.0686 6.244 26.6912C7.36472 27.3138 8.61886 27.6251 10.0064 27.6251C12.0877 27.6251 13.84 26.878 15.2631 25.3837L16.9976 27.0648C16.1437 28.0254 15.103 28.7547 13.8756 29.2528C12.6659 29.7509 11.3317 30 9.87299 30Z" fill="#fff"/>
+<defs>
+<linearGradient id="paint0_linear_485_3832" x1="85.9992" y1="30" x2="105.499" y2="3.5" gradientUnits="userSpaceOnUse">
+<stop stop-color="#fff"/>
+<stop offset="0.463328" stop-color="#fff"/>
+<stop offset="1" stop-color="white"/>
+</linearGradient>
+</defs>
+</svg>
+    <ul><li>Product</li><li>Solutions</li><li>Company</li><li>Resources</li><li class="plain">Contact</li></ul>
+    <div class="right"><span>EN</span><a class="button" style="margin:0" href="#">Book a demo</a></div>
+  </nav>
+
+  <div class="container">
+    <div class="home_hero-header_content">
+      <div>
+        <div class="hero-badge">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><g fill="#f5d34a"><circle cx="20.00" cy="12.00" r="1.3"/><circle cx="18.93" cy="16.00" r="1.3"/><circle cx="16.00" cy="18.93" r="1.3"/><circle cx="12.00" cy="20.00" r="1.3"/><circle cx="8.00" cy="18.93" r="1.3"/><circle cx="5.07" cy="16.00" r="1.3"/><circle cx="4.00" cy="12.00" r="1.3"/><circle cx="5.07" cy="8.00" r="1.3"/><circle cx="8.00" cy="5.07" r="1.3"/><circle cx="12.00" cy="4.00" r="1.3"/><circle cx="16.00" cy="5.07" r="1.3"/><circle cx="18.93" cy="8.00" r="1.3"/></g></svg>
+          Gebouwd voor DNB, AFM en DORA
+        </div>
+        <h1 class="home_hero_title" style="margin-top:1.75rem;max-width:16ch">Van versnipperde GRC naar één bron van waarheid</h1>
+        <p class="home_hero_text" style="max-width:40em">Eén Europees platform voor risk, compliance en audit. Niet aangepast vanuit een Amerikaans pakket, maar gebouwd voor de regels waar jij mee werkt.</p>
+        <div class="hero-team">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.3"/><path d="M3 19c.6-3.2 3-5 6-5s5.4 1.8 6 5M15 14.5c2.6-.3 4.7 1.2 5.3 4.5"/></svg>
+          Met een team dat risk en compliance in de financiële sector van binnenuit kent.
+        </div>
+        <div class="hero-actions">
+          <a class="button" href="#">Plan een demo</a>
+          <a class="button is-outline" href="#video"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z" fill="currentColor"/></svg>Bekijk de video</a>
+          <div class="hero-stats">
+            <div><strong>100+</strong><span>klanten</span></div>
+            <div><strong>20+</strong><span>landen</span></div>
+            <div><strong>10+</strong><span>jaar GRC</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="home_hero-header_image-wrapper">
+        <img class="home_hero-header_image" alt="" src="https://cdn.prod.website-files.com/680635202bcf9a66844338c8/681e5adba5a7614a58e61db8_cer.avif">
+        <canvas id="donut"></canvas>
+        <canvas id="donut-blur"></canvas>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="section_video" id="video">
+  <div class="container">
+    <div class="video-glow g1"></div><div class="video-glow g2"></div><div class="video-glow g3"></div>
+    <div class="video-frame" role="button" aria-label="Speel de merkvideo af">
+      <div class="play"><svg width="28" height="28" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.5l7.5 4.5L3 10.5z" fill="#fff"/></svg></div>
+      <div class="label">Merkvideo CERRIX · 60 tot 90 sec · placeholder</div>
+    </div>
+  </div>
+</section>
+
+<section class="section_logos">
+  <p>Vertrouwd door 100+ financiële instellingen in Europa</p>
+  <div class="marquee"><div class="marquee-track"><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681dfdfddaaf10d33b3acf25_Menzis.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681dff33aa18f31986597962_VDZ.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681dff5559978c4fef66da07_Nibc.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681dff9559978c4fef670364_BDO.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681dfeecb14ccd0b55e3caf6_Mazars.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681dff1c912d4f5ed5bcb225_Grant.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681dff8084cbb5f6e831884a_Geld.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681e0137aa18f319865addb4_Abn%20Amro.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/685a7994cf7ec89ffc6624bd_Bitvavo.png" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681e0127d96f98816b0d1917_RSM.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681e00e3345d95b351555dfb_CEB.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681e00fa345d95b351556c89_Montae.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/685a79af145a8475eed30b6d_Stichting%20Pensioenfonds.png" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681dfdfddaaf10d33b3acf25_Menzis.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681dff33aa18f31986597962_VDZ.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681dff5559978c4fef66da07_Nibc.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681dff9559978c4fef670364_BDO.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681dfeecb14ccd0b55e3caf6_Mazars.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681dff1c912d4f5ed5bcb225_Grant.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681dff8084cbb5f6e831884a_Geld.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681e0137aa18f319865addb4_Abn%20Amro.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/685a7994cf7ec89ffc6624bd_Bitvavo.png" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681e0127d96f98816b0d1917_RSM.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681e00e3345d95b351555dfb_CEB.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681e00fa345d95b351556c89_Montae.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/685a79af145a8475eed30b6d_Stichting%20Pensioenfonds.png" alt=""></div></div>
+</section>
+</div>
+
+<section class="sectors">
+  <canvas id="sector-canvas"></canvas>
+  <div class="container">
+    <div class="inner">
+      <div class="sectors-head">
+        <h2>Gebouwd voor jouw sector</h2>
+        <p>Elke sector heeft zijn eigen toezichthouder, regels en tempo. Kies de jouwe en zie wat CERRIX daar voor je doet.</p>
+      </div>
+      <ul class="sector-list">
+        <li class="sector-row" data-index="0">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="5.5"/></svg></div>
+          <div><h3>Banken</h3><div class="sub">DORA en third-party risk</div></div>
+          <p class="desc">DORA vraagt grip op ICT-risico en uitbesteding. Jij wilt dat zonder extra spreadsheet.</p>
+          <svg class="arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </li>
+        <li class="sector-row" data-index="1">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.2 7.5 9.5 4.3-1.3 7.5-4.9 7.5-9.5V6z"/><path d="M12 9v6M9 12h6"/></svg></div>
+          <div><h3>Verzekeraars</h3><div class="sub">Solvency II-governance</div></div>
+          <p class="desc">Sleutelfuncties, ORSA en DNB-rapportage uit één bron, in plaats van vier losse lijstjes.</p>
+          <svg class="arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </li>
+        <li class="sector-row" data-index="2">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M6 3h12M6 21h12M7 3c0 5 5 6 5 9s-5 4-5 9M17 3c0 5-5 6-5 9s5 4 5 9"/></svg></div>
+          <div><h3>Pensioenfondsen</h3><div class="sub">Grip tijdens de Wtp-transitie</div></div>
+          <p class="desc">Het bestuur wil zien waar de risico's zitten. Elk kwartaal, zonder weken voorbereiding.</p>
+          <svg class="arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </li>
+        <li class="sector-row" data-index="3">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M12 2 5 12l7 10 7-10z"/><path d="M5 12l7 3.5 7-3.5M12 2v13.5"/></svg></div>
+          <div><h3>Crypto</h3><div class="sub">MiCA en DORA <span class="concept">concepttekst</span></div></div>
+          <p class="desc">Een MiCA-vergunning vraagt aantoonbaar beheerste processen. Laat zien dat je controls op orde zijn, ook als je hard groeit.</p>
+          <svg class="arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </li>
+        <li class="sector-row" data-index="4">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M11 4a8 8 0 1 0 9 9h-9z"/><path d="M14 2.5V10h7.5A7.5 7.5 0 0 0 14 2.5z"/></svg></div>
+          <div><h3>Vermogensbeheer</h3><div class="sub">AFM-toezicht en MiFID II <span class="concept">concepttekst</span></div></div>
+          <p class="desc">Toezichthouder en klanten willen zien dat je beheerst werkt. Leg het bewijs vast terwijl je werkt, niet achteraf.</p>
+          <svg class="arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </li>
+        <li class="sector-row" data-index="5">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2.5" y="8" width="11" height="8" rx="4"/><rect x="10.5" y="8" width="11" height="8" rx="4"/></svg></div>
+          <div><h3>Financiële dienstverlening</h3><div class="sub">Wft, integriteit en uitbesteding <span class="concept">concepttekst</span></div></div>
+          <p class="desc">Van SIRA tot uitbestedingsregister: alle verplichtingen op één plek, passend bij de omvang van je organisatie.</p>
+          <svg class="arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </li>
+      </ul>
+      <div class="reg-chips"><span>Of start bij je regelgeving</span>
+        <a href="#">DORA</a><a href="#">NIS2</a><a href="#">Solvency II</a><a href="#">GDPR</a><a href="#">EU AI Act</a><a href="#">MiCA</a><a href="#">Alle regelgeving →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const params = new URLSearchParams(location.search);
+const freezeT = parseFloat(params.get('t'));   // ?t=1.2 freezes the timeline, for review
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// ============================================================================
+// Donut
+// ============================================================================
+const CONFIG = {
+  count: 30,              // number of discs
+  ringRadius: 1.6,        // radius of the circle the discs sit on
+  discRadius: 0.68,       // radius of each disc (smaller = bigger hole)
+  thickness: 0.046,
+  bevel: 0.014,           // rounded edge, so the discs aren't razor-sharp coins
+  capColor: 0x91a6c2,     // face colour (lit faces read as pale grey-blue)
+  rimColor: 0x5a729c,     // thin blue edge
+  // orientation, starting from the ring facing the camera (looking through the hole):
+  // first rolled in the screen plane (positive = counter-clockwise), then tipped
+  // backwards around the centre. Tuned against the live hero image.
+  rollDeg: -60,
+  tiltBackDeg: 47,
+  offset: [-0.08, 0.12],  // nudge within the frame to line up with the original image
+  spinSpeed: 0.1,         // rad/s the discs travel along the ring
+  introDuration: 2.6,     // seconds
+  cameraDistance: 12.2,
+};
+
+const canvas = document.getElementById('donut');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.0;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.VSMShadowMap;   // variance shadows: blurrable, soft edges
+
+const scene = new THREE.Scene();
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+scene.environmentIntensity = 0.08;
+
+const BLEED = 1.3;   // canvas is 130% of the image frame (see CSS)
+const camera = new THREE.PerspectiveCamera(
+  THREE.MathUtils.radToDeg(2 * Math.atan(BLEED * Math.tan(THREE.MathUtils.degToRad(11)))), 1, 0.1, 100);
+camera.position.set(0, 0, CONFIG.cameraDistance);
+
+// Two spotlights close to the ring, like the original: one from above, one
+// from below. Because they sit close, the light angle and falloff change around the
+// ring, so some discs catch light and others fall into shadow.
+function spot(color, intensity, pos, target) {
+  const l = new THREE.SpotLight(color, intensity, 0, 0.55, 1, 2);
+  l.position.set(...pos);
+  l.target.position.set(...target);
+  l.castShadow = true;
+  l.shadow.mapSize.set(256, 256);
+  l.shadow.bias = -0.0004;
+  l.shadow.radius = 22;        // softness of the shadow edge
+  l.shadow.blurSamples = 24;
+  scene.add(l, l.target);
+  return l;
+}
+spot(0xd0e3fb, 120, [0.5, 4.0, 3.5], [0, 1.3, 0]);      // above
+spot(0xcde0fa, 65, [-0.6, -3.6, 2.4], [0, -1.0, 0]);  // below
+// faint blue backlight catches the rims; low fill keeps shadows navy, not black
+const back = new THREE.DirectionalLight(0x8d9cd0, 1.2);
+back.position.set(-2, -1, -6);
+scene.add(back);
+scene.add(new THREE.HemisphereLight(0x4d64a8, 0x08102a, 0.55));
+
+// seeded random so the irregularity is the same on every load
+let seed = 7;
+const rand = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+
+// Procedural powder-coat / sandblasted texture: layered noise at a few scales for
+// soft mottling, plus fine speckle for grain.
+function grainTextures(size = 512) {
+  const layer = n => {
+    const c = document.createElement('canvas');
+    c.width = c.height = n;
+    const x = c.getContext('2d');
+    const img = x.createImageData(n, n);
+    for (let i = 0; i < img.data.length; i += 4) {
+      const v = rand() * 255;
+      img.data[i] = img.data[i + 1] = img.data[i + 2] = v;
+      img.data[i + 3] = 255;
+    }
+    x.putImageData(img, 0, 0);
+    return c;
+  };
+  const c = document.createElement('canvas');
+  c.width = c.height = size;
+  const ctx = c.getContext('2d');
+  ctx.imageSmoothingEnabled = true;
+  ctx.fillStyle = '#808080';
+  ctx.fillRect(0, 0, size, size);
+  // [cells, weight]: large soft blotches -> fine grain
+  for (const [n, w] of [[6, 0.35], [24, 0.25], [96, 0.2], [size, 0.45]]) {
+    ctx.globalAlpha = w;
+    ctx.drawImage(layer(n), 0, 0, size, size);
+  }
+  ctx.globalAlpha = 1;
+  const make = (repeat) => {
+    const t = new THREE.CanvasTexture(c);
+    t.wrapS = t.wrapT = THREE.RepeatWrapping;
+    t.repeat.set(repeat, repeat);
+    t.anisotropy = 4;
+    return t;
+  };
+  // colour map: same noise, washed towards white so it only mottles lightly
+  ctx.globalAlpha = 0.7;
+  ctx.fillStyle = '#fff';
+  const bumpCanvas = document.createElement('canvas');
+  bumpCanvas.width = bumpCanvas.height = size;
+  bumpCanvas.getContext('2d').drawImage(c, 0, 0);
+  ctx.fillRect(0, 0, size, size);
+  ctx.globalAlpha = 1;
+  const colorMap = make(1);
+  colorMap.colorSpace = THREE.SRGBColorSpace;
+  const bump = new THREE.CanvasTexture(bumpCanvas);
+  bump.wrapS = bump.wrapT = THREE.RepeatWrapping;
+  bump.repeat.set(2, 2);
+  return { bump, rough: bump, color: colorMap };
+}
+const tex = grainTextures();
+
+const capMat = new THREE.MeshStandardMaterial({
+  color: CONFIG.capColor, map: tex.color,   // slight mottling in the colour
+  roughness: 0.92, roughnessMap: tex.rough, metalness: 0.0,
+  bumpMap: tex.bump, bumpScale: 0.7,
+});
+const capBase = capMat.color.clone();
+const rimMat = new THREE.MeshStandardMaterial({
+  color: CONFIG.rimColor, roughness: 0.45, metalness: 0.25,
+  emissive: new THREE.Color(0x1d44e0), emissiveIntensity: 0.0,
+});
+// Disc with a rounded (bevelled) edge: an extruded circle. Group 0 = flat faces,
+// group 1 = edge + bevel (gets the blue rim material).
+function bevelledDisc(r, thickness, bevel) {
+  const shape = new THREE.Shape().absarc(0, 0, r - bevel, 0, Math.PI * 2);
+  const geo = new THREE.ExtrudeGeometry(shape, {
+    depth: Math.max(thickness - bevel * 2, 0.001),
+    bevelEnabled: true, bevelThickness: bevel, bevelSize: bevel, bevelSegments: 4,
+    curveSegments: 96,
+  });
+  // planar UVs across the face so the grain texture maps like on a coin
+  const pos = geo.attributes.position, uv = geo.attributes.uv;
+  for (let i = 0; i < pos.count; i++) uv.setXY(i, pos.getX(i) / (2 * r) + .5, pos.getY(i) / (2 * r) + .5);
+  geo.center();
+  geo.rotateX(-Math.PI / 2);   // face normal along Y, like the cylinder it replaces
+  return geo;
+}
+const rimBase = rimMat.color.clone();
+const discGeo = bevelledDisc(CONFIG.discRadius, CONFIG.thickness, CONFIG.bevel);
+
+const ring = new THREE.Group();   // spins on its own axis: discs travel along the circle
+const tilt = new THREE.Group();   // fixed presentation angle
+// ?roll=45&tilt=45 overrides the angles, handy while fine-tuning
+const deg = THREE.MathUtils.degToRad;
+const rollDeg = parseFloat(params.get('roll') ?? CONFIG.rollDeg);
+const tiltBackDeg = parseFloat(params.get('tilt') ?? CONFIG.tiltBackDeg);
+// 'ZXY': roll in the screen plane first, then tip back around the ring's own horizontal axis
+tilt.rotation.set(-deg(tiltBackDeg), 0, deg(rollDeg), 'ZXY');
+tilt.add(ring);
+// parallax group: follows the cursor a little; the lights stay put, so the light
+// shifts subtly over the discs as you move
+const parallax = new THREE.Group();
+parallax.add(tilt);
+scene.add(parallax);
+
+const Y = new THREE.Vector3(0, 1, 0);
+const discs = [];
+for (let i = 0; i < CONFIG.count; i++) {
+  const pivot = new THREE.Group();
+  const mats = [capMat.clone(), rimMat.clone()];   // per disc, for the intro fade
+  const mesh = new THREE.Mesh(discGeo, mats);
+  mesh.castShadow = mesh.receiveShadow = true;
+  pivot.add(mesh);
+  ring.add(pivot);
+  discs.push({
+    pivot, mesh, mats,
+    theta: (i / CONFIG.count) * Math.PI * 2 + (rand() - .5) * 0.05,
+    jx: (rand() - .5) * 0.16, jz: (rand() - .5) * 0.16,
+  });
+}
+
+const tangent = new THREE.Vector3();
+const q = new THREE.Quaternion();
+function placeDisc(d, theta, scale, open) {
+  const r = CONFIG.ringRadius;
+  d.pivot.position.set(Math.cos(theta) * r, Math.sin(theta) * r, 0);
+  tangent.set(-Math.sin(theta), Math.cos(theta), 0);
+  q.setFromUnitVectors(Y, tangent);
+  d.pivot.quaternion.copy(q);
+  // 'open' flips the disc from lying in the ring plane to upright
+  d.mesh.rotation.set(d.jx + (1 - open) * Math.PI / 2, 0, d.jz);
+  d.mesh.scale.setScalar(Math.max(scale, 0.0001));
+}
+
+const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
+const easeOutBack = t => { const c = 1.3; return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2); };
+const clamp01 = t => Math.min(1, Math.max(0, t));
+
+let introStart = performance.now();
+let spin = 0;
+
+function updateDonut(t, dt) {
+  const stagger = CONFIG.introDuration * 0.55 / CONFIG.count;
+  const each = CONFIG.introDuration * 0.45;
+  for (let i = 0; i < discs.length; i++) {
+    const d = discs[i];
+    const p = clamp01((t - i * stagger) / each);
+    placeDisc(d, d.theta + (1 - easeOutCubic(p)) * -0.5, easeOutBack(p), easeOutCubic(p));
+    // rise out of the shadow: stay dark while flat, brighten as the disc stands up
+    const lum = p * p * p;
+    d.mats[0].color.copy(capBase).multiplyScalar(lum);
+    d.mats[1].color.copy(rimBase).multiplyScalar(lum);
+  }
+  const done = clamp01(t / (CONFIG.introDuration + 0.4));
+  spin += dt * (CONFIG.spinSpeed * (0.25 + 0.75 * done) + scroll.boost);
+  ring.rotation.z = spin;
+  tilt.position.set(...CONFIG.offset, (1 - easeOutCubic(done)) * -1.5);
+  renderer.render(scene, camera);
+  // copy for the depth-of-field layer (half resolution is plenty once blurred)
+  bctx.clearRect(0, 0, blurCanvas.width, blurCanvas.height);
+  bctx.drawImage(canvas, 0, 0, blurCanvas.width, blurCanvas.height);
+}
+
+const blurCanvas = document.getElementById('donut-blur');
+const bctx = blurCanvas.getContext('2d');
+function resizeDonut() {
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  if (!w || !h) return;
+  blurCanvas.width = Math.round(w * renderer.getPixelRatio() / 2);
+  blurCanvas.height = Math.round(h * renderer.getPixelRatio() / 2);
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+}
+
+// ============================================================================
+// Dust: tiny white specks drifting down, densest top-right (like Stars.avif)
+// ============================================================================
+const dustCanvas = document.getElementById('dust');
+const dctx = dustCanvas.getContext('2d');
+let specks = [], dw = 0, dh = 0, dpr = 1;
+
+function spawn(s, anywhere) {
+  // bias towards the top-right corner
+  s.x = (1 - Math.pow(rand(), 1.5) * 0.45) * dw;
+  s.y = anywhere ? Math.pow(rand(), 1.4) * dh * 0.6 : -5;
+  s.r = 1 + Math.round(Math.pow(rand(), 5) * 1.6);   // size in device pixels
+  s.vy = 2 + rand() * 7;              // px/s, very slow fall
+  s.sway = 4 + rand() * 10;
+  s.phase = rand() * Math.PI * 2;
+  s.freq = 0.15 + rand() * 0.35;
+  s.a = 0.6 + rand() * 0.4;
+  return s;
+}
+function resizeDust() {
+  dpr = Math.min(devicePixelRatio, 2);
+  dw = dustCanvas.clientWidth; dh = dustCanvas.clientHeight;
+  dustCanvas.width = dw * dpr; dustCanvas.height = dh * dpr;
+  const n = Math.round(Math.min(420, dw * dh / 3000));
+  specks = Array.from({ length: n }, () => spawn({}, true));
+}
+function updateDust(t, dt) {
+  dctx.setTransform(1, 0, 0, 1, 0, 0);
+  dctx.clearRect(0, 0, dustCanvas.width, dustCanvas.height);
+  dctx.fillStyle = '#fff';
+  for (const s of specks) {
+    s.y += s.vy * dt;
+    if (s.y > dh * 0.65) spawn(s, false);
+    const x = s.x + Math.sin(t * s.freq + s.phase) * s.sway + follow.x * PARALLAX.dust * s.r;
+    // fade out towards the bottom and the left, twinkle a little
+    const fade = clamp01((1 - s.y / (dh * 0.65)) * 1.5) * clamp01((x / dw - 0.55) * 5);
+    const tw = 0.75 + 0.25 * Math.sin(t * 1.7 + s.phase * 3);
+    dctx.globalAlpha = s.a * fade * tw;
+    // snapped to whole device pixels so the specks stay crisp
+    dctx.fillRect(Math.round(x * dpr), Math.round((s.y + follow.y * PARALLAX.dust * 0.6 * s.r) * dpr), s.r, s.r);
+  }
+  dctx.globalAlpha = 1;
+}
+
+// ============================================================================
+// Loop
+// ============================================================================
+function resize() { resizeDonut(); resizeDust(); }
+addEventListener('resize', resize);
+resize();
+
+let last = performance.now(), visible = true;
+// cursor position, -1..1 from the viewport centre (mouse only, not touch)
+const pointer = { x: 0, y: 0 }, follow = { x: 0, y: 0 };
+const PARALLAX = { rotY: 0.09, rotX: 0.06, moveX: 0.2, moveY: 0.15, dust: 8 };   // rotation (rad, ~5°), shift (world units, ~20px), dust px
+if (!reduceMotion) {
+  addEventListener('pointermove', e => {
+    if (e.pointerType !== 'mouse') return;
+    pointer.x = e.clientX / innerWidth * 2 - 1;
+    pointer.y = e.clientY / innerHeight * 2 - 1;
+  });
+  document.addEventListener('pointerleave', () => { pointer.x = pointer.y = 0; });
+}
+// ?px=1&py=-1 pins the cursor position, for review screenshots
+if (params.has('px')) {
+  follow.x = pointer.x = parseFloat(params.get('px'));
+  follow.y = pointer.y = parseFloat(params.get('py') ?? 0);
+}
+function updateParallax(dt) {
+  const k = 1 - Math.exp(-dt * 2.5);   // slow, damped follow
+  follow.x += (pointer.x - follow.x) * k;
+  follow.y += (pointer.y - follow.y) * k;
+  parallax.rotation.set(follow.y * PARALLAX.rotX + scroll.tilt, follow.x * PARALLAX.rotY, 0);
+  parallax.position.set(follow.x * PARALLAX.moveX, -follow.y * PARALLAX.moveY, 0);
+}
+
+// Scroll: the ring trails the page (moves down at a fraction of the scroll, so it drifts
+// behind the video), tips back a little, and its discs speed up in the scroll direction.
+const SCROLL = { follow: 0.38, tiltMax: 0.35, tiltPerPx: 0.0006, boostPerPxs: 0.0016, boostMax: 2.2 };
+const scroll = { y: scrollY, last: scrollY, boost: 0, tilt: 0 };
+const ringWrap = document.querySelector('.home_hero-header_image-wrapper');
+if (params.has('scrollto')) setTimeout(() => scrollTo(0, +params.get('scrollto')), 300);   // review only
+function updateScroll(dt) {
+  const y = scrollY;
+  const v = dt > 0 ? (y - scroll.last) / dt : 0;   // px/s, signed
+  scroll.last = y;
+  const target = Math.max(-SCROLL.boostMax, Math.min(SCROLL.boostMax, v * SCROLL.boostPerPxs));
+  scroll.boost += (target - scroll.boost) * (1 - Math.exp(-dt * (Math.abs(target) > Math.abs(scroll.boost) ? 6 : 1.5)));
+  scroll.tilt = Math.min(SCROLL.tiltMax, y * SCROLL.tiltPerPx);
+  ringWrap.style.transform = `translate3d(0, ${(y * SCROLL.follow).toFixed(1)}px, 0)`;
+}
+
+function frame(now) {
+  const dt = Math.min((now - last) / 1000, 0.05);
+  last = now;
+  const live = !reduceMotion && isNaN(freezeT);
+  if (!reduceMotion) updateScroll(dt);
+  updateParallax(dt);
+  const t = !isNaN(freezeT) ? freezeT : reduceMotion ? 999 : (now - introStart) / 1000;
+  updateDonut(t, live ? dt : 0);
+  updateDust(now / 1000, live ? dt : 0);
+  if (visible) requestAnimationFrame(frame);
+}
+new IntersectionObserver(([e]) => {
+  const was = visible;
+  visible = e.isIntersecting;
+  if (visible && !was) { last = performance.now(); requestAnimationFrame(frame); }
+}).observe(document.querySelector('.section_home_hero-header'));
+requestAnimationFrame(frame);
+
+
+</script>
+
+<script type="module">
+// ============================================================================
+// Sector objects: a simple 3D form per sector grows out of the cursor while you
+// hover its row, spins at a constant speed, and swaps quickly to the next row.
+// Same material and light rig as the hero ring, so they read as one family.
+// ============================================================================
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const params = new URLSearchParams(location.search);
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const section = document.querySelector('.sectors');
+const canvas = document.getElementById('sector-canvas');
+const rows = [...document.querySelectorAll('.sector-row')];
+
+const S = {
+  sizePx: 150,           // on-screen size of an object
+  offset: [56, -8],      // object centre relative to the cursor (px, right / down)
+  // lean: the object tilts in the direction the cursor moves and springs back upright
+  leanPerPx: 0.0011,     // radians of tilt per px/s of cursor speed
+  leanMax: 0.55,         // cap, ~30 degrees
+  leanStiffness: 90, leanDamping: 11,   // spring back: a little wobble before settling
+  spin: 0.8,             // rad/s, identical for every object so a swap keeps the rhythm
+  follow: 10,            // how quickly the object trails the cursor
+  stiffness: 320,        // grow/shrink spring: higher = snappier
+  damping: 22,           // lower = more overshoot
+  capColor: 0x91a6c2, rimColor: 0x5a729c,   // as the hero ring
+};
+const UNIT = 2.4;        // every object is modelled to fit roughly a 2.4-unit box
+
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.VSMShadowMap;
+
+const scene = new THREE.Scene();
+scene.environment = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), 0.04).texture;
+scene.environmentIntensity = 0.08;
+scene.add(new THREE.HemisphereLight(0x4d64a8, 0x08102a, 0.55));
+
+// narrow lens from far away: close to orthographic, so an object looks the same
+// wherever the cursor is in the section
+const FOV = 12;
+const camera = new THREE.PerspectiveCamera(FOV, 1, 1, 400);
+
+// the follower carries the object AND its lights, so the lighting stays identical
+// wherever the object is on screen
+const follower = new THREE.Group();
+scene.add(follower);
+function spot(color, intensity, pos, target) {
+  const l = new THREE.SpotLight(color, intensity, 0, 0.6, 1, 2);
+  l.position.set(...pos);
+  l.target.position.set(...target);
+  l.castShadow = true;
+  l.shadow.mapSize.set(256, 256);
+  l.shadow.bias = -0.0004;
+  l.shadow.radius = 18;
+  l.shadow.blurSamples = 20;
+  follower.add(l, l.target);
+}
+spot(0xd0e3fb, 120, [0.6, 4.2, 3.8], [0, 0.4, 0]);    // above
+spot(0xcde0fa, 55, [-0.8, -3.8, 2.8], [0, -0.4, 0]);  // below
+const back = new THREE.PointLight(0x8d9cd0, 18, 0, 2);
+back.position.set(-2.5, 1, -4);
+follower.add(back);
+
+// ---- material (same powder-coat grain as the hero) ----
+let seed = 11;
+const rand = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+function grainTextures(size = 512) {
+  const layer = n => {
+    const c = document.createElement('canvas'); c.width = c.height = n;
+    const x = c.getContext('2d'); const img = x.createImageData(n, n);
+    for (let i = 0; i < img.data.length; i += 4) { const v = rand() * 255; img.data[i] = img.data[i + 1] = img.data[i + 2] = v; img.data[i + 3] = 255; }
+    x.putImageData(img, 0, 0); return c;
+  };
+  const c = document.createElement('canvas'); c.width = c.height = size;
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = '#808080'; ctx.fillRect(0, 0, size, size);
+  for (const [n, w] of [[6, 0.35], [24, 0.25], [96, 0.2], [size, 0.45]]) { ctx.globalAlpha = w; ctx.drawImage(layer(n), 0, 0, size, size); }
+  const bumpCanvas = document.createElement('canvas'); bumpCanvas.width = bumpCanvas.height = size;
+  ctx.globalAlpha = 1; bumpCanvas.getContext('2d').drawImage(c, 0, 0);
+  ctx.globalAlpha = 0.7; ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, size, size); ctx.globalAlpha = 1;
+  const color = new THREE.CanvasTexture(c); color.colorSpace = THREE.SRGBColorSpace;
+  const bump = new THREE.CanvasTexture(bumpCanvas); bump.wrapS = bump.wrapT = THREE.RepeatWrapping; bump.repeat.set(2, 2);
+  return { color, bump };
+}
+const tex = grainTextures();
+const cap = new THREE.MeshStandardMaterial({
+  color: S.capColor, map: tex.color, roughness: 0.92, roughnessMap: tex.bump, metalness: 0,
+  bumpMap: tex.bump, bumpScale: 0.7,
+});
+const rim = new THREE.MeshStandardMaterial({ color: S.rimColor, roughness: 0.45, metalness: 0.25 });
+const capFlat = cap.clone(); capFlat.flatShading = true;
+
+const mesh = (geo, mat) => { const m = new THREE.Mesh(geo, mat); m.castShadow = m.receiveShadow = true; return m; };
+// planar UVs so the grain maps evenly across flat faces
+function planarUV(geo, size) {
+  const p = geo.attributes.position, uv = geo.attributes.uv;
+  for (let i = 0; i < p.count; i++) uv.setXY(i, p.getX(i) / size + .5, p.getY(i) / size + .5);
+  return geo;
+}
+function extrude(shape, depth, bevel, size, center = true) {
+  const g = new THREE.ExtrudeGeometry(shape, {
+    depth, bevelEnabled: true, bevelThickness: bevel, bevelSize: bevel, bevelSegments: 4, curveSegments: 64,
+  });
+  planarUV(g, size);
+  if (center) g.center(); else g.translate(0, 0, -depth / 2);
+  return g;
+}
+function coin(r, h, bevel = 0.05) {
+  const g = extrude(new THREE.Shape().absarc(0, 0, r - bevel, 0, Math.PI * 2), Math.max(h - bevel * 2, 0.001), bevel, r * 2);
+  g.rotateX(-Math.PI / 2);
+  return g;
+}
+
+// ---- the six forms ---------------------------------------------------------
+// Outline of a character in the site font, traced from a canvas render, as a
+// THREE.Path in object units (max dimension = size). Used to cut the euro out of the coin.
+async function glyphPath(ch, size, weight = 600) {
+  const font = `${weight} 200px "Inter 18 Pt"`;
+  await document.fonts.load(font, ch);
+  const N = 256, c = document.createElement('canvas');
+  c.width = c.height = N;
+  const x = c.getContext('2d');
+  x.font = font; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillStyle = '#000';
+  x.fillText(ch, N / 2, N / 2);
+  const a = x.getImageData(0, 0, N, N).data;
+  const inside = (px, py) => px >= 0 && py >= 0 && px < N && py < N && a[(py * N + px) * 4 + 3] > 127;
+  // start: first filled pixel, scanning rows from the top
+  let start = null;
+  for (let py = 0; py < N && !start; py++) for (let px = 0; px < N; px++) if (inside(px, py)) { start = [px, py]; break; }
+  // Moore-neighbour tracing (8 directions, clockwise on screen)
+  const D = [[1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1], [0, -1], [1, -1]];
+  const pts = [];
+  let cur = start, dir = 7;
+  for (let guard = 0; guard < 20000; guard++) {
+    pts.push(cur);
+    let moved = false;
+    for (let k = 0; k < 8; k++) {
+      const d = (dir + 6 + k) % 8, nx = cur[0] + D[d][0], ny = cur[1] + D[d][1];
+      if (inside(nx, ny)) { cur = [nx, ny]; dir = d; moved = true; break; }
+    }
+    if (!moved || (cur[0] === start[0] && cur[1] === start[1] && pts.length > 2)) break;
+  }
+  // simplify (Ramer-Douglas-Peucker), then scale/centre into object units
+  const rdp = (p, eps) => {
+    if (p.length < 3) return p;
+    const [ax, ay] = p[0], [bx, by] = p[p.length - 1];
+    let max = 0, idx = 0;
+    for (let i = 1; i < p.length - 1; i++) {
+      const dd = Math.abs((by - ay) * p[i][0] - (bx - ax) * p[i][1] + bx * ay - by * ax) / (Math.hypot(bx - ax, by - ay) || 1);
+      if (dd > max) { max = dd; idx = i; }
+    }
+    return max > eps ? [...rdp(p.slice(0, idx + 1), eps).slice(0, -1), ...rdp(p.slice(idx), eps)] : [p[0], p[p.length - 1]];
+  };
+  const simple = rdp(pts, 0.7);
+  let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+  for (const [px, py] of simple) { x0 = Math.min(x0, px); x1 = Math.max(x1, px); y0 = Math.min(y0, py); y1 = Math.max(y1, py); }
+  const k = size / Math.max(x1 - x0, y1 - y0), cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+  return new THREE.Path(simple.map(([px, py]) => new THREE.Vector2((px - cx) * k, -(py - cy) * k)));
+}
+
+// 3D versions of the list icons: extruded solids with a rounded edge, small and simple
+function roundedRect(w, h, r) {
+  const p = new THREE.Shape(), x = -w / 2, y = -h / 2;
+  p.moveTo(x + r, y); p.lineTo(x + w - r, y); p.absarc(x + w - r, y + r, r, -Math.PI / 2, 0);
+  p.lineTo(x + w, y + h - r); p.absarc(x + w - r, y + h - r, r, 0, Math.PI / 2);
+  p.lineTo(x + r, y + h); p.absarc(x + r, y + h - r, r, Math.PI / 2, Math.PI);
+  p.lineTo(x, y + r); p.absarc(x + r, y + r, r, Math.PI, Math.PI * 1.5);
+  return p;
+}
+const BUILD = [
+  // Banken: a coin with a raised rim and a raised euro sign on both faces
+  () => {
+    const g = new THREE.Group();
+    g.add(mesh(extrude(new THREE.Shape().absarc(0, 0, 1.0, 0, Math.PI * 2), 0.16, 0.06, 2.1), [cap, rim]));
+    const FACE = 0.14;   // half the coin thickness (depth 0.16 + 2 x bevel 0.06)
+    const ring = new THREE.TorusGeometry(0.8, 0.04, 16, 96);
+    for (const z of [-FACE + 0.01, FACE - 0.01]) { const m = mesh(ring, cap); m.position.z = z; g.add(m); }
+    // the euro arrives once the font is loaded
+    glyphPath('€', 0.9).then(euro => {
+      const geo = extrude(new THREE.Shape(euro.getPoints()), 0.06, 0.02, 1.0);
+      // optical centre: a hair left of the bounding-box centre (tuned by eye on a face-on render)
+      geo.translate(-0.015, 0, 0);
+      const front = mesh(geo, [cap, rim]); front.position.z = FACE + 0.045;
+      const back = mesh(geo, [cap, rim]); back.position.z = -FACE - 0.045; back.rotation.y = Math.PI;   // reads correctly from behind
+      g.add(front, back);
+    });
+    return { g, tilt: 0.18 };
+  },
+  // Verzekeraars: a shield with a raised plus on both faces
+  () => {
+    const s = new THREE.Shape();
+    s.moveTo(0, 1.12);
+    s.bezierCurveTo(0.35, 0.98, 0.68, 0.94, 0.9, 0.94);
+    s.lineTo(0.9, 0.18);
+    s.bezierCurveTo(0.9, -0.48, 0.48, -0.88, 0, -1.12);
+    s.bezierCurveTo(-0.48, -0.88, -0.9, -0.48, -0.9, 0.18);
+    s.lineTo(-0.9, 0.94);
+    s.bezierCurveTo(-0.68, 0.94, -0.35, 0.98, 0, 1.12);
+    const a = 0.17, l = 0.52, cy = 0.06;     // half arm width, half arm length
+    const plusPts = [[-a, l], [a, l], [a, a], [l, a], [l, -a], [a, -a], [a, -l], [-a, -l], [-a, -a], [-l, -a], [-l, a], [-a, a]]
+      .map(([x, y]) => new THREE.Vector2(x, y));
+    const g = new THREE.Group();
+    g.add(mesh(extrude(s, 0.22, 0.06, 2.2), [cap, rim]));
+    const FACE = 0.17;   // half the shield thickness (depth 0.22 + 2 x bevel 0.06)
+    const plusGeo = extrude(new THREE.Shape(plusPts), 0.06, 0.02, 1.1);
+    for (const side of [1, -1]) {
+      const m = mesh(plusGeo, [cap, rim]);
+      m.position.set(0, cy, side * (FACE + 0.045));
+      g.add(m);
+    }
+    return { g, tilt: 0.12 };
+  },
+  // Pensioenfondsen: an hourglass, as in the icon - two plates and a slim glass
+  () => {
+    const g = new THREE.Group();
+    const pts = [new THREE.Vector2(0, -0.86)];
+    for (let i = 0; i <= 40; i++) {
+      const y = -0.86 + (i / 40) * 1.72;
+      pts.push(new THREE.Vector2(0.1 + 0.48 * Math.pow(Math.abs(y) / 0.86, 1.3), y));
+    }
+    pts.push(new THREE.Vector2(0, 0.86));
+    g.add(mesh(new THREE.LatheGeometry(pts, 64), cap));
+    const plate = coin(0.68, 0.14, 0.045);
+    for (const y of [-0.93, 0.93]) { const m = mesh(plate, [cap, rim]); m.position.y = y; g.add(m); }
+    return { g, tilt: 0.22 };
+  },
+  // Crypto: a faceted crystal / token
+  () => {
+    const geo = new THREE.OctahedronGeometry(1.0, 0);
+    geo.scale(0.9, 1.2, 0.9);
+    const g = new THREE.Group();
+    g.add(mesh(geo, capFlat));
+    return { g, tilt: 0.1 };
+  },
+  // Vermogensbeheer: a pie with one slice pulled out, as in the icon
+  () => {
+    const g = new THREE.Group();
+    const slice = (a0, a1) => {
+      const s = new THREE.Shape(); s.moveTo(0, 0); s.absarc(0, 0, 0.92, a0, a1, false); s.lineTo(0, 0);
+      return mesh(extrude(s, 0.18, 0.05, 1.9, false), [cap, rim]);   // keep the shared pie centre
+    };
+    const big = slice(Math.PI / 2 + 0.05, Math.PI * 2 - 0.05);
+    const wedge = slice(0.05, Math.PI / 2 - 0.05);
+    wedge.position.set(0.14, 0.14, 0);   // pulled out along its middle (45 degrees)
+    g.add(big, wedge);
+    g.position.set(-0.06, -0.06, 0);     // re-centre the whole
+    return { g, tilt: 0.12 };
+  },
+  // Financiële dienstverlening: two interlocking links, as in the icon
+  () => {
+    const g = new THREE.Group();
+    const s = roundedRect(1.25, 0.8, 0.4);
+    s.holes.push(roundedRect(0.85, 0.4, 0.2));
+    const geo = extrude(s, 0.16, 0.05, 1.3);
+    const a = mesh(geo, [cap, rim]); a.position.x = -0.36;
+    const b = mesh(geo, [cap, rim]); b.position.x = 0.36; b.rotation.x = Math.PI / 2;
+    g.add(a, b);
+    return { g, tilt: 0.3 };
+  },
+];
+
+// lean group: tilts with the cursor's speed (the lights stay put, so the light
+// also slides over the object while it leans)
+const lean = new THREE.Group();
+follower.add(lean);
+const L = { x: 0, vx: 0, y: 0, vy: 0, z: 0, vz: 0 };
+
+const objects = BUILD.map(build => {
+  const { g, tilt } = build();
+  const spinner = new THREE.Group(); spinner.add(g);
+  const tiltG = new THREE.Group(); tiltG.rotation.set(tilt, 0, -0.08); tiltG.add(spinner);
+  const holder = new THREE.Group(); holder.add(tiltG); holder.visible = false;
+  lean.add(holder);
+  return { holder, spinner, s: 0, v: 0 };
+});
+
+// ---- sizing: camera distance chosen so 1 world unit = sizePx / UNIT pixels ----
+let W = 1, H = 1, wpp = 1;
+function resize() {
+  W = canvas.clientWidth; H = canvas.clientHeight;
+  if (!W || !H) return;
+  renderer.setSize(W, H, false);
+  wpp = UNIT / S.sizePx;                                  // world units per pixel
+  camera.aspect = W / H;
+  camera.position.set(0, 0, (H * wpp / 2) / Math.tan(THREE.MathUtils.degToRad(FOV / 2)));
+  camera.updateProjectionMatrix();
+}
+addEventListener('resize', resize);
+resize();
+
+// ---- interaction ----
+let active = -1;
+const cursor = { x: W / 2, y: H / 2 }, pos = { x: W / 2, y: H / 2 }, prev = { x: W / 2, y: H / 2 };
+const toWorld = (px, py) => [(px - W / 2) * wpp, -(py - H / 2) * wpp];
+section.addEventListener('pointermove', e => {
+  if (e.pointerType !== 'mouse') return;
+  const r = canvas.getBoundingClientRect();
+  cursor.x = e.clientX - r.left + S.offset[0];
+  cursor.y = e.clientY - r.top + S.offset[1];
+});
+rows.forEach((row, i) => row.addEventListener('pointerenter', e => {
+  if (e.pointerType !== 'mouse') return;
+  // nothing visible yet: start right at the cursor instead of sliding in from afar
+  if (objects.every(o => o.s < 0.02)) { pos.x = prev.x = cursor.x; pos.y = prev.y = cursor.y; }
+  active = i;
+}));
+document.querySelector('.sector-list').addEventListener('pointerleave', () => { active = -1; });
+
+// ?lean=0.4 shows a fixed lean, ?sector=2 pins a sector open (for review screenshots)
+const leanFix = parseFloat(params.get('lean'));
+if (params.has('sector')) {
+  active = parseInt(params.get('sector'), 10);
+  const r = rows[active].getBoundingClientRect(), c = canvas.getBoundingClientRect();
+  cursor.x = pos.x = r.left - c.left + r.width * 0.42 + S.offset[0];
+  cursor.y = pos.y = r.top - c.top + r.height / 2 + S.offset[1];
+  objects[active].s = 1;
+}
+
+// ---- loop ----
+let angle = parseFloat(params.get('spin') ?? 0), last = performance.now(), visible = false;
+const spinFrozen = params.has('spin');
+function frame(now) {
+  const dt = Math.min((now - last) / 1000, 0.05);
+  last = now;
+  if (!reduceMotion && !spinFrozen) angle += dt * S.spin;
+
+  const k = 1 - Math.exp(-dt * S.follow);
+  pos.x += (cursor.x - pos.x) * k;
+  pos.y += (cursor.y - pos.y) * k;
+  const [wx, wy] = toWorld(pos.x, pos.y);
+  follower.position.set(wx, wy, 0);
+
+  // lean into the movement: right -> top falls back to the left, down -> top tips away,
+  // plus a little turn; when the cursor stops the spring brings it back upright
+  if (!reduceMotion && dt > 0) {
+    const vx = (pos.x - prev.x) / dt, vy = (pos.y - prev.y) / dt;
+    const c = v => Math.max(-S.leanMax, Math.min(S.leanMax, v * S.leanPerPx));
+    for (const [axis, target] of [['z', c(vx)], ['x', c(vy)], ['y', c(vx) * 0.6]]) {
+      const v = 'v' + axis;
+      L[v] += (target - L[axis]) * S.leanStiffness * dt;
+      L[v] *= Math.exp(-S.leanDamping * dt);
+      L[axis] += L[v] * dt;
+    }
+    lean.rotation.set(L.x, L.y, L.z);
+  }
+  prev.x = pos.x; prev.y = pos.y;
+  if (!isNaN(leanFix)) lean.rotation.set(leanFix * 0.5, leanFix * 0.6, leanFix);
+
+  objects.forEach((o, i) => {
+    const target = i === active ? 1 : 0;
+    if (reduceMotion) o.s = target;
+    else {
+      // spring: grows with a little overshoot, shrinks fast
+      o.v += (target - o.s) * S.stiffness * dt;
+      o.v *= Math.exp(-S.damping * dt);
+      o.s += o.v * dt;
+    }
+    const s = Math.max(o.s, 0);
+    o.holder.visible = s > 0.003;
+    o.holder.scale.setScalar(Math.max(s, 0.0001));
+    o.spinner.rotation.y = angle;   // shared angle: a new object picks up the same rotation
+  });
+
+  renderer.render(scene, camera);
+  if (visible) requestAnimationFrame(frame);
+}
+new IntersectionObserver(([e]) => {
+  const was = visible;
+  visible = e.isIntersecting;
+  if (visible && !was) { last = performance.now(); resize(); requestAnimationFrame(frame); }
+}).observe(section);
+
+</script>
+</body>
+</html>

@@ -1,0 +1,671 @@
+/* CERRIX · ontwerplaag in de huisstijl van cerrix.com (02-11-2026).
+   Ligt bovenop de wireframe-kit en de blok-CSS; wordt alleen geladen in de d-*.html-pagina's (design.py).
+   Waarden komen van de live site (cerrix.webflow.shared.css): navy #040c28 / #050f32, turquoise #50e3c2,
+   Inter 18pt, pilknoppen, donkere banden met gloed. */
+
+@font-face { font-family: "Inter 18 Pt"; font-weight: 400; font-display: swap; src: url(https://cdn.prod.website-files.com/680635202bcf9a66844338c8/6853bafec488ee61eb4d2d8e_Inter18pt-Regular.woff2) format("woff2"); }
+@font-face { font-family: "Inter 18 Pt"; font-weight: 500; font-display: swap; src: url(https://cdn.prod.website-files.com/680635202bcf9a66844338c8/6853bafe8015e4866c4f475f_Inter18pt-Medium.woff2) format("woff2"); }
+@font-face { font-family: "Inter 18 Pt"; font-weight: 600; font-display: swap; src: url(https://cdn.prod.website-files.com/680635202bcf9a66844338c8/6853bafe503a4c0914e09944_Inter18pt-SemiBold.woff2) format("woff2"); }
+@font-face { font-family: "Inter 18 Pt"; font-weight: 700; font-display: swap; src: url(https://cdn.prod.website-files.com/680635202bcf9a66844338c8/6853bafe0bbaf652c5fe224f_Inter18pt-Bold.woff2) format("woff2"); }
+
+:root {
+  /* merk */
+  --ds-navy: #040c28;          /* --swatch--dark-blue */
+  --ds-ink: #050f32;           /* --swatch--dark */
+  --ds-teal: #50e3c2;          /* --swatch--primary */
+  --ds-gray: #d0d2d8;          /* --swatch--light-gray */
+  --ds-band: #0b1a45;          /* kaarten op de donkere band */
+  --ds-band-line: #ffffff1f;
+
+  /* kit-tokens naar de huisstijl */
+  --wf-page: #ffffff;
+  --wf-card: #ffffff;
+  --wf-surface: #f4f6fa;
+  --wf-surface-2: #e8ecf3;
+  --wf-line: #e3e7ef;
+  --wf-line-strong: #c7cddb;
+  --wf-muted: #7a819a;
+  --wf-text-2: #4b5470;
+  --wf-ink: var(--ds-ink);
+  --wf-on-ink: #ffffff;
+  --wf-font: "Inter 18 Pt", Inter, Arial, sans-serif;
+  --wf-radius: 16px;
+}
+
+body.ds { background: #fff; font-size: 15px; }
+.ds .wf-frame { overflow: hidden; }
+
+/* ---------- typografie ---------- */
+.ds .wf-h1, .ds .hp-hero .wf-h1 { font-size: 64px; line-height: 1.08; letter-spacing: -1.64px; font-weight: 600; }
+.ds .wf-h2 { font-size: 44px; line-height: 1.12; letter-spacing: -1px; font-weight: 600; }
+.ds .wf-h3 { font-size: 24px; letter-spacing: -.3px; }
+.ds .wf-lead { font-size: 18px; line-height: 1.55; color: var(--wf-text-2); }
+.ds .wf-eyebrow { font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #0a7560; }
+.ds .wf-small { color: var(--wf-muted); }
+
+/* ---------- knoppen en links ---------- */
+.ds .wf-btn {
+  background: var(--ds-teal); color: var(--ds-ink); border: 1px solid var(--ds-teal); border-radius: 999px;
+  padding: 14px 24px; font-size: 16px; font-weight: 500; letter-spacing: .02em; height: auto; gap: 10px;
+}
+.ds .wf-btn--secondary { background: transparent; color: var(--ds-ink); border-color: var(--ds-ink); }
+.ds .hp-btn-light { background: var(--ds-teal); color: var(--ds-ink); border-color: var(--ds-teal); }
+.ds .cx-link { color: var(--ds-ink); font-weight: 500; }
+.ds .wf-pill { border-radius: 999px; border-color: var(--wf-line-strong); padding: 8px 16px; font-size: 14px; color: var(--ds-ink); }
+.ds .cx-tag { border-color: #0a756066; color: #0a7560; background: #50e3c21a; }
+.ds .cx-pill { border-radius: 999px; }
+
+/* ---------- donkere banden (hero, logo's, AI, slot) ---------- */
+.ds .hp-s1, .ds .hp-s2, .ds .tp-s1, .ds .hp-s5, .ds .hp-end, .ds .cx-header {
+  --wf-ink: #fff; --wf-text-2: #b9bfd0; --wf-muted: #8d94ab; --wf-line: var(--ds-band-line); --wf-line-strong: #ffffff33;
+  color: #fff;
+}
+.ds .cx-header { background: var(--ds-navy); border-bottom: 0; padding-top: 24px; }
+.ds .cx-header .wf-container { padding: 14px 32px; border: 1px solid #ffffff33; border-radius: 12px; background: #ffffff0d; max-width: 1360px; }
+.ds .cx-header .wf-nav a { color: #fff; font-size: 16px; font-weight: 500; }
+.ds .cx-header .wf-nav a .cx-ic, .ds .cx-header .wf-nav a svg { color: #fff; fill: #fff; }
+.ds .cx-header .wf-lang span { color: #fff; }
+.ds .wf-wordmark img { height: 30px; display: block; }
+
+/* hero: navy met de gloed uit de live site */
+.ds .hp-s1, .ds .tp-s1 {
+  background:
+    url(https://cdn.prod.website-files.com/680635202bcf9a66844338c8/681d577fd6731330b9f21f12_Ellipse%2011.avif) 0 0 / contain no-repeat,
+    url(https://cdn.prod.website-files.com/680635202bcf9a66844338c8/681d5674d6731330b9f13ea1_Stars.avif) 100% 0 / 33em no-repeat,
+    url(https://cdn.prod.website-files.com/680635202bcf9a66844338c8/681d5433d6731330b9efb0af_Group%201321316742.avif) 100% -200px / contain no-repeat,
+    var(--ds-navy);
+  padding-top: 96px;
+}
+.ds .hp-badge { background: #ffffff12; border: 1px solid #ffffff26; color: #fff; }
+.ds .hp-team { color: #b9bfd0; }
+.ds .hp-team .cx-ic { color: #b9bfd0; fill: #b9bfd0; }
+.ds .hp-s1 .wf-btn--secondary, .ds .tp-s1 .wf-btn--secondary { color: #fff; border-color: #ffffff59; }
+.ds .hp-facts-inline { flex-basis: 100%; margin: 28px 0 0; }
+.ds .hp-facts-inline div { border-color: #ffffff33; padding: 0 28px; }
+.ds .hp-facts-inline div:first-child { padding-left: 0; border-left: 0; }
+.ds .hp-facts-inline strong { font-size: 22px; }
+.ds .ds-ring { justify-self: end; width: 100%; max-width: 520px; aspect-ratio: 1; display: grid; place-items: center; }
+.ds .ds-ring img { width: 118%; max-width: none; }
+
+/* video in de donkere band, met zachte spotlights ernaast */
+.ds .hp-s1 > .wf-container:last-child { position: relative; }
+.ds .hp-s1 > .wf-container:last-child::before, .ds .hp-s1 > .wf-container:last-child::after {
+  content: ""; position: absolute; z-index: 0; border-radius: 50%; filter: blur(60px); pointer-events: none;
+}
+.ds .hp-s1 > .wf-container:last-child::before { width: 520px; height: 520px; left: -160px; top: 30%; background: radial-gradient(circle, #50e3c24d 0%, #50e3c200 65%); }
+.ds .hp-s1 > .wf-container:last-child::after { width: 640px; height: 640px; right: -220px; top: -10%; background: radial-gradient(circle, #3a6dff59 0%, #3a6dff00 65%); }
+.ds .wf-img.hp-video {
+  position: relative; z-index: 1; margin-top: 72px; border: 1px solid #ffffff24; border-radius: 24px; color: #ffffffb3;
+  background: radial-gradient(60% 80% at 75% 30%, #1c3a8a66 0%, transparent 70%), radial-gradient(50% 60% at 20% 80%, #50e3c222 0%, transparent 70%), linear-gradient(160deg, #0b1a45 0%, #050f32 60%, #040c28 100%);
+}
+.ds .hp-video .cx-ic { color: #fff; fill: #fff; }
+.ds .tp-ruler .hp-video { margin: 0; }
+
+/* logostrip: nog in de donkere band, ronde onderrand daaronder */
+.ds .hp-s2 { background: var(--ds-navy); padding: 72px 0 64px; border-radius: 0 0 36px 36px; }
+.ds .hp-trust { font-size: 18px; font-weight: 500; color: #fff; margin-bottom: 28px; }
+.ds .hp-logos .wf-logo, .ds .ds-logo { background: none; border: 0; height: 48px; padding: 0; }
+.ds .ds-logo img { max-height: 40px; max-width: 120px; object-fit: contain; opacity: .85; }
+.ds .hp-logo-tip > .cx-ic { color: #fff; fill: #fff; }
+.ds .hp-tip, .ds .hp-logo-tip > .cx-ic { display: none; }
+.ds .hp-tip { background: #fff; color: var(--ds-ink); border-radius: 12px; }
+.ds .hp-tip::after { border-top-color: #fff; }
+.ds .hp-tip span { color: #4b5470; }
+
+/* ---------- 3 · sectoren ---------- */
+.ds .hp-s3 { padding-top: 112px; }
+.ds .hp-srows { border-top-color: var(--wf-line); }
+.ds .hp-srow { border-bottom-color: var(--wf-line); border-radius: 0; padding: 32px 16px; }
+.ds .hp-srow.is-hover { background: var(--wf-surface); }
+.ds .hp-srow-ic { color: var(--ds-ink); }
+.ds .hp-srow-title strong { font-size: 44px; letter-spacing: -1.2px; }
+.ds .hp-srow-sub { color: #5b6380; }
+.ds .ds-obj { position: absolute; left: 36%; top: 50%; transform: translateY(-50%); width: 170px; height: 170px; z-index: 2; border: 0; background: none; padding: 0; filter: drop-shadow(0 14px 18px #050f3226); }
+.ds .hp-more { border-color: var(--ds-ink); color: var(--ds-ink); padding: 12px 22px; }
+
+/* ---------- 4 · product ---------- */
+.ds .hp-s4 { background: var(--wf-surface); border-radius: 36px 36px 0 0; }
+.ds .hp-acc { border-radius: 12px; border-color: var(--wf-line); background: #fff; }
+.ds .hp-acc.is-open { border-color: var(--ds-ink); box-shadow: 0 12px 32px #050f3214; }
+.ds .hp-acc-head .cx-ic { color: #0a7560; fill: #0a7560; }
+.ds .hp-usps .cx-ic { color: #0a7560; fill: #0a7560; }
+.ds .ds-shot { display: block; width: 100%; height: auto; border-radius: 24px; box-shadow: 0 30px 70px #050f3226; }
+.ds .hp-sticky .ds-shot { height: 640px; object-fit: cover; object-position: top center; }
+
+/* ---------- 5 · AI: donkere band ---------- */
+.ds .hp-s5 { background: radial-gradient(50% 70% at 85% 10%, #3a6dff33 0%, transparent 70%), radial-gradient(40% 60% at 10% 90%, #50e3c21f 0%, transparent 70%), var(--ds-navy); border-radius: 36px; margin: 0 16px; }
+.ds .hp-s5 .wf-eyebrow { color: var(--ds-teal); }
+.ds .hp-ai-lead { color: #b9bfd0; }
+.ds .hp-tabs { background: #ffffff0d; border-color: #ffffff1f; }
+.ds .hp-tab { color: #b9bfd0; }
+.ds .hp-tab .cx-ic { fill: currentColor; }
+.ds .hp-tab.is-active { background: #fff; color: var(--ds-ink); }
+.ds .hp-cmp--off { border-color: #ffffff33; opacity: .7; color: #b9bfd0; }
+.ds .hp-cmp--off .wf-eyebrow { color: #8d94ab; }
+.ds .hp-cmp--on, .ds .hp-step--ai, .ds .hp-stage { background: var(--ds-band); border-color: #ffffff1f; }
+.ds .hp-msg-q { background: #fff; color: var(--ds-ink); }
+.ds .hp-msg-a { background: #13265c; }
+.ds .hp-rows span { border-color: #ffffff26; color: #c9cfdf; }
+.ds .hp-s5 .hp-bars i { background: #2c4a9a; }
+.ds .hp-s5 .hp-bars i:nth-child(3) { background: var(--ds-teal); }
+.ds .hp-fast { color: var(--ds-teal); }
+.ds .hp-fast .cx-ic { fill: var(--ds-teal); }
+.ds .hp-s5 .hp-ui-label { color: #8d94ab; }
+
+/* ---------- 6 · klantverhaal ---------- */
+.ds .hp-s6 { background: #fff; }
+.ds .hp-case { border-radius: 24px; border-color: var(--wf-line); box-shadow: 0 20px 50px #050f3210; }
+.ds .hp-case .wf-img { border-radius: 16px; }
+.ds .hp-quote { font-size: 28px; letter-spacing: -.4px; }
+.ds .hp-stats strong { color: var(--ds-ink); }
+.ds .hp-case-tabs .wf-logo { border-radius: 12px; }
+.ds .hp-case-tabs .wf-logo.is-active { border-color: var(--ds-ink); }
+.ds .hp-progress i { background: var(--ds-teal); }
+
+/* ---------- 7 · beveiliging ---------- */
+.ds .hp-s7 { background: var(--wf-surface); }
+.ds .hp-sec-grid .wf-feature { border-radius: 20px; border-color: var(--wf-line); }
+.ds .hp-sec-grid .cx-ic { color: #0a7560; fill: #0a7560; }
+
+/* ---------- 8 · events en kennis ---------- */
+.ds .hp-s8 { background: #fff; }
+.ds .hp-event2 { background: var(--ds-navy); border-radius: 20px; }
+.ds .hp-event2 .wf-img { background: linear-gradient(160deg, #13265c, #0b1a45); border: 0; color: #8d94ab; border-radius: 12px; }
+.ds .hp-event2 .wf-btn { background: var(--ds-teal); border-color: var(--ds-teal); color: var(--ds-ink); }
+.ds .hp-acard { border-radius: 20px; border-color: var(--wf-line); }
+.ds .hp-acard .wf-img { border-radius: 0; border-bottom: 0; }
+.ds .hp-acard-tag { background: #fff; color: var(--ds-ink); box-shadow: 0 2px 6px #050f321a; }
+.ds .hp-acard-tag--webinar { background: var(--ds-teal); color: var(--ds-ink); }
+.ds .hp-know-head { border-bottom-color: var(--wf-line); }
+
+/* ---------- 9 · slot + footer ---------- */
+.ds .hp-end { background: var(--ds-navy); border-radius: 36px 36px 0 0; }
+.ds .hp-end-bg { border: 0; padding: 0; width: 620px; height: 620px; top: 0; background: url(assets/ring.png) center / contain no-repeat; opacity: .55; color: transparent; }
+.ds .hp-end-title { letter-spacing: -1.64px; }
+.ds .hp-end-sub { color: #b9bfd0; }
+.ds .hp-foot { border-radius: 24px; }
+.ds .hp-foot strong { color: var(--ds-ink); }
+.ds .hp-foot-brand p, .ds .hp-foot ul { color: #4b5470; }
+.ds .hp-social { background: var(--ds-ink); }
+.ds .hp-certs .wf-logo { border-radius: 12px; }
+.ds .hp-legal { color: #8d94ab; }
+
+/* ---------- placeholders voor beeld dat de klant nog levert ---------- */
+.ds .wf-img { background: var(--wf-surface-2); border: 0; border-radius: 16px; color: var(--wf-muted); }
+.ds .wf-avatar { background: #dfe4ee; }
+.ds .wf-logo { border-radius: 12px; border-color: var(--wf-line); color: var(--wf-muted); }
+
+/* ---------- sector- en regelgevingstemplate ---------- */
+.ds .tp-s1 { padding-bottom: 96px; border-radius: 0 0 36px 36px; }
+.ds .tp-hero .wf-breadcrumb { color: #8d94ab; }
+.ds .tp-hero-logos { border-top-color: #ffffff1f; }
+.ds .tp-hero-logos .wf-logo { background: #ffffff0d; border-color: #ffffff1f; color: #8d94ab; }
+.ds .tp-hero .ds-shot { box-shadow: 0 30px 80px #00000066; }
+.ds .tp-geldt { border-top-color: #ffffff1f; }
+.ds .tp-s1 .wf-pill { color: #fff; border-color: #ffffff40; }
+.ds .tp-proof blockquote { font-size: 24px; letter-spacing: -.3px; }
+.ds .tp-s5 { background: var(--wf-surface); }
+.ds .tp-facts { border-radius: 20px; }
+
+/* tijdlijn + paneel per fase */
+/* Tijdlijn (03-11): lijn en punten navy voor voldoende contrast; turquoise alleen als vinkje/punt ín de navy punt */
+.ds .cx-tl::before { background: var(--wf-line); }
+.ds .cx-tl::after { background: var(--ds-ink); }
+.ds .cx-tl li.is-done .cx-tl-dot { background: var(--ds-ink); border-color: var(--ds-ink); }
+.ds .cx-tl li.is-done .cx-tl-dot svg { fill: var(--ds-teal); color: var(--ds-teal); }
+.ds .cx-tl li.is-active .cx-tl-dot { background: var(--ds-ink); border-color: var(--ds-ink); }
+.ds .cx-tl li.is-active .cx-tl-dot::after { width: 12px; height: 12px; background: var(--ds-teal); }
+.ds .cx-tl li.is-next .cx-tl-dot { border-color: var(--ds-ink); }
+.ds .cx-tl-now { background: var(--ds-ink); }
+/* label en titel groeperen: minder ruimte ertussen, meer ruimte boven het label */
+.ds .cx-tl-dot { margin-bottom: 14px; }
+.ds .cx-tl-label { margin-bottom: -6px; line-height: 1.3; }
+.ds .cx-tl strong { line-height: 1.2; }
+.ds .tp-tl-panel { border-radius: 24px; border-color: var(--wf-line); box-shadow: 0 20px 50px #050f3210; }
+.ds .tp-tl-main .tp-tl-consultant { background: var(--wf-surface); border-radius: 14px; }
+.ds .tp-tl-gain-txt .cx-ic { fill: #0a7560; color: #0a7560; }
+.ds .tp-tl-gain .ds-shot { box-shadow: 0 20px 40px #050f321f; border-radius: 16px; }
+
+.ds .tp-table { border-radius: 20px; overflow: hidden; border-collapse: separate; border-spacing: 0; }
+.ds .tp-table th { border-bottom-color: var(--ds-ink); }
+.ds .tp-mod-ic { color: #0a7560; }
+.ds .tp-topic.is-hover { border-color: var(--ds-ink); }
+.ds .tp-ask { border-radius: 16px; }
+.ds .tp-faq-q { border-bottom-color: var(--wf-line); }
+.ds .tp-faq-list { border-top-color: var(--wf-line); }
+
+/* navigatie-frames: dropdownpanelen in de stijl van de huidige site */
+.ds .cx-dropdown { border-radius: 16px; border-color: var(--wf-line); box-shadow: 0 24px 48px #050f3229; }
+.ds .cx-item.is-active { background: var(--wf-surface); }
+.ds .cx-item .cx-ic { color: #0a7560; fill: #0a7560; }
+.ds .cx-featured { background: var(--wf-surface); }
+
+/* logo's op een lichte ondergrond: donker in plaats van wit */
+.ds .hp-case-tabs .ds-logo { border: 1px solid var(--wf-line); background: #fff; height: auto; padding: 22px 0; display: flex; justify-content: center; }
+.ds .hp-case-tabs .ds-logo.is-active { border-color: var(--ds-ink); }
+.ds .hp-case-tabs .ds-logo img, .ds .ds-logo--light img { filter: brightness(0); opacity: .75; }
+
+/* footerkaart: weer de lichte tokens, ook al ligt hij in de donkere band */
+.ds .hp-foot { --wf-ink: var(--ds-ink); --wf-text-2: #4b5470; --wf-muted: #7a819a; --wf-line: #e3e7ef; --wf-line-strong: #c7cddb; color: var(--ds-ink); }
+
+/* navigatie-frames: de pagina onder het menu is de donkere hero */
+.ds .cx-under { --wf-ink: #fff; --wf-text-2: #b9bfd0; --wf-line: var(--ds-band-line); background: var(--ds-navy); color: #fff; }
+.ds .cx-under .wf-btn--secondary { color: #fff; border-color: #ffffff59; }
+.ds .cx-under .wf-img { background: linear-gradient(160deg, #0b1a45 0%, #050f32 60%, #040c28 100%); border: 1px solid #ffffff24; border-radius: 24px; color: #ffffffb3; }
+.ds .cx-under .wf-img .cx-ic { fill: #fff; }
+.ds .cx-frame { background: var(--ds-navy); }
+
+/* ---- ronde 02-11 (2) ---- */
+/* menu horizontaal gecentreerd tussen logo en knoppen, zoals .navbar12_menu-links (margin auto) */
+.ds .cx-header .wf-nav { margin: 0 auto; gap: 30px; }
+.ds .cx-header .wf-header-actions { margin-left: 0; gap: 24px; }
+/* taalkeuze is een dropdown */
+.ds .ds-lang { display: inline-flex; align-items: center; gap: 4px; color: #fff; font-size: 16px; font-weight: 500; }
+
+/* één donkere band van header t/m logo's: de achtergrond en gloed van de hero lopen door achter de logostrip */
+.ds .ds-band {
+  position: relative;
+  background:
+    radial-gradient(45% 35% at 8% 78%, #50e3c224 0%, transparent 70%),
+    radial-gradient(50% 40% at 95% 70%, #3a6dff30 0%, transparent 70%),
+    url(https://cdn.prod.website-files.com/680635202bcf9a66844338c8/681d577fd6731330b9f21f12_Ellipse%2011.avif) 0 0 / 100% auto no-repeat,
+    url(https://cdn.prod.website-files.com/680635202bcf9a66844338c8/681d5674d6731330b9f13ea1_Stars.avif) 100% 0 / 33em no-repeat,
+    url(https://cdn.prod.website-files.com/680635202bcf9a66844338c8/681d5433d6731330b9efb0af_Group%201321316742.avif) 100% -200px / 100% auto no-repeat,
+    var(--ds-navy);
+  border-radius: 0 0 36px 36px; overflow: hidden;
+}
+.ds .ds-band .cx-header, .ds .ds-band .hp-s1, .ds .ds-band .hp-s2 { background: transparent; }
+.ds .ds-band .hp-s2 { border-radius: 0; }
+
+/* ---- ronde 02-11 (3) ----
+   Uitgangspunt: tekstgroottes en kleuren van cerrix.com aanhouden. Uitzondering: lichtgroen (#50e3c2) als tekst op wit
+   haalt WCAG niet (1,6:1); op licht gebruiken we #0a7560 (5,6:1). #50e3c2 blijft voor knoppen en op navy (12:1). */
+
+/* hero: kerncijfers naast de knoppen, zodat de hero niet te hoog wordt */
+.ds .hp-facts-inline { flex-basis: auto; margin: 0 0 0 12px; }
+.ds .hp-facts-inline div { padding: 0 18px; }
+.ds .hp-facts-inline div:first-child { padding-left: 18px; border-left: 1px solid #ffffff33; }
+
+/* sectorblok: kleine kop zodat de sectoren de nadruk krijgen; intro op de kolom van de omschrijvingen */
+.ds .hp-s3 .wf-section-head { display: grid; grid-template-columns: 48px 1fr 1fr 24px; column-gap: 16px; align-items: end; padding: 0 16px; }
+.ds .hp-s3 .wf-section-head .wf-h2 { grid-column: 1 / 3; font-size: 28px; letter-spacing: -.5px; }
+.ds .hp-s3 .wf-section-head .wf-lead { grid-column: 3 / 5; font-size: 16px; max-width: 46ch; }
+.ds .ds-obj { filter: none; }
+.ds .hp-more { display: flex; width: max-content; margin: 32px auto 0; }
+/* "Of start bij je regelgeving" in een balk over de volle breedte, inhoud gecentreerd */
+.ds .hp-s3 { padding-bottom: 0; }
+.ds .hp-regs { justify-content: center; margin: 56px calc(50% - 720px) 0; padding: 28px 40px; background: var(--wf-surface); border-top: 1px solid var(--wf-line); border-bottom: 1px solid var(--wf-line); }
+.ds .hp-regs .wf-small { font-size: 16px; color: var(--wf-text-2); }
+.ds .hp-s4 { border-radius: 0; }
+
+/* productblok: label Nieuw valt op; knop en link even groot */
+.ds .hp-acc-head .cx-tag { font-size: 12px; font-weight: 600; letter-spacing: .02em; padding: 3px 10px; background: var(--ds-teal); border-color: var(--ds-teal); color: var(--ds-ink); }
+.ds .cx-link { font-size: 16px; }
+.ds .hp-acc-body .wf-row { gap: 24px; align-items: center; }
+.ds .hp-s1 .hp-hero { grid-template-columns: 1.3fr 0.7fr; gap: 40px; }
+.ds .hp-s1 .wf-hero-copy .wf-row { flex-wrap: nowrap; }
+.ds .hp-s1 .ds-ring img { width: 135%; }
+.ds .hp-s3 { padding-bottom: 112px; }
+.ds .hp-acc-body .wf-row { flex-wrap: nowrap; }
+.ds .hp-acc-body .wf-btn { padding: 12px 20px; white-space: nowrap; }
+.ds .hp-acc-body .cx-link { white-space: nowrap; }
+.ds .cx-tag { font-style: normal; }
+
+/* ---- ronde 02-11 (4) ---- */
+/* "Of start bij je regelgeving" als banner, zoals .cta_block_inner op /grc-tooling (afgeronde kaart, zachte achtergrond) */
+.ds .hp-regs {
+  margin: 48px 0 0; padding: 28px 40px; justify-content: center;
+  background: #03103308 url(https://cdn.prod.website-files.com/680635202bcf9a66844338c8/68120600c51e5a96f7c8758d_managebg.avif) center / cover no-repeat;
+  border: 0; border-radius: 24px;
+}
+
+/* sectorrijen: hover-vlak met ronde hoeken. De scheidingslijnen springen 16px in en verdwijnen
+   rond de actieve rij, zodat het afgeronde vlak vrij staat in plaats van tegen een lijn te botsen. */
+.ds .hp-srows { border-top: 0; }
+.ds .hp-srow { grid-template-columns: 48px 1fr 1fr 44px; border-bottom: 0; border-radius: 16px; }
+.ds .hp-srow::after { content: ""; position: absolute; left: 16px; right: 16px; bottom: 0; height: 1px; background: var(--wf-line); }
+.ds .hp-srow.is-hover::after, .ds .hp-srow:has(+ .hp-srow.is-hover)::after { opacity: 0; }
+
+/* icoonknop voor de pijl */
+.ds .ds-iconbtn { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--wf-surface); color: var(--ds-ink); justify-self: end; }
+.ds .ds-iconbtn svg { fill: currentColor; }
+.ds .hp-srow.is-hover .ds-iconbtn { background: var(--ds-navy); color: #fff; }
+.ds .hp-srow.is-hover { background: var(--wf-surface); }
+.ds .hp-srow.is-hover .ds-iconbtn { box-shadow: none; }
+
+/* "Bekijk meer sectoren": donkere knop (.button.is-dark), aantal in een bolletje, plus */
+.ds .hp-more { background: var(--ds-navy); color: #fff; border: 0; padding: 10px 14px 10px 24px; gap: 10px; font-size: 16px; font-weight: 500; letter-spacing: .02em; }
+.ds .hp-more svg { fill: #fff; }
+.ds .hp-more-count { display: grid; place-items: center; min-width: 26px; height: 26px; padding: 0 6px; border-radius: 13px; background: var(--ds-teal); color: var(--ds-ink); font-size: 13px; font-weight: 600; }
+.ds .hp-regs .wf-pill { background: #fff; border-color: #fff; }
+
+/* ---- ronde 02-11 (5) ---- */
+/* icoon: evenveel ruimte links als tussen icoon en tekst (24px), kop/intro op hetzelfde raster */
+.ds .hp-srow { grid-template-columns: 28px 1fr 1fr 44px; column-gap: 24px; padding: 32px 24px; }
+.ds .hp-srow-ic { display: flex; }
+.ds .hp-s3 .wf-section-head { grid-template-columns: 28px 1fr 1fr 44px; column-gap: 24px; padding: 0 24px; }
+.ds .hp-srow::after { left: 24px; right: 24px; }
+/* banner: kopje boven de pillen, zelfde maat en gewicht als "Vertrouwd door 100+ financiële instellingen" (18px, 500) */
+.ds .hp-regs { flex-direction: column; gap: 16px; padding: 32px 40px; }
+.ds .hp-regs .wf-small { font-size: 18px; font-weight: 500; color: var(--ds-ink); }
+.ds .hp-regs .wf-pills { justify-content: center; }
+
+/* ---- ronde 02-11 (6) ---- */
+/* navigatie: maten van cerrix.com (balk 26px van boven, 74px hoog, padding 14px 40px, knop 44px) */
+.ds .cx-header { padding-top: 26px; }
+.ds .cx-header .wf-container { min-height: 0; padding: 14px 40px; }
+.ds .cx-header .wf-nav a { padding: 0; }
+.ds .cx-header .wf-nav a.is-open { box-shadow: none; text-decoration: underline; text-underline-offset: 8px; text-decoration-thickness: 2px; }
+.ds .cx-header .wf-btn { border: 0; padding: 14px 24px; line-height: 1; }
+/* hero: inhoud dichter onder de navigatie */
+.ds .hp-s1 { padding-top: 56px; }
+.ds .tp-s1 { padding-top: 56px; }
+
+/* productblok: open kaart opnieuw vormgegeven */
+.ds .hp-product { grid-template-columns: 480px 1fr; gap: 56px; }
+.ds .hp-accs { gap: 10px; }
+.ds .hp-acc { border-radius: 16px; border: 1px solid var(--wf-line); background: #fff; }
+.ds .hp-acc-head { grid-template-columns: 40px 1fr auto auto; gap: 14px; height: 64px; padding: 0 20px 0 12px; font-size: 16px; color: var(--ds-ink); }
+.ds .ds-tile { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 10px; background: var(--wf-surface); }
+.ds .ds-tile svg { fill: #0a7560; color: #0a7560; }
+.ds .hp-acc-head > svg { fill: var(--wf-muted); }
+.ds .hp-acc .cx-tag, .ds .hp-acc-head .cx-tag { font-size: 13px; line-height: 1.2; padding: 4px 10px; border-radius: 999px; }
+/* open */
+.ds .hp-acc.is-open { padding: 24px; border: 1px solid var(--wf-line); box-shadow: 0 24px 48px #050f3214; }
+.ds .hp-acc.is-open .hp-acc-head { height: auto; padding: 0; font-size: 20px; grid-template-columns: 48px 1fr auto; gap: 16px; }
+.ds .hp-acc.is-open .hp-acc-head strong { font-weight: 600; letter-spacing: -.2px; line-height: 1.3; }
+.ds .hp-acc.is-open .ds-tile { width: 48px; height: 48px; border-radius: 12px; background: #50e3c226; }
+.ds .hp-acc-body { padding: 20px 0 0; gap: 20px; }
+.ds .hp-mod-desc { font-size: 16px; line-height: 1.6; color: var(--wf-text-2); }
+.ds .hp-usps { gap: 12px; font-size: 16px; padding: 20px 0; border-top: 1px solid var(--wf-line); border-bottom: 1px solid var(--wf-line); }
+.ds .hp-usps li { grid-template-columns: 22px 1fr; gap: 12px; line-height: 1.5; }
+.ds .hp-usps .cx-ic { margin-top: 2px; }
+/* knoppen verticaal gestapeld: knop over de volle breedte, link eronder, allebei 16px */
+.ds .hp-acc-body .wf-row { flex-direction: column; align-items: stretch; flex-wrap: nowrap; gap: 14px; }
+.ds .hp-acc-body .wf-btn { justify-content: center; padding: 14px 24px; }
+.ds .hp-acc-body .cx-link { justify-content: center; align-self: center; }
+.ds .hp-acc.is-open .ds-tile svg { width: 24px; height: 24px; }
+
+/* ---- ronde 02-11 (7) ---- */
+/* icoontegel: vol turquoise met donker icoon (11,7:1), geen transparant groen op wit */
+.ds .hp-acc.is-open .ds-tile { background: var(--ds-teal); }
+.ds .hp-acc.is-open .ds-tile svg { fill: var(--ds-ink); color: var(--ds-ink); }
+/* label Nieuw: opvallend oranje buiten het palet, donkere tekst (8:1) */
+.ds .hp-acc .cx-tag, .ds .hp-acc-head .cx-tag { background: #ff8a3d; border-color: #ff8a3d; color: var(--ds-ink); font-weight: 600; }
+/* USP's: vinkje in een bolletje, leest als bullet */
+.ds .hp-usps li { grid-template-columns: 24px 1fr; align-items: start; }
+.ds .hp-usps .cx-ic { box-sizing: content-box; width: 14px; height: 14px; padding: 5px; margin-top: 0; border-radius: 50%; background: var(--ds-teal); fill: var(--ds-ink); color: var(--ds-ink); }
+/* visual niet bijsnijden: het beeld heeft zelf gelijke binnenruimte rondom */
+.ds .hp-sticky .ds-shot { height: auto; object-fit: contain; }
+/* sectie 50/50: lijst en visual even breed, intro op de lijn van de visual */
+.ds .hp-product { grid-template-columns: 1fr 1fr; gap: 56px; }
+.ds .hp-s4 .wf-section-head { display: grid; grid-template-columns: 1fr 1fr; column-gap: 56px; align-items: end; }
+.ds .hp-s4 .wf-section-head .wf-lead { max-width: none; }
+.ds .hp-usps .cx-ic { box-sizing: border-box; width: 14px; height: 14px; padding: 0; background: none; border-radius: 0; }
+.ds .ds-check { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--ds-teal); }
+
+/* ---- ronde 02-11 (8): minder groen in het productblok ---- */
+.ds .ds-check { background: var(--ds-navy); }
+.ds .ds-check svg, .ds .hp-usps .ds-check .cx-ic { fill: #fff; color: #fff; }
+/* ingeklapte items: rustig, donkerblauw icoon op lichtgrijze tegel; alleen de open kaart krijgt turquoise */
+.ds .hp-acc:not(.is-open) .ds-tile svg { fill: var(--ds-ink); color: var(--ds-ink); }
+
+/* ---- ronde 02-11 (9): beveiliging en footer één op één van cerrix.com (live.css, gescoped onder .lv) ---- */
+.ds .hp-s7 { background: #fff; padding: 96px 0; }
+.ds .hp-s9 { padding: 0; background: #fff; }
+.ds .lv { background: transparent; }
+/* footer: zelfde opbouw als live, maar de ring in het achtergrondbeeld is vervangen door onze 3D-ring */
+.ds .lv .footer_component {
+  background:
+    linear-gradient(#03103380, #03103380),
+    url(assets/ring.png) 50% -60px / 620px auto no-repeat,
+    radial-gradient(40% 35% at 6% 30%, #50e3c233 0%, transparent 70%),
+    radial-gradient(45% 40% at 90% 20%, #3a6dff26 0%, transparent 70%),
+    #031033;
+}
+.ds .ds-foot-sub { margin-top: 16px; font-size: 18px; color: #c9cfdf; }
+
+/* AI-blok, kaart "Vandaag, vaak nog": geen transparantie meer (label haalde 3,7:1); eigen kleuren: lijst 10,5:1, label 6,4:1.
+   Het label blijft bovenaan, het lijstje staat verticaal gecentreerd in de resterende ruimte. */
+.ds .hp-cmp--off { opacity: 1; color: #b9bfd0; }
+.ds .hp-cmp--off .wf-eyebrow { color: #8d94ab; }
+.ds .hp-cmp--off ol { margin-block: auto; gap: 18px; font-size: 16px; }
+.ds .hp-cmp--off .cx-ic { fill: #8d94ab; }
+
+/* klantverhaal: gegenereerde foto en portret, logo-tabs met een nette voortgangsbalk (timer) */
+.ds .ds-case-photo { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 16px; display: block; }
+.ds .ds-avatar { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; flex: none; }
+.ds .hp-case-tabs .ds-logo { position: relative; overflow: hidden; border-radius: 12px; }
+.ds .hp-case-tabs .hp-progress { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; margin: 0; background: var(--wf-line); }
+.ds .hp-case-tabs .hp-progress i { height: 100%; width: 40%; background: var(--ds-teal); border-radius: 0 3px 3px 0; }
+/* secundaire knop op licht: navy (.button.is-dark), de site kent geen outline-knop */
+.ds .wf-btn--secondary { background: var(--ds-navy); color: #fff; border-color: var(--ds-navy); }
+.ds .hp-s1 .wf-btn--secondary, .ds .tp-s1 .wf-btn--secondary, .ds .cx-under .wf-btn--secondary { background: transparent; border-color: #ffffff59; }
+.ds .hp-case-tabs .ds-logo img { filter: none; opacity: .8; }
+
+/* ---- ronde 02-11 (10): klantverhaal-layout ----
+   quote bovenaan en groter dan de cijfers; persoon, cijfers en knop onderaan uitgelijnd */
+.ds .hp-case { align-items: stretch; padding: 24px 56px 24px 24px; }
+.ds .hp-case-body { justify-content: flex-start; padding: 32px 0 16px; gap: 28px; }
+.ds .hp-quote { font-size: 34px; line-height: 1.3; letter-spacing: -.6px; font-weight: 500; margin-bottom: auto; }
+.ds .hp-case .wf-person { gap: 14px; align-items: center; }
+.ds .hp-case .wf-person > span { white-space: nowrap; font-size: 16px; color: var(--wf-text-2); }
+.ds .hp-case .wf-person strong { display: block; font-size: 18px; font-weight: 600; color: var(--ds-ink); margin-bottom: 2px; }
+.ds .hp-stats strong { font-size: 28px; }
+.ds .hp-stats span { font-size: 14px; }
+/* alternatief: cijfers direct onder de quote, persoon en knop onderaan */
+.ds.case-alt .hp-quote { margin-bottom: 0; order: 0; }
+.ds.case-alt .hp-stats { order: 1; margin-bottom: auto; padding-top: 24px; border-top: 1px solid var(--wf-line); }
+.ds.case-alt .hp-case .wf-person { order: 2; }
+.ds.case-alt .hp-case-body > .wf-btn { order: 3; }
+.ds.case-alt .hp-stats { align-self: stretch; }
+.ds .hp-case .wf-person > span { flex: 1; min-width: 0; }
+.ds .hp-case .ds-role { display: block; width: 100%; min-width: 380px; white-space: nowrap; }
+
+/* ---- ronde 02-11 (11): klantverhaal ----
+   quote boven, cijfers verticaal gecentreerd (elk de helft), persoon + knop samen onderaan */
+.ds .hp-case-body { align-items: stretch; }
+.ds .hp-quote { margin-bottom: 0; }
+.ds .hp-case .hp-stats { margin: auto 0; display: grid; grid-template-columns: 1fr 1fr; gap: 32px; padding: 28px 0; border-top: 1px solid var(--wf-line); border-bottom: 1px solid var(--wf-line); }
+.ds .hp-case-foot { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.ds .hp-case-foot .wf-btn { flex: none; }
+.ds .hp-case .ds-role { min-width: 0; }
+
+/* ---- ronde 02-11 (12) ---- */
+.ds .hp-case .wf-person > span { line-height: 1.35; }
+.ds .hp-case .wf-person strong { margin-bottom: 0; }
+/* slot-CTA: vast vlak van 600px, inhoud en 3D-ring verticaal gecentreerd */
+.ds .lv .footer_component { padding-top: 0; background: radial-gradient(40% 30% at 6% 20%, #50e3c233 0%, transparent 70%), radial-gradient(45% 30% at 90% 15%, #3a6dff26 0%, transparent 70%), #031033; }
+.ds .ds-foot-cta {
+  height: 600px; display: flex; flex-direction: column; justify-content: center; align-items: center;
+  background: linear-gradient(#03103380, #03103380), url(assets/ring.png) center / 560px auto no-repeat;
+  margin-bottom: 8px;
+}
+.ds .ds-foot-cta .spacer._40 { padding-top: 32px; }
+
+/* ---- ronde 02-11 (13): kennisblok ----
+   één rij van drie kaarten; de webinarkaart is de uitgelichte (navy, zoals de eventkaart eerst), de datum staat als tegel
+   op het beeld, zodat titel en kaarthoogte gelijk blijven aan de artikelkaarten */
+.ds .tp-cards3 { gap: 24px; align-items: stretch; }
+.ds .hp-wcard { background: var(--ds-navy); border-color: var(--ds-navy); color: #fff; }
+.ds .hp-wcard .wf-img { background: linear-gradient(160deg, #13265c, #0b1a45); color: #8d94ab; }
+.ds .hp-wcard .hp-acard-body p { color: #b9bfd0; }
+.ds .hp-wcard .hp-wmeta { color: #b9bfd0; }
+.ds .hp-wcard .hp-wmeta .cx-ic { fill: #b9bfd0; }
+.ds .hp-wcard .cx-link { color: var(--ds-teal); }
+.ds .hp-wcard .cx-link svg { fill: var(--ds-teal); }
+.ds .hp-wdate { border-radius: 12px; background: #fff; color: var(--ds-ink); box-shadow: 0 6px 16px #050f3240; }
+.ds .hp-wdate span { color: #4b5470; }
+.ds .hp-s8 .wf-section-head--bar { margin-bottom: 32px; }
+
+/* ---- ronde 02-11 (14): kaarten in het kennisblok ----
+   duidelijke hiërarchie: meta klein en gedempt, titel groot, omschrijving rustig; ronde pijlknop rechtsonder */
+.ds .hp-acard-body { position: relative; padding: 22px 22px 84px; gap: 10px; }
+.ds .hp-acard-body strong { font-size: 20px; font-weight: 600; line-height: 1.3; letter-spacing: -.2px; }
+.ds .hp-acard-body p { font-size: 15px; line-height: 1.5; }
+.ds .hp-wmeta { font-size: 13px; font-weight: 500; letter-spacing: .02em; }
+.ds .ds-cardbtn { position: absolute; right: 22px; bottom: 22px; width: 44px; height: 44px; background: var(--ds-navy); color: #fff; }
+.ds .ds-cardbtn svg { fill: #fff; }
+.ds .hp-wcard .ds-cardbtn { background: var(--ds-teal); color: var(--ds-ink); }
+.ds .hp-wcard .ds-cardbtn svg { fill: var(--ds-ink); }
+/* label Webinar wit zoals Blog; datumtegel rechtsboven, compacter */
+.ds .hp-acard-tag--webinar { background: #fff; color: var(--ds-ink); }
+.ds .hp-wdate { left: auto; right: 12px; top: 12px; bottom: auto; width: 52px; height: 52px; display: flex; flex-direction: column; justify-content: center; gap: 2px; }
+.ds .hp-wdate strong { font-size: 20px; line-height: 1; }
+.ds .hp-wdate span { font-size: 11px; line-height: 1; }
+
+/* ---- ronde 02-11 (15): kaart-inhoud in leesvolgorde, niets over het beeld ---- */
+.ds .hp-acard-body { padding: 22px; gap: 10px; }
+.ds .ds-ctype { font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: #0a7560; }
+.ds .hp-wcard .ds-ctype { color: var(--ds-teal); }
+.ds .ds-cfoot { margin-top: auto; padding-top: 14px; display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 44px; }
+.ds .ds-cardbtn { position: static; flex: none; }
+.ds .ds-cfoot .hp-wmeta { font-size: 13px; }
+
+/* ---- ronde 03-11: sectorpagina ---- */
+/* hero: klantlogo's zoals de logostrip op de homepage (wit, zonder vlak), links uitgelijnd op de tekstkolom */
+.ds .tp-hero-logos > div { display: flex; align-items: center; gap: 48px; }
+.ds .tp-hero-logos .ds-logo { background: none; border: 0; height: 40px; padding: 0; width: auto; justify-content: flex-start; }
+.ds .tp-hero-logos .ds-logo img { max-height: 40px; max-width: 120px; }
+.ds .tp-hero-logos .wf-small { font-size: 16px; color: #b9bfd0; }
+/* quote onder de hero: zelfde typografie en persoonsregel als het klantverhaal */
+.ds .tp-proof { grid-template-columns: 1fr auto; gap: 64px; padding-top: 8px; padding-bottom: 40px; }
+.ds .tp-proof blockquote { font-size: 28px; line-height: 1.3; letter-spacing: -.5px; font-weight: 500; color: var(--ds-ink); }
+.ds .tp-proof .wf-person { gap: 14px; align-items: center; }
+.ds .tp-proof .wf-person > span { font-size: 16px; line-height: 1.35; color: var(--wf-text-2); white-space: nowrap; }
+.ds .tp-proof .wf-person strong { display: block; font-size: 18px; font-weight: 600; color: var(--ds-ink); }
+.ds .tp-proof .ds-role { display: block; }
+/* regels per sector: gecentreerd zoals "Of start bij je regelgeving", witte pillen onder de titel */
+.ds .tp-regs { flex-direction: column; justify-content: center; text-align: center; gap: 24px; }
+.ds .tp-regs .wf-pills { justify-content: center; }
+.ds .tp-regs .wf-pill { background: #fff; border-color: #fff; }
+/* 03-11 (3): footerkolommen gestapeld; blok eronder volgt direct, zelfde afstand als tussen de kolommen (3rem) */
+.ds .lv .ds-foot-stack { display: flex; flex-direction: column; gap: 3rem; }
+.ds .cx-tl li.is-done .cx-tl-dot svg { width: 18px; height: 18px; }
+
+/* ---- ronde 03-11 (4): tijdlijnpaneel (sector + regelgeving) ---- */
+.ds .tp-tl-panel { padding: 48px; gap: 56px; grid-template-columns: 1fr 1.1fr; }
+.ds .tp-tl-panel::before { border-color: var(--wf-line); background: #fff; }
+.ds .tp-tl-title { font-size: 32px; font-weight: 600; letter-spacing: -.6px; color: var(--ds-ink); margin: -4px 0 0; }
+.ds .tp-tl-main > p { font-size: 17px; line-height: 1.55; color: var(--wf-text-2); }
+.ds .tp-tl-points li .wf-small { font-size: 14px; color: var(--wf-text-2); }
+.ds .tp-tl-points li p { font-size: 17px; font-weight: 500; color: var(--ds-ink); line-height: 1.45; }
+.ds .tp-tl-ic { background: var(--ds-navy); }
+.ds .tp-tl-ic svg { fill: #fff; color: #fff; }
+.ds .tp-tl-main .tp-tl-consultant { margin-top: 24px; }
+.ds .tp-tl-visual .ds-shot { width: 100%; display: block; border-radius: 16px; box-shadow: 0 20px 40px #050f321f; }
+
+/* 03-11: FAQ-kaart, portret 48px en knop op dezelfde x als de tekst */
+.ds .tp-ask { grid-template-columns: 48px 1fr; }
+.ds .tp-ask .wf-btn { grid-column: 2; }
+
+/* 03-11: spraakballon (FAQ "Nog vragen?" + contactregel tijdlijn) */
+.ds .ds-say { display: flex !important; align-items: flex-start; gap: 18px; padding: 0 !important; background: none !important; border-radius: 0 !important; grid-template-columns: none; }
+.ds .ds-say > .ds-avatar { width: 56px; height: 56px; margin-top: 4px; }
+.ds .ds-bubble { position: relative; flex: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 14px; padding: 20px 24px; background: var(--wf-surface); border-radius: 18px; }
+.ds .ds-bubble::before { content: ""; position: absolute; left: -7px; top: 22px; width: 16px; height: 16px; background: var(--wf-surface); transform: rotate(45deg); border-radius: 3px; }
+.ds .ds-bubble > div, .ds .ds-bubble > p { display: flex; flex-direction: column; gap: 4px; margin: 0; }
+.ds .ds-bubble .cx-link { margin-left: 0 !important; flex-basis: auto; }
+.ds .ds-bubble .wf-btn { grid-column: auto; }
+
+/* 03-11: kopje in beide ballonnen gelijk aan "Nog vragen?" (15/700), knop als volwaardige knop */
+.ds .ds-bubble strong { font-size: 15px; font-weight: 700; line-height: 24px; color: var(--ds-ink); }
+.ds .ds-bubble .wf-btn { margin-top: 2px; }
+.ds .ds-bubble p span, .ds .ds-bubble p.wf-small { font-size: 14px; line-height: 1.5; color: var(--wf-text-2); }
+
+/* 03-11: regelgevingshero met logostrip zoals de sectorhero, "Geldt voor" er direct onder */
+.ds .tp-geldt--in-logos { margin-top: 20px; padding-top: 0; border-top: 0; flex-wrap: wrap; }
+.ds .tp-geldt--in-logos .wf-small { font-size: 16px; color: #b9bfd0; margin-right: 6px; }
+/* 03-11: "DORA in het kort" zonder zwarte rand, grijze achtergrond zoals de banner "Of start bij je regelgeving" */
+.ds .tp-facts { background: var(--wf-surface); border: 0; box-shadow: none; }
+.ds .tp-facts-title { border-bottom-color: #fff; }
+.ds .tp-facts dl div { border-left-color: #fff; }
+.ds .tp-hero-logos > .tp-geldt--in-logos { gap: 8px; }
+
+/* 03-11: spraakballon iets donkerder, zelfde tint als de banner "Of start bij je regelgeving" op wit (gemeten #eff0f3) */
+.ds .ds-bubble, .ds .ds-bubble::before { background: #eff0f3; }
+
+/* 03-11: "Geldt voor" als eigen blok: label boven de pillen (zoals het logolabel), scheidingslijn tussen logo's en "Geldt voor" */
+.ds .tp-hero-logos > .tp-geldt--in-logos { display: flex; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 24px; padding-top: 24px; border-top: 1px solid #ffffff1f; }
+.ds .tp-geldt--in-logos .wf-small { flex-basis: 100%; margin: 0 0 6px; }
+
+/* 03-11: kerngegevens zonder titelbalk; scheidingslijnen zichtbaar als navy met lage opacity (waren wit) */
+.ds .tp-facts dl div { border-left-color: rgba(5, 15, 50, .12); padding-top: 24px; }
+
+/* 03-11: EU-sterren in de pil in het EU-geel (#FFCC00), alle pagina's */
+.ds .hp-badge .cx-ic[data-icon="eu_stars"] { fill: #ffcc00; color: #ffcc00; }
+/* 03-11: "Geldt voor" als tags direct onder de intro (regelgeving) */
+.ds .tp-geldt--tags { margin: -4px 0 8px; padding: 0; border: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.ds .tp-geldt--tags .wf-small { font-size: 15px; color: #b9bfd0; margin-right: 4px; }
+.ds .tp-geldt--tags .wf-pill { font-size: 14px; padding: 6px 14px; }
+
+/* ---- 03-11: "Wat DORA van je vraagt" als kaarten (zelfde rand/ronding als de kennis- en artikelkaarten),
+   icoon in een tegel zoals de ingeklapte items bij "Herkenbaar? Zo lost CERRIX het op" ---- */
+.ds .tp-topics { border-top: 0; gap: 16px; grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.ds .tp-topic, .ds .tp-topic + .tp-topic { padding: 24px 22px 28px; border: 1px solid var(--wf-line); border-radius: 20px; background: #fff; gap: 10px; }
+.ds .tp-topic .ds-tile { width: 48px; height: 48px; border-radius: 12px; margin-bottom: 10px; }
+.ds .tp-topic .ds-tile svg { fill: var(--ds-ink); color: var(--ds-ink); }
+.ds .tp-topic strong { font-size: 20px; font-weight: 600; line-height: 1.3; letter-spacing: -.2px; color: var(--ds-ink); }
+.ds .tp-topic > span:not(.tp-topic-ic) { font-size: 15px; line-height: 1.5; color: var(--wf-text-2); }
+/* tablet: vijf kaarten verdelen niet netjes over 2 of 3 kolommen, dus horizontaal scrollen met snap */
+@media (max-width: 1100px) {
+  .ds .tp-topics { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 8px; }
+  .ds .tp-topic { flex: 0 0 260px; scroll-snap-align: start; }
+}
+/* mobiel: onder elkaar, icoon naast de titel zodat de kaarten compact blijven */
+@media (max-width: 640px) {
+  .ds .tp-topics { display: grid; grid-template-columns: 1fr; overflow: visible; }
+  .ds .tp-topic, .ds .tp-topic + .tp-topic { display: grid; grid-template-columns: 48px 1fr; column-gap: 16px; row-gap: 4px; align-items: center; }
+  .ds .tp-topic .ds-tile { grid-row: span 2; align-self: start; margin-bottom: 0; }
+}
+
+/* ---- 03-11: "Van vereiste naar module" — labels boven het vlak, vereiste zoals de kaarten in blok 3, hover alleen op de module ---- */
+.ds .tp-table { border: 0; background: none; border-radius: 0; overflow: visible; border-collapse: separate; border-spacing: 0; }
+.ds .tp-table th { border-bottom: 0; padding: 0 24px 12px; font-size: 13px; font-weight: 600; letter-spacing: .08em; color: var(--wf-text-2); }
+.ds .tp-table td { background: #fff; padding: 20px 24px; border-bottom: 1px solid var(--wf-line); }
+.ds .tp-table tbody tr:first-child td { border-top: 1px solid var(--wf-line); }
+.ds .tp-table tbody td:first-child { border-left: 1px solid var(--wf-line); }
+.ds .tp-table tbody td:last-child { border-right: 1px solid var(--wf-line); }
+.ds .tp-table tbody tr:first-child td:first-child { border-top-left-radius: 20px; }
+.ds .tp-table tbody tr:first-child td:last-child { border-top-right-radius: 20px; }
+.ds .tp-table tbody tr:last-child td:first-child { border-bottom-left-radius: 20px; }
+.ds .tp-table tbody tr:last-child td:last-child { border-bottom-right-radius: 20px; }
+.ds .tp-table tr.is-hover td { background: #fff; }
+.ds .tp-req { display: flex; align-items: center; gap: 16px; }
+.ds .tp-req .ds-tile { width: 48px; height: 48px; border-radius: 12px; flex: none; }
+.ds .tp-req .ds-tile svg { fill: var(--ds-ink); color: var(--ds-ink); }
+.ds .tp-req strong { font-size: 20px; font-weight: 600; line-height: 1.3; letter-spacing: -.2px; color: var(--ds-ink); }
+.ds .tp-table td:nth-child(2) { font-size: 16px; line-height: 1.5; }
+
+/* 03-11: modulekaart met de ronde pijlknop van de sectorrijen (homepage); hover-staat = navy met witte pijl */
+.ds .tp-mod { padding: 12px 12px 12px 14px; }
+.ds .tp-mod .ds-iconbtn { flex: none; }
+.ds .tp-table tr.is-hover .tp-mod .ds-iconbtn { background: var(--ds-navy); color: #fff; }
+/* 03-11: modulekaart zonder icoon — tekst is nu het eerste kind, knop het tweede */
+.ds .tp-mod { padding-left: 20px; }
+.ds .tp-mod > span:first-child { display: flex; flex-direction: column; gap: 2px; margin-right: auto; }
+.ds .tp-mod > .ds-iconbtn { display: grid; flex-direction: initial; gap: 0; margin-right: 0; }
+
+/* 03-11 navigatie: grotere items, hover/actief als afgeronde kaart, kopje + knop in de uitgelichte kaart */
+.ds .cx-panel--sectoren .cx-item strong { font-size: 16px; }
+.ds .cx-panel--sectoren .cx-item strong + span { font-size: 14px; }
+.ds .cx-panel--sectoren .cx-item { height: 64px; }
+.ds .cx-item.is-active { border-radius: 12px; border-bottom-color: transparent; }
+.ds .cx-list > .cx-item:has(+ .cx-item.is-active) { border-bottom-color: transparent; }
+.ds .cx-item .cx-ic[data-icon^="sector_"] { fill: none; }
+.ds .cx-feat-title { font-size: 19px; font-weight: 600; line-height: 1.3; color: var(--ds-ink); letter-spacing: -0.2px; }
+.ds .cx-featured .wf-btn { margin-top: 4px; }
+.ds .ds-feat-photo { padding: 0; overflow: hidden; border: 0; border-radius: 14px; }
+.ds .ds-feat-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* 03-11: dropdown knipt zijn inhoud af (geen hoekjes van de grijze kolom buiten de ronding), ruimte onder de knop */
+.ds .cx-dropdown { overflow: hidden; }
+.ds .cx-featured { padding-bottom: 32px; border-radius: 0 15px 15px 0; }
+.ds .cx-feat-title { font-size: 18px; }
+/* 03-11: menu-items: ruimte links van het icoon = zichtbare ruimte tussen icoon en tekst (16px: icoon 20px in een kolom van 24 + gap 12), in alle dropdowns */
+.ds .cx-item { margin: 0 -16px; padding: 0 16px; column-gap: 12px; }
+.ds .cx-panel--2 { grid-template-columns: 320px 320px; }
+/* 03-11: Diensten-strook onderin Product op lichtgrijs, zoals de uitgelichte kaarten (geen lijn erboven nodig) */
+.ds .cx-col--span { background: var(--wf-surface); border-top-color: transparent; }
+/* Diensten-items op dezelfde x als de twee Product-kolommen erboven (kolom 320 + lijn 1) */
+.ds .cx-col--span .cx-list--row { display: grid; grid-template-columns: 321px 1fr; column-gap: 0; }

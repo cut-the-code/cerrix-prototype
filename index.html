@@ -3,1080 +3,131 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex, nofollow">
-<title>CERRIX — homepage prototype (hero, video, logo's, sectoren)</title>
-<style>
-  @font-face { font-family: "Inter 18 Pt"; font-weight: 400; font-display: swap;
-    src: url(https://cdn.prod.website-files.com/680635202bcf9a66844338c8/6853bafec488ee61eb4d2d8e_Inter18pt-Regular.woff2) format("woff2"); }
-  @font-face { font-family: "Inter 18 Pt"; font-weight: 500; font-display: swap;
-    src: url(https://cdn.prod.website-files.com/680635202bcf9a66844338c8/6853bafe8015e4866c4f475f_Inter18pt-Medium.woff2) format("woff2"); }
-  @font-face { font-family: "Inter 18 Pt"; font-weight: 600; font-display: swap;
-    src: url(https://cdn.prod.website-files.com/680635202bcf9a66844338c8/6853bafe503a4c0914e09944_Inter18pt-SemiBold.woff2) format("woff2"); }
-
-  :root {
-    --swatch--primary: #50e3c2;
-    --swatch--dark: #050f32;
-    --swatch--dark-blue: #040c28;
-    --swatch--light-gray: #d0d2d8;
-    --font: "Inter 18 Pt", Arial, sans-serif;
-  }
-  * { box-sizing: border-box; }
-  body { margin: 0; font-family: var(--font); background: #fff; color: #fff; -webkit-font-smoothing: antialiased; }
-
-  /* ---- hero, rebuilt from cerrix.webflow.shared.css ---- */
-  .section_home_hero-header {
-    position: relative;
-    background-color: var(--swatch--dark-blue);
-    background-image:
-      url(https://cdn.prod.website-files.com/680635202bcf9a66844338c8/681d577fd6731330b9f21f12_Ellipse%2011.avif),
-      url(https://cdn.prod.website-files.com/680635202bcf9a66844338c8/681d5674d6731330b9f13ea1_Stars.avif),
-      url(https://cdn.prod.website-files.com/680635202bcf9a66844338c8/681d5433d6731330b9efb0af_Group%201321316742.avif);
-    background-position: 0 0, 100% 0, 100% -20vh;
-    background-repeat: no-repeat;
-    background-size: contain, 33em, contain;
-    border-bottom-left-radius: 2.25rem; border-bottom-right-radius: 2.25rem;
-    padding: 11rem 0 17rem;
-    overflow: hidden;
-  }
-  /* in 3D mode the static star layer is replaced by animated dust */
-  body.mode-3d .section_home_hero-header {
-    background-image:
-      url(https://cdn.prod.website-files.com/680635202bcf9a66844338c8/681d577fd6731330b9f21f12_Ellipse%2011.avif),
-      url(https://cdn.prod.website-files.com/680635202bcf9a66844338c8/681d5433d6731330b9efb0af_Group%201321316742.avif);
-    background-position: 0 0, 100% -20vh;
-    background-size: contain, contain;
-  }
-  #dust { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; display: none; }
-  body.mode-3d #dust { display: block; }
-
-  .nav {
-    position: absolute; top: 26px; left: 40px; right: 40px; z-index: 5;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 40px; border: 1px solid #fff3; border-radius: .75em;
-    background: #ffffff0d; backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
-  }
-  .nav svg { display: block; }
-  .nav ul { display: flex; gap: 30px; list-style: none; margin: 0; padding: 0; font-size: 16px; font-weight: 500; }
-  .nav ul li::after { content: ""; display: inline-block; width: 6px; height: 6px; margin-left: 10px;
-    border-right: 1.6px solid #fff; border-bottom: 1.6px solid #fff; transform: translateY(-3px) rotate(45deg); }
-  .nav ul li.plain::after { display: none; }
-  .nav .right { display: flex; align-items: center; gap: 30px; font-weight: 500; }
-
-  .container { max-width: 90rem; margin: 0 auto; padding: 0 2.5rem; position: relative; z-index: 1; }
-  .home_hero-header_content {
-    display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
-    align-items: center; margin-top: -42px;
-  }
-  .home_hero_title { font-size: 4rem; font-weight: 600; letter-spacing: -1.64px; line-height: 1.1; margin: 10px 0 0; max-width: 25ch; }
-  .home_hero_text { font-size: 18px; line-height: 1.5; color: var(--swatch--light-gray); margin: 2rem 0 0; }
-  .button {
-    display: inline-block; margin: 3rem 0 0 5px; padding: .875rem 1.5rem; border-radius: 6.25rem;
-    background: var(--swatch--primary); color: var(--swatch--dark); font-size: 1rem; font-weight: 500;
-    letter-spacing: .0225rem; text-decoration: none;
-  }
-  .home_hero-header_image-wrapper { max-width: 547px; width: 100%; aspect-ratio: 1; position: relative; }
-  .home_hero-header_image { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-  /* the 3D canvases bleed 15% past the image frame on every side, so the ring can drift
-     with the cursor without being clipped (the camera compensates, the ring keeps its size) */
-  #donut, #donut-blur { position: absolute; inset: -15%; width: 130%; height: 130%; display: block; pointer-events: none; }
-  .home_hero-header_image { object-fit: contain; }
-  body.mode-3d .home_hero-header_image { display: none; }
-  body:not(.mode-3d) #donut { visibility: hidden; }
-  /* depth of field: the top-left of the ring is slightly out of focus, like the original
-     render. A blurred copy fades in towards the top-left while the sharp canvas fades out
-     (but never fully — the sharp layer keeps 45% at the core, which keeps it subtle). */
-  .home_hero-header_image-wrapper { --depth-blur: 1.8px; }
-  #donut-blur {
-    filter: blur(var(--depth-blur));
-    -webkit-mask-image: radial-gradient(46% 46% at 17% 19%, rgba(0,0,0,.55) 0%, rgba(0,0,0,.55) 20%, transparent 100%);
-            mask-image: radial-gradient(46% 46% at 17% 19%, rgba(0,0,0,.55) 0%, rgba(0,0,0,.55) 20%, transparent 100%);
-  }
-  #donut {
-    -webkit-mask-image: radial-gradient(46% 46% at 17% 19%, rgba(0,0,0,.45) 0%, rgba(0,0,0,.45) 20%, #000 100%);
-            mask-image: radial-gradient(46% 46% at 17% 19%, rgba(0,0,0,.45) 0%, rgba(0,0,0,.45) 20%, #000 100%);
-  }
-  body:not(.mode-3d) #donut-blur { display: none; }
-
-  /* ---- comparison toggle (prototype only) ---- */
-  .compare {
-    position: fixed; right: 20px; bottom: 20px; z-index: 10; display: flex; gap: 4px; padding: 4px;
-    background: #ffffffee; border-radius: 999px; box-shadow: 0 6px 24px #0004; font: 500 13px/1 system-ui, sans-serif;
-  }
-  .compare button { border: 0; background: none; padding: 9px 14px; border-radius: 999px; cursor: pointer; color: #050f32; font: inherit; }
-  .compare button[aria-pressed="true"] { background: #050f32; color: #fff; }
-
-  /* ---- hero content (wireframe blok 1) ---- */
-  .hero-badge {
-    display: inline-flex; align-items: center; gap: 10px; padding: 8px 16px 8px 12px; border-radius: 999px;
-    background: #ffffff12; border: 1px solid #ffffff26; font-size: 14px; font-weight: 500;
-  }
-  .hero-badge svg { width: 20px; height: 20px; }
-  .hero-team { display: flex; align-items: center; gap: 10px; margin-top: 1.25rem; font-size: 14px; color: #b9bdc8; }
-  .hero-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; margin-top: 2.5rem; }
-  .hero-actions .button { margin: 0; }
-  .button.is-outline { background: transparent; color: #fff; border: 1px solid #ffffff59; display: inline-flex; align-items: center; gap: 10px; }
-  .hero-stats { display: flex; margin-left: 14px; }
-  .hero-stats div { padding: 0 20px; border-left: 1px solid #ffffff33; }
-  .hero-stats strong { display: block; font-size: 22px; font-weight: 600; line-height: 1.1; }
-  .hero-stats span { font-size: 13px; color: #b9bdc8; }
-
-  /* ---- the dark hero continues behind the video and the logos; the rounded
-     bottom edge moves to the end of the logo strip ---- */
-  .dark-block {
-    background: var(--swatch--dark-blue); border-bottom-left-radius: 2.25rem; border-bottom-right-radius: 2.25rem;
-    margin-bottom: 3rem; overflow: hidden;   /* clips the ring's scroll parallax and the glows at the rounded edge */
-  }
-  /* the hero no longer clips, so the ring can drift down behind the video while you scroll */
-  .section_home_hero-header { border-radius: 0; padding-bottom: 6rem; overflow: visible; z-index: 1; }
-  .home_hero-header_image-wrapper { will-change: transform; }
-  .section_video { position: relative; z-index: 2; }
-  .section_video .container { position: relative; }
-
-  /* soft spotlights beside the video, drifting slowly for depth */
-  .video-glow { position: absolute; z-index: -1; border-radius: 50%; pointer-events: none; filter: blur(60px); mix-blend-mode: screen; }
-  .video-glow.g1 { width: 520px; height: 520px; left: -140px; top: 18%; background: radial-gradient(circle, #50e3c259 0%, #50e3c200 65%); animation: drift1 14s ease-in-out infinite alternate; }
-  .video-glow.g2 { width: 640px; height: 640px; right: -200px; top: -12%; background: radial-gradient(circle, #3a6dff66 0%, #3a6dff00 65%); animation: drift2 18s ease-in-out infinite alternate; }
-  .video-glow.g3 { width: 420px; height: 420px; right: 6%; bottom: -22%; background: radial-gradient(circle, #8fb0ff40 0%, #8fb0ff00 65%); animation: drift3 11s ease-in-out infinite alternate; }
-  @keyframes drift1 { 0% { transform: translate(0, 0) scale(1); opacity: .8; } 50% { opacity: 1; } 100% { transform: translate(60px, -90px) scale(1.15); opacity: .6; } }
-  @keyframes drift2 { 0% { transform: translate(0, 0) scale(1.1); opacity: .7; } 100% { transform: translate(-80px, 110px) scale(.9); opacity: 1; } }
-  @keyframes drift3 { 0% { transform: translate(0, 0); opacity: .5; } 100% { transform: translate(-120px, -40px); opacity: .9; } }
-  @media (prefers-reduced-motion: reduce) { .video-glow { animation: none; } }
-  .video-frame {
-    position: relative; max-width: 1176px; margin: 0 auto; aspect-ratio: 16 / 9; border-radius: 1.5rem; overflow: hidden;
-    background:
-      radial-gradient(60% 80% at 75% 30%, #1c3a8a66 0%, transparent 70%),
-      radial-gradient(50% 60% at 20% 80%, #50e3c222 0%, transparent 70%),
-      linear-gradient(160deg, #0b1a45 0%, #050f32 60%, #040c28 100%);
-    border: 1px solid #ffffff24; box-shadow: 0 30px 80px #040c2840; display: grid; place-items: center; color: #fff; cursor: pointer;
-  }
-  .video-frame .play {
-    width: 88px; height: 88px; border-radius: 50%; display: grid; place-items: center;
-    background: #ffffff1f; border: 1px solid #ffffff4d; backdrop-filter: blur(6px); transition: transform .3s ease;
-  }
-  .video-frame:hover .play { transform: scale(1.06); }
-  .video-frame .label { position: absolute; left: 32px; bottom: 28px; font-size: 14px; color: #ffffffb3; }
-
-  /* ---- logo strip (wireframe blok 2), logos as on the live marquee ---- */
-  .section_logos { position: relative; z-index: 2; padding: 5rem 0 4.5rem; color: #fff; text-align: center; }
-  .section_logos p { font-size: 18px; font-weight: 500; margin: 0 0 2.25rem; }
-  .marquee { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); }
-  .marquee-track { display: flex; width: max-content; animation: marquee 45s linear infinite; }
-  .marquee:hover .marquee-track { animation-play-state: paused; }
-  .marquee img { height: 40px; width: 118px; object-fit: contain; margin: 0 28px; opacity: .8; }
-  @keyframes marquee { to { transform: translateX(-50%); } }
-
-  /* ---- sectors (wireframe blok 3) ---- */
-  .sectors { position: relative; padding: 4.5rem 0 7rem; color: var(--swatch--dark); }
-  .sectors .inner { max-width: 1176px; margin: 0 auto; position: relative; z-index: 1; }
-  /* same columns as the rows, so the intro starts where the row descriptions start */
-  .sectors-head { display: grid; grid-template-columns: 72px minmax(0, 1.15fr) minmax(0, 1fr) 40px; column-gap: 24px; align-items: end; margin-bottom: 2rem; }
-  .sectors-head h2 { grid-column: 1 / 3; font-size: 1.75rem; font-weight: 600; letter-spacing: -.5px; margin: 0; }
-  .sectors-head p { grid-column: 3 / 5; font-size: 17px; line-height: 1.5; color: #4b5470; margin: 0; max-width: 46ch; }
-  .sector-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid #0310331f; }
-  .sector-row {
-    display: grid; grid-template-columns: 72px minmax(0, 1.15fr) minmax(0, 1fr) 40px; column-gap: 24px; align-items: center;
-    padding: 1.75rem 0; border-bottom: 1px solid #0310331f; cursor: pointer; transition: background .25s ease;
-  }
-  .sector-row:hover { background: #f4f6fa; }
-  .sector-row .icon { padding-left: 12px; color: var(--swatch--dark); }
-  .sector-row .icon svg { width: 28px; height: 28px; display: block; }
-  .sector-row h3 { font-size: 2.5rem; font-weight: 600; letter-spacing: -1.1px; line-height: 1.05; margin: 0; }
-  .sector-row .sub { font-size: 16px; color: #5b6380; margin-top: 8px; }
-  .sector-row .desc { font-size: 17px; line-height: 1.5; margin: 0; max-width: 46ch; }
-  .sector-row .arrow { transition: transform .25s ease; }
-  .sector-row:hover .arrow { transform: translateX(6px); }
-  .sector-row .concept { display: inline-block; margin-left: 8px; font-size: 11px; font-weight: 500; letter-spacing: .04em; text-transform: uppercase; color: #8a91a8; border: 1px dashed #b8bed0; border-radius: 4px; padding: 2px 6px; vertical-align: middle; }
-  .reg-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 1.75rem; font-size: 14px; }
-  .reg-chips span { color: #7a819a; margin-right: 6px; }
-  .reg-chips a { padding: 8px 16px; border: 1px solid #0310332e; border-radius: 999px; color: var(--swatch--dark); text-decoration: none; }
-  .reg-chips a:hover { border-color: var(--swatch--dark); }
-  /* the 3D layer sits above the rows and never catches the mouse */
-  #sector-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; }
-
-  @media (max-width: 991px) {
-    .sectors-head { grid-template-columns: 1fr; row-gap: 12px; }
-    .sectors-head h2, .sectors-head p { grid-column: 1 / -1; }
-    .sector-row { grid-template-columns: 56px 1fr 32px; }
-    .sector-row .desc { grid-column: 2 / 3; margin-top: 12px; }
-    .sector-row h3 { font-size: 2rem; }
-    #sector-canvas { display: none; }
-    .hero-stats { margin: 1rem 0 0; }
-  }
-
-  @media (max-width: 991px) {
-    .nav ul { display: none; }
-    .home_hero-header_content { grid-template-columns: 1fr; gap: 4rem; }
-    .section_home_hero-header { padding-top: 10rem; }
-  }
-</style>
-<script type="importmap">
-{ "imports": {
-  "three": "https://unpkg.com/three@0.170.0/build/three.module.js",
-  "three/addons/": "https://unpkg.com/three@0.170.0/examples/jsm/"
-} }
-</script>
+<title>Homepage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="wireframe.css">
+<link rel="stylesheet" href="cerrix.css">
+<link rel="stylesheet" href="home.css">
+<link rel="stylesheet" href="live.css">
+<link rel="stylesheet" href="design.css">
+<link rel="stylesheet" href="proto.css">
+<script type="importmap">{"imports": {"three": "https://unpkg.com/three@0.170.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.170.0/examples/jsm/"}}</script>
 </head>
-<body class="mode-3d">
-
-<div class="dark-block">
-<header class="section_home_hero-header">
-  <canvas id="dust"></canvas>
-  <nav class="nav">
-    <svg width="108" height="30" viewBox="0 0 108 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M39.0547 4.34389L75.6673 3.10278V5.58499L39.0547 4.34389Z" fill="#50E3C2"/>
-<path d="M83.1133 3.10278L101.73 4.34389L83.1133 5.58499V3.10278Z" fill="#50E3C2"/>
-<path d="M79.3906 0C81.7896 0 83.7343 1.94475 83.7344 4.34375C83.7344 6.7428 81.7897 8.6875 79.3906 8.6875C76.9916 8.68744 75.0469 6.74276 75.0469 4.34375C75.0469 1.94479 76.9917 6.36506e-05 79.3906 0ZM79.3916 2.08496C78.1441 2.08497 77.1329 3.09629 77.1328 4.34375C77.1328 5.59125 78.1441 6.60253 79.3916 6.60254C80.6391 6.60254 81.6504 5.59126 81.6504 4.34375C81.6503 3.09628 80.6391 2.08496 79.3916 2.08496Z" fill="#50E3C2"/>
-<path d="M97.4555 29.7865L91.8519 22.0749L86.3284 29.7865H83.2598L90.2776 20.2071L83.6867 11.1079H86.7287L91.9587 18.2858L107.135 1.10791L100.044 11.1079L93.453 20.127L100.524 29.7865H97.4555Z" fill="url(#paint0_linear_485_3832)"/>
-<path d="M77.4551 11.1079H80.1235V29.7865H77.4551V11.1079Z" fill="#fff"/>
-<path d="M70.5564 29.7865L66.5271 24.0495C66.029 24.0851 65.6377 24.1029 65.353 24.1029H60.7367V29.7865H58.0684V11.1079H65.353C67.7724 11.1079 69.6758 11.6861 71.0634 12.8424C72.4509 13.9987 73.1447 15.5908 73.1447 17.6187C73.1447 19.0597 72.7889 20.2871 72.0773 21.3011C71.3658 22.3151 70.3518 23.0533 69.0354 23.5159L73.4649 29.7865H70.5564ZM65.273 21.8348C66.9629 21.8348 68.2527 21.4701 69.1421 20.7408C70.0316 20.0114 70.4763 18.9707 70.4763 17.6187C70.4763 16.2668 70.0316 15.235 69.1421 14.5234C68.2527 13.7941 66.9629 13.4294 65.273 13.4294H60.7367V21.8348H65.273Z" fill="#fff"/>
-<path d="M51.1677 29.7865L47.1384 24.0495C46.6403 24.0851 46.249 24.1029 45.9644 24.1029H41.3481V29.7865H38.6797V11.1079H45.9644C48.3837 11.1079 50.2871 11.6861 51.6747 12.8424C53.0622 13.9987 53.756 15.5908 53.756 17.6187C53.756 19.0597 53.4002 20.2871 52.6887 21.3011C51.9771 22.3151 50.9631 23.0533 49.6467 23.5159L54.0762 29.7865H51.1677ZM45.8843 21.8348C47.5743 21.8348 48.864 21.4701 49.7534 20.7408C50.6429 20.0114 51.0876 18.9707 51.0876 17.6187C51.0876 16.2668 50.6429 15.235 49.7534 14.5234C48.864 13.7941 47.5743 13.4294 45.8843 13.4294H41.3481V21.8348H45.8843Z" fill="#fff"/>
-<path d="M34.36 27.4651V29.7865H20.8047V11.1079H33.9865V13.4294H23.4731V19.1664H32.8391V21.4345H23.4731V27.4651H34.36Z" fill="#fff"/>
-<path d="M9.87299 30C8.00513 30 6.31516 29.5908 4.80308 28.7725C3.30879 27.9364 2.1347 26.7979 1.28082 25.357C0.42694 23.8983 0 22.2617 0 20.4472C0 18.6327 0.42694 17.005 1.28082 15.5641C2.1347 14.1054 3.31768 12.9668 4.82976 12.1485C6.34184 11.3125 8.03181 10.8944 9.89968 10.8944C11.3584 10.8944 12.6926 11.1435 13.9022 11.6416C15.1119 12.1219 16.1437 12.8423 16.9976 13.8029L15.2631 15.484C13.8578 14.0075 12.1055 13.2693 10.0064 13.2693C8.61886 13.2693 7.36472 13.5806 6.244 14.2032C5.12328 14.8258 4.24272 15.6886 3.60231 16.7915C2.97969 17.8767 2.66838 19.0952 2.66838 20.4472C2.66838 21.7992 2.97969 23.0266 3.60231 24.1296C4.24272 25.2147 5.12328 26.0686 6.244 26.6912C7.36472 27.3138 8.61886 27.6251 10.0064 27.6251C12.0877 27.6251 13.84 26.878 15.2631 25.3837L16.9976 27.0648C16.1437 28.0254 15.103 28.7547 13.8756 29.2528C12.6659 29.7509 11.3317 30 9.87299 30Z" fill="#fff"/>
-<defs>
-<linearGradient id="paint0_linear_485_3832" x1="85.9992" y1="30" x2="105.499" y2="3.5" gradientUnits="userSpaceOnUse">
-<stop stop-color="#fff"/>
-<stop offset="0.463328" stop-color="#fff"/>
-<stop offset="1" stop-color="white"/>
-</linearGradient>
-</defs>
-</svg>
-    <ul><li>Product</li><li>Solutions</li><li>Company</li><li>Resources</li><li class="plain">Contact</li></ul>
-    <div class="right"><span>EN</span><a class="button" style="margin:0" href="#">Book a demo</a></div>
-  </nav>
-
-  <div class="container">
-    <div class="home_hero-header_content">
-      <div>
-        <div class="hero-badge">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><g fill="#f5d34a"><circle cx="20.00" cy="12.00" r="1.3"/><circle cx="18.93" cy="16.00" r="1.3"/><circle cx="16.00" cy="18.93" r="1.3"/><circle cx="12.00" cy="20.00" r="1.3"/><circle cx="8.00" cy="18.93" r="1.3"/><circle cx="5.07" cy="16.00" r="1.3"/><circle cx="4.00" cy="12.00" r="1.3"/><circle cx="5.07" cy="8.00" r="1.3"/><circle cx="8.00" cy="5.07" r="1.3"/><circle cx="12.00" cy="4.00" r="1.3"/><circle cx="16.00" cy="5.07" r="1.3"/><circle cx="18.93" cy="8.00" r="1.3"/></g></svg>
-          Gebouwd voor DNB, AFM en DORA
-        </div>
-        <h1 class="home_hero_title" style="margin-top:1.75rem;max-width:16ch">Van versnipperde GRC naar één bron van waarheid</h1>
-        <p class="home_hero_text" style="max-width:40em">Eén Europees platform voor risk, compliance en audit. Niet aangepast vanuit een Amerikaans pakket, maar gebouwd voor de regels waar jij mee werkt.</p>
-        <div class="hero-team">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.3"/><path d="M3 19c.6-3.2 3-5 6-5s5.4 1.8 6 5M15 14.5c2.6-.3 4.7 1.2 5.3 4.5"/></svg>
-          Met een team dat risk en compliance in de financiële sector van binnenuit kent.
-        </div>
-        <div class="hero-actions">
-          <a class="button" href="#">Plan een demo</a>
-          <a class="button is-outline" href="#video"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z" fill="currentColor"/></svg>Bekijk de video</a>
-          <div class="hero-stats">
-            <div><strong>100+</strong><span>klanten</span></div>
-            <div><strong>20+</strong><span>landen</span></div>
-            <div><strong>10+</strong><span>jaar GRC</span></div>
-          </div>
-        </div>
-      </div>
-      <div class="home_hero-header_image-wrapper">
-        <img class="home_hero-header_image" alt="" src="https://cdn.prod.website-files.com/680635202bcf9a66844338c8/681e5adba5a7614a58e61db8_cer.avif">
-        <canvas id="donut"></canvas>
-        <canvas id="donut-blur"></canvas>
-      </div>
+<body class="ds proto mode-3d">
+<div class="wf-frame" data-frame="Homepage">
+<div class="ds-band"><canvas id="dust"></canvas>
+<header class="wf-header cx-header" data-name="Header">
+  <div class="wf-container">
+    <a class="wf-wordmark" href="index.html"><img src="assets/cerrix-logo-white.svg" alt="CERRIX"></a>
+    <nav class="wf-nav"><a class="has-sub" href="#" data-label="Sectoren">Sectoren<svg class="cx-ic" fill="currentColor" data-icon="expand_more" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18"><path d="M480-358.46 253.85-584.62 296-626.77l184 184 184-184 42.15 42.15L480-358.46Z"/></svg></a><a class="has-sub" href="#" data-label="Regelgeving">Regelgeving<svg class="cx-ic" fill="currentColor" data-icon="expand_more" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18"><path d="M480-358.46 253.85-584.62 296-626.77l184 184 184-184 42.15 42.15L480-358.46Z"/></svg></a><a class="has-sub" href="#" data-label="Product">Product<svg class="cx-ic" fill="currentColor" data-icon="expand_more" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18"><path d="M480-358.46 253.85-584.62 296-626.77l184 184 184-184 42.15 42.15L480-358.46Z"/></svg></a><a class="has-sub" href="#" data-label="Resources">Resources<svg class="cx-ic" fill="currentColor" data-icon="expand_more" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18"><path d="M480-358.46 253.85-584.62 296-626.77l184 184 184-184 42.15 42.15L480-358.46Z"/></svg></a><a class="has-sub" href="#" data-label="Bedrijf">Bedrijf<svg class="cx-ic" fill="currentColor" data-icon="expand_more" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18"><path d="M480-358.46 253.85-584.62 296-626.77l184 184 184-184 42.15 42.15L480-358.46Z"/></svg></a><a class="" href="#" data-label="Contact">Contact</a></nav>
+    <div class="wf-header-actions">
+      <span class="ds-lang">NL<svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18"><path d="M480-358.46 253.85-584.62 296-626.77l184 184 184-184 42.15 42.15L480-358.46Z"/></svg></span>
+      <a class="wf-btn" href="#">Plan een demo</a>
     </div>
   </div>
-</header>
+</header><div class="wf-container cx-dd-wrap proto-dd" data-dd="Sectoren" hidden><div class="cx-dropdown" data-for="Sectoren" data-name="Dropdown Sectoren"><div class="cx-panel cx-panel--feat cx-panel--sectoren"><div class="cx-col"><p class="wf-eyebrow">Sectoren</p><div class="cx-list"><a class="cx-item" href="#"><svg class="cx-ic" fill="currentColor" data-icon="sector_banken" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20"><g fill="none" stroke="currentColor" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="5.5"/></g></svg><span><strong>Banken</strong><span>DORA en third-party risk.</span></span></a><a class="cx-item is-active" href="#"><svg class="cx-ic" fill="currentColor" data-icon="sector_verzekeraars" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20"><g fill="none" stroke="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.2 7.5 9.5 4.3-1.3 7.5-4.9 7.5-9.5V6z"/><path d="M12 9v6M9 12h6"/></g></svg><span><strong>Verzekeraars</strong><span>Solvency II-governance.</span></span></a><a class="cx-item" href="sector-pensioenfondsen.html"><svg class="cx-ic" fill="currentColor" data-icon="sector_pensioenfondsen" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20"><g fill="none" stroke="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M6 3h12M6 21h12M7 3c0 5 5 6 5 9s-5 4-5 9M17 3c0 5-5 6-5 9s5 4 5 9"/></g></svg><span><strong>Pensioenfondsen</strong><span>Grip tijdens de Wtp-transitie.</span></span></a><a class="cx-item" href="#"><svg class="cx-ic" fill="currentColor" data-icon="sector_crypto" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20"><g fill="none" stroke="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M12 2 5 12l7 10 7-10z"/><path d="M5 12l7 3.5 7-3.5M12 2v13.5"/></g></svg><span><strong>Crypto</strong><span>MiCA-vergunning en compliance.</span></span></a><a class="cx-item" href="#"><svg class="cx-ic" fill="currentColor" data-icon="sector_vermogensbeheer" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20"><g fill="none" stroke="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M11 4a8 8 0 1 0 9 9h-9z"/><path d="M14 2.5V10h7.5A7.5 7.5 0 0 0 14 2.5z"/></g></svg><span><strong>Vermogensbeheer</strong><span>AFM-toezicht en MiFID II.</span></span></a><a class="cx-item" href="#"><svg class="cx-ic" fill="currentColor" data-icon="sector_findienst" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20"><g fill="none" stroke="currentColor" stroke="currentColor" stroke-width="1.5"><rect x="2.5" y="8" width="11" height="8" rx="4"/><rect x="10.5" y="8" width="11" height="8" rx="4"/></g></svg><span><strong>Financiële dienstverlening</strong><span>Wft, integriteit en uitbesteding.</span></span></a></div></div><aside class="cx-featured"><div class="wf-img ds-feat-photo" style="--ratio:1/1"><img src="assets/case-team.png" alt=""></div><span class="cx-pill">Klantcase · verzekeraars</span><p class="cx-feat-title">Hoe VGZ risk en compliance versterkt met CERRIX</p><a class="wf-btn wf-btn--secondary" href="#">Lees de case</a></aside></div></div></div>
+<div class="wf-container cx-dd-wrap proto-dd" data-dd="Regelgeving" hidden><div class="cx-dropdown" data-for="Regelgeving" data-name="Dropdown Regelgeving"><div class="cx-panel cx-panel--feat"><div class="cx-col"><p class="wf-eyebrow">Regelgeving</p><div class="cx-list"><a class="cx-item cx-item--plain" href="regelgeving-dora.html"><span><strong>DORA</strong><span>Digitale weerbaarheid in de financiële sector.</span></span></a><a class="cx-item cx-item--plain" href="#"><span><strong>NIS2</strong><span>Cyberbeveiliging voor essentiële diensten.</span></span></a><a class="cx-item cx-item--plain" href="#"><span><strong>Solvency II</strong><span>Governance en risicobeheer bij verzekeraars.</span></span></a><a class="cx-item cx-item--plain" href="#"><span><strong>GDPR</strong><span>Privacy en gegevensbescherming.</span></span></a><a class="cx-item cx-item--plain" href="#"><span><strong>EU AI Act</strong><span>Verantwoord gebruik van AI.</span></span></a><a class="cx-item cx-item--plain" href="#"><span><strong>MiCA</strong><span>Regels voor cryptoaanbieders.</span></span></a></div></div><aside class="cx-featured"><div class="wf-img ds-feat-photo" style="--ratio:1/1"><img src="assets/prod-ruler.png" alt=""></div><span class="cx-pill">Regulatory monitoring</span><p class="cx-feat-title">Mis geen wijziging: Ruler vertaalt nieuwe regels naar je controls</p><a class="wf-btn wf-btn--secondary" href="#">Bekijk Ruler</a></aside></div></div></div>
+<div class="wf-container cx-dd-wrap proto-dd" data-dd="Product" hidden><div class="cx-dropdown" data-for="Product" data-name="Dropdown Product"><div class="cx-panel cx-panel--2"><div class="cx-col"><p class="wf-eyebrow">Product</p><div class="cx-list"><a class="cx-item" href="#"><svg class="cx-ic" fill="currentColor" data-icon="shield" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M480-100.77q-129.77-35.39-214.88-152.77Q180-370.92 180-516v-230.15l300-112.31 300 112.31V-516q0 145.08-85.12 262.46Q609.77-136.16 480-100.77Zm0-63.23q104-33 172-132t68-220v-189l-240-89.62L240-705v189q0 121 68 220t172 132Zm0-315.62Z"/></svg><span><strong>Risico- en controlebeheer</strong><span>Risico's en controls in één register.</span></span></a><a class="cx-item" href="#"><svg class="cx-ic" fill="currentColor" data-icon="verified" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="m352.46-85.39-71.38-120.3-135.54-29.7 13.23-139.53L66.93-480l91.84-105.08-13.23-139.53 135.54-29.7 71.38-120.3L480-820.46l127.54-54.15 71.38 120.3 135.54 29.7-13.23 139.53L893.07-480l-91.84 105.08 13.23 139.53-135.54 29.7-71.38 120.3L480-139.54 352.46-85.39ZM378-162l102-43.23L583.23-162 640-258l110-25.23L740-396l74-84-74-85.23L750-678l-110-24-58-96-102 43.23L376.77-798 320-702l-110 24 10 112.77L146-480l74 84-10 114 110 24 58 96Zm102-318Zm-42 128.15L650.15-564 608-607.38l-170 170-86-84.77L309.85-480 438-351.85Z"/></svg><span><strong>Compliancemanagement</strong><span>Aantoonbaar voldoen, bewijs op één plek.</span></span></a><a class="cx-item" href="#"><svg class="cx-ic" fill="currentColor" data-icon="fact_check" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M172.31-140Q142-140 121-161q-21-21-21-51.31v-535.38Q100-778 121-799q21-21 51.31-21h615.38Q818-820 839-799q21 21 21 51.31v535.38Q860-182 839-161q-21 21-51.31 21H172.31Zm0-60h615.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46v-535.38q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H172.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v535.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85ZM210-290h180v-60H210v60Zm372-84.23L765.77-558 723-600.77l-141 142-57-57L483.23-473 582-374.23ZM210-450h180v-60H210v60Zm0-160h180v-60H210v60Zm-50 410v-560 560Z"/></svg><span><strong>Auditmanagement</strong><span>Audits gepland, bevindingen opgevolgd.</span></span></a><a class="cx-item" href="#"><svg class="cx-ic" fill="currentColor" data-icon="report" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M480-291.54q13.73 0 23.02-9.38 9.29-9.39 9.29-22.93 0-13.53-9.29-22.92-9.29-9.38-23.02-9.38t-23.02 9.38q-9.29 9.39-9.29 22.92 0 13.54 9.29 22.93 9.29 9.38 23.02 9.38Zm-30-139.23h60v-241.54h-60v241.54ZM338.46-140 140-338.28v-283.26L338.28-820h283.26L820-621.72v283.26L621.72-140H338.46ZM364-200h232l164-164v-232L596-760H364L200-596v232l164 164Zm116-280Z"/></svg><span><strong>Incidentmanagement</strong><span>Incidenten gemeld en afgehandeld.</span></span></a><a class="cx-item" href="#"><svg class="cx-ic" fill="currentColor" data-icon="account_tree" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M610-130v-120H450v-400H350v120H90v-300h260v120h260v-120h260v300H610v-120H510v340h100v-120h260v300H610ZM150-770v180-180Zm520 400v180-180Zm0-400v180-180Zm0 180h140v-180H670v180Zm0 400h140v-180H670v180ZM150-590h140v-180H150v180Z"/></svg><span><strong>Procesmanagement</strong><span>Processen gekoppeld aan controls.</span></span></a></div></div><div class="cx-col"><p class="wf-eyebrow">&nbsp;</p><div class="cx-list"><a class="cx-item" href="#"><svg class="cx-ic" fill="currentColor" data-icon="handshake" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M471.54-161.15q5.92 0 12.04-2.77 6.11-2.77 9.65-6.31l319.92-319.92q13.54-13.54 20.39-28.93 6.84-15.38 6.84-32.3 0-17.54-6.84-33.77-6.85-16.24-20.39-29.16l-160-160q-12.92-13.54-28-19.81-15.07-6.26-32.61-6.26-16.92 0-32.5 6.26-15.58 6.27-28.73 19.81l-22.93 22.93 74 74.61q13.46 12.85 19.89 29.31 6.42 16.46 6.42 34.15 0 36.62-24.46 61.08t-61.08 24.46q-17.69 0-34.27-5.85-16.57-5.84-29.42-18.69l-75.77-75.15-173.84 173.84q-4.54 4.54-6.81 10.16-2.27 5.61-2.27 11.54 0 11.07 7.54 18.92 7.54 7.85 18.61 7.85 5.93 0 12.04-2.77 6.12-2.77 9.66-6.31L380-545.61l42.15 42.15-130.77 131.38q-4.53 4.54-6.8 10.16-2.27 5.61-2.27 11.54 0 10.69 7.73 18.42 7.73 7.73 18.42 7.73 5.93 0 12.04-2.77 6.12-2.77 9.65-6.31l136-135.38 42.16 42.15-135.39 136q-4.15 3.54-6.61 9.65-2.46 6.12-2.46 12.04 0 10.7 7.73 18.43t18.42 7.73q5.92 0 11.54-2.27 5.61-2.27 10.15-6.81l136-135.38L589.85-345l-136 136q-4.54 4.54-6.81 10.54-2.27 6-2.27 11.54 0 11.07 8.23 18.42 8.23 7.35 18.54 7.35Zm-.62 59.99q-33.92 0-59.15-23.53-25.23-23.54-26.38-58.62-34-2.31-56.81-24.15-22.81-21.85-24.73-57.39-35.54-2.3-57.46-24.84-21.93-22.54-23.47-56.7-35.69-2.3-58.92-25.88-23.23-23.58-23.23-59.65 0-17.69 6.73-34.66 6.73-16.96 19.58-29.8l216.61-216 117.16 117.15q3.53 4.15 9.26 6.62 5.74 2.46 12.43 2.46 10.92 0 18.84-7.23 7.93-7.23 7.93-18.93 0-6.69-2.46-12.42-2.47-5.73-6.62-9.27L399.92-774.31q-12.92-13.54-28.19-19.81-15.27-6.26-32.81-6.26-16.92 0-32.11 6.26-15.2 6.27-28.73 19.81l-131.39 132q-10.92 10.92-17.88 25.81-6.96 14.88-8.19 30.35-1.24 12.77 1.15 25.27 2.38 12.5 8.38 23.5L86-493.23Q72.46-512.77 65.62-537q-6.85-24.23-5.62-49.15 1.23-27.62 12.46-53.35t31.46-45.96l131-131q22.47-21.85 48.89-32.88 26.42-11.04 55.5-11.04 29.07 0 55.3 11.04 26.24 11.03 48.08 32.88l22.93 22.92 22.92-22.92q22.46-21.85 48.69-32.88 26.23-11.04 55.31-11.04 29.08 0 55.5 11.04 26.42 11.03 48.27 32.88l159 159q21.84 21.85 33.46 49.73 11.61 27.88 11.61 56.96 0 29.08-11.61 55.31-11.62 26.23-33.46 48.07L535.38-128.08q-13.23 13.23-29.8 20.08-16.58 6.84-34.66 6.84Zm-113.61-532.3Z"/></svg><span><strong>Third party management</strong><span>Leveranciers en uitbesteding in beeld.</span></span></a><a class="cx-item" href="#"><svg class="cx-ic" fill="currentColor" data-icon="lock" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M252.31-100q-29.92 0-51.12-21.19Q180-142.39 180-172.31v-375.38q0-29.92 21.19-51.12Q222.39-620 252.31-620H300v-80q0-74.92 52.54-127.46Q405.08-880 480-880q74.92 0 127.46 52.54Q660-774.92 660-700v80h47.69q29.92 0 51.12 21.19Q780-577.61 780-547.69v375.38q0 29.92-21.19 51.12Q737.61-100 707.69-100H252.31Zm0-60h455.38q5.39 0 8.85-3.46t3.46-8.85v-375.38q0-5.39-3.46-8.85t-8.85-3.46H252.31q-5.39 0-8.85 3.46t-3.46 8.85v375.38q0 5.39 3.46 8.85t8.85 3.46Zm277.27-150.42Q550-330.85 550-360t-20.42-49.58Q509.15-430 480-430t-49.58 20.42Q410-389.15 410-360t20.42 49.58Q450.85-290 480-290t49.58-20.42ZM360-620h240v-80q0-50-35-85t-85-35q-50 0-85 35t-35 85v80ZM240-160v-400 400Z"/></svg><span><strong>Privacy en GDPR</strong><span>Verwerkingen en datalekken beheerst.</span></span></a><a class="cx-item" href="#"><svg class="cx-ic" fill="currentColor" data-icon="monitoring" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M130-130v-65.77l60-60V-130h-60Zm160 0v-225.77l60-60V-130h-60Zm160 0v-285.77l60 61V-130h-60Zm160 0v-224.77l60-60V-130h-60Zm160 0v-385.77l60-60V-130h-60ZM130-351.23v-84.54l270-270 160 160 270-270v84.54l-270 270-160-160-270 270Z"/></svg><span><strong>Rapportage en dashboards</strong><span>Realtime inzicht voor het bestuur.</span></span></a><a class="cx-item" href="#"><svg class="cx-ic" fill="currentColor" data-icon="auto_awesome" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M740-616.16 697.69-710l-93.84-42.31 93.84-42.3L740-888.46l42.31 93.85 93.84 42.3L782.31-710 740-616.16Zm0 544.62-42.31-93.85-93.84-42.3L697.69-250 740-343.84 782.31-250l93.84 42.31-93.84 42.3L740-71.54ZM355.38-208.47l-84.61-186.92L83.85-480l186.92-84.61 84.61-186.92L440-564.61 626.92-480 440-395.39l-84.62 186.92Zm0-145.53 40-86 86-40-86-40-40-86-40 86-86 40 86 40 40 86Zm0-126Z"/></svg><span><strong>AI en automatisering</strong><span>AI in elke stap van je GRC-werk.</span></span></a><a class="cx-item" href="#"><svg class="cx-ic" fill="currentColor" data-icon="radar" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M331.86-129.92q-69.37-29.92-120.68-81.21-51.31-51.29-81.25-120.63Q100-401.1 100-479.93q0-78.84 29.92-148.21t81.21-120.68q51.29-51.31 120.63-81.25Q401.1-860 479.93-860q78.84 0 148.21 29.92t120.68 81.21q51.31 51.29 81.25 120.63Q860-558.9 860-480.07q0 78.84-29.92 148.21t-81.21 120.68q-51.29 51.31-120.63 81.25Q558.9-100 480.07-100q-78.84 0-148.21-29.92ZM480-160q58.5 0 110.21-19.42 51.71-19.43 93.48-54.12l-70.84-70.85q-27.47 21-61.48 32.7Q517.36-260 480-260q-91.67 0-155.83-64.14Q260-388.28 260-479.91q0-91.63 64.14-155.86Q388.28-700 479.91-700q91.63 0 155.86 64.17Q700-571.67 700-480q0 37.46-12 71.68-12 34.22-33 61.78l70.85 70.85q34.69-41.77 54.42-93.69Q800-421.31 800-480q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-160q24.55 0 47.43-7.23t42.03-20.54L495-422.23q-3.73 1.48-7.46 1.86-3.73.37-7.46.37-24.62 0-42.35-17.73T420-480q0-24.54 17.73-42.27Q455.46-540 480-540q24.54 0 42.27 17.73Q540-504.54 540-480.08q0 4.45-.37 8.53-.38 4.07-1.86 7.78l73.84 73.85q13.31-19.16 20.85-41.87Q640-454.51 640-480q0-66-47-113t-113-47q-66 0-113 47t-47 113q0 66 47 113t113 47Z"/></svg><span><strong>Regulatory monitoring (Ruler)</strong><span>Ruler signaleert wetswijzigingen.</span></span></a></div></div><div class="cx-col cx-col--span"><p class="wf-eyebrow">Diensten</p><div class="cx-list cx-list--row"><a class="cx-item" href="#"><svg class="cx-ic" fill="currentColor" data-icon="rocket_launch" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="m216.77-535.15 88 37.23q16.31-32.62 34.77-63.04 18.46-30.42 40.69-59.89l-58.69-11.38q-3.08-.77-5.96.19-2.89.96-5.2 3.27l-93.61 93.62Zm135.84 74.92 113.62 113q44.69-18.69 92.69-51.69t91.16-76.16q67.3-67.3 104.11-146.65Q791-701.07 790.61-785q-83.92-.38-163.38 36.42-79.46 36.81-146.77 104.12-43.15 43.15-76.15 91.35-33 48.19-51.7 92.88Zm172.31-129.38q0-29.08 20.31-49.39 20.31-20.31 49.88-20.31 29.58 0 49.89 20.31 20.31 20.31 20.31 49.39 0 29.07-20.31 49.38-20.31 20.31-49.89 20.31-29.57 0-49.88-20.31-20.31-20.31-20.31-49.38Zm15.85 378.84 93.61-93.61q2.31-2.31 3.27-5.2.96-2.88.2-5.96l-11.39-58.69Q597-352 566.58-333.85q-30.43 18.16-63.04 34.47l37.23 88.61Zm304.54-629.15q12.84 115.61-27.35 219.15T685.69-425.15l-3.46 3.46-3.46 3.46 18.07 90.54q3.62 18.07-1.61 35.15t-18.08 29.92L520.31-106.16l-75.16-176.61-156.76-156.77-176.62-75.54 155.85-156.46q12.84-12.84 30.23-18.27 17.38-5.42 35.46-1.8l91.31 18.46q1.92-1.92 3.26-3.46 1.35-1.54 3.27-3.47 92.08-92.07 195.31-132.38t218.85-27.46ZM180.85-317.15q29.23-29.23 71.27-29.35 42.03-.11 71.26 29.12 29.23 29.23 28.93 71.26-.31 42.04-29.54 71.27-22.69 22.69-74.46 38.96-51.77 16.27-132.85 26.04 9.77-81.07 26.23-132.84 16.47-51.77 39.16-74.46Zm42.77 42.53q-10.77 10.77-20.77 37.08t-13.62 53.69q27.39-3.61 53.69-13.5Q269.23-207.23 280-218q12-12 12.62-28.81.61-16.81-11.39-28.81t-28.81-11.5q-16.8.5-28.8 12.5Z"/></svg><span><strong>Implementatie</strong><span>Live met consultants uit je sector.</span></span></a><a class="cx-item" href="#"><svg class="cx-ic" fill="currentColor" data-icon="forum" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M852.31-133.85 710.77-275.39H320q-29.19 0-49.98-20.79-20.79-20.78-20.79-49.98v-24.61h435.39q29.82 0 51.06-21.24 21.24-21.24 21.24-51.07V-720h24.62q29.19 0 49.98 20.79 20.79 20.79 20.79 49.98v515.38Zm-684.62-320.3 56.62-56.62h380.31q5.38 0 8.84-3.46t3.46-8.85v-264.61q0-5.39-3.46-8.85t-8.84-3.46H180q-5.38 0-8.85 3.46-3.46 3.46-3.46 8.85v333.54Zm-60 144.92v-478.46q0-29.83 21.24-51.07Q150.17-860 180-860h424.62q29.82 0 51.06 21.24 21.24 21.24 21.24 51.07v264.61q0 29.83-21.24 51.07-21.24 21.24-51.06 21.24H249.23L107.69-309.23Zm60-213.85V-800v276.92Z"/></svg><span><strong>Support en community</strong><span>Hulp, kennisbank en gebruikersdagen.</span></span></a></div></div></div></div></div>
+<div class="wf-container cx-dd-wrap proto-dd" data-dd="Resources" hidden><div class="cx-dropdown" data-for="Resources" data-name="Dropdown Resources"><div class="cx-panel cx-panel--feat"><div class="cx-col"><p class="wf-eyebrow">Resources</p><div class="cx-list"><a class="cx-item" href="#"><svg class="cx-ic" fill="currentColor" data-icon="article" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M290-290h260v-60H290v60Zm0-160h380v-60H290v60Zm0-160h380v-60H290v60Zm-77.69 470Q182-140 161-161q-21-21-21-51.31v-535.38Q140-778 161-799q21-21 51.31-21h535.38Q778-820 799-799q21 21 21 51.31v535.38Q820-182 799-161q-21 21-51.31 21H212.31Zm0-60h535.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46v-535.38q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H212.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v535.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85ZM200-760v560-560Z"/></svg><span><strong>Blog</strong><span>Inzichten over risk, compliance en audit.</span></span></a><a class="cx-item" href="#"><svg class="cx-ic" fill="currentColor" data-icon="event" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M522.27-266.88q-26.88-26.89-26.88-65.43 0-38.54 26.88-65.42 26.88-26.88 65.42-26.88 38.54 0 65.43 26.88Q680-370.85 680-332.31q0 38.54-26.88 65.43Q626.23-240 587.69-240q-38.54 0-65.42-26.88ZM212.31-100Q182-100 161-121q-21-21-21-51.31v-535.38Q140-738 161-759q21-21 51.31-21h55.38v-84.61h61.54V-780h303.08v-84.61h60V-780h55.38Q778-780 799-759q21 21 21 51.31v535.38Q820-142 799-121q-21 21-51.31 21H212.31Zm0-60h535.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46v-375.38H200v375.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85ZM200-607.69h560v-100q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H212.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v100Zm0 0V-720v112.31Z"/></svg><span><strong>Events en webinars</strong><span>Live meedoen of terugkijken.</span></span></a><a class="cx-item" href="#"><svg class="cx-ic" fill="currentColor" data-icon="description" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M330-250h300v-60H330v60Zm0-160h300v-60H330v60Zm-77.69 310Q222-100 201-121q-21-21-21-51.31v-615.38Q180-818 201-839q21-21 51.31-21H570l210 210v477.69Q780-142 759-121q-21 21-51.31 21H252.31ZM540-620v-180H252.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v615.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85h455.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46V-620H540ZM240-800v180-180V-160v-640Z"/></svg><span><strong>Whitepapers</strong><span>Verdieping om te downloaden.</span></span></a><a class="cx-item" href="#"><svg class="cx-ic" fill="currentColor" data-icon="campaign" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M718.46-450v-60h144.62v60H718.46Zm45.69 269.23-115.69-86.77 36.46-47.84 115.69 86.76-36.46 47.85Zm-80.77-465.38L646.92-694l115.69-86.77 36.47 47.85-115.7 86.77ZM210-220.77v-156.15h-40.77q-29.92 0-51.11-21.2-21.2-21.19-21.2-51.11v-61.54q0-29.92 21.2-51.11 21.19-21.2 51.11-21.2h154.62L503.08-690v420L323.85-376.92H270v156.15h-60Zm233.08-155.84v-206.78l-102.62 60.31H169.23q-4.61 0-8.46 3.85-3.85 3.85-3.85 8.46v61.54q0 4.61 3.85 8.46 3.85 3.85 8.46 3.85h171.23l102.62 60.31Zm115.38 21.38v-249.54q23.54 21.31 37.92 53.69 14.39 32.39 14.39 71.08t-14.39 71.08q-14.38 32.38-37.92 53.69ZM300-480Z"/></svg><span><strong>Nieuws</strong><span>Updates over CERRIX.</span></span></a></div></div><aside class="cx-featured"><div class="wf-img ds-feat-photo" style="--ratio:1/1"><img src="assets/webinar-speakers.png" alt=""></div><span class="cx-pill">Webinar · 12 november</span><p class="cx-feat-title">Risicomanagement en AI: wat werkt nu al in de praktijk?</p><a class="wf-btn wf-btn--secondary" href="#">Meld je aan</a></aside></div></div></div>
+<div class="wf-container cx-dd-wrap proto-dd" data-dd="Bedrijf" hidden><div class="cx-dropdown" data-for="Bedrijf" data-name="Dropdown Bedrijf"><div class="cx-panel cx-panel--1"><div class="cx-col"><p class="wf-eyebrow">Bedrijf</p><div class="cx-list"><a class="cx-item" href="#"><svg class="cx-ic" fill="currentColor" data-icon="apartment" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M130-136.92v-540h160v-160h380v320h160v380H530v-160H430v160H130Zm60-60h100v-100H190v100Zm0-160h100v-100H190v100Zm0-160h100v-100H190v100Zm160 160h100v-100H350v100Zm0-160h100v-100H350v100Zm0-160h100v-100H350v100Zm160 320h100v-100H510v100Zm0-160h100v-100H510v100Zm0-160h100v-100H510v100Zm160 480h100v-100H670v100Zm0-160h100v-100H670v100Z"/></svg><span><strong>Over ons</strong><span>Wie we zijn en waar we voor staan.</span></span></a><a class="cx-item" href="#"><svg class="cx-ic" fill="currentColor" data-icon="diversity_3" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M60.39-172.31v-150q0-29 19.65-49.11 19.65-20.12 47.65-20.89H251q18.08 0 34.35 8.85 16.26 8.85 26.5 24.69 29.76 40.92 73.8 63.69 44.04 22.77 94.35 22.77 50.92 0 95.15-22.77 44.24-22.77 73.39-63.69 11.46-15.84 27.42-24.69 15.96-8.85 33.04-8.85h123.31q28.61.77 48.15 20.89Q900-351.31 900-322.31v150H640v-94.08q-34.23 26.16-74.92 40.12-40.7 13.96-85.08 13.96-43.38 0-84.19-14.08-40.81-14.07-75.43-40.23v94.31H60.39ZM480-327.69q-36.08 0-68.35-16.73-32.26-16.73-54.11-46.2-15.46-22.3-37.69-36.42-22.23-14.11-48.39-17.19 25.46-31.23 88.96-48.5Q423.92-510 480-510t119.58 17.27q63.5 17.27 89.34 48.5-25.54 3.08-48.07 17.19-22.54 14.12-38 36.42-20.85 30.47-53.31 46.7-32.46 16.23-69.54 16.23Zm-308.46-120q-45.38 0-77.69-32.31-32.31-32.31-32.31-77.69 0-46.39 32.31-78.19 32.31-31.81 77.69-31.81 46.38 0 78.19 31.81 31.81 31.8 31.81 78.19 0 45.38-31.81 77.69-31.81 32.31-78.19 32.31Zm616.92 0q-45.38 0-77.69-32.31-32.31-32.31-32.31-77.69 0-46.39 32.31-78.19 32.31-31.81 77.69-31.81 46.38 0 78.19 31.81 31.81 31.8 31.81 78.19 0 45.38-31.81 77.69-31.81 32.31-78.19 32.31ZM480-567.69q-45.38 0-77.69-32.31Q370-632.31 370-677.69q0-46.39 32.31-78.19 32.31-31.81 77.69-31.81 46.38 0 78.19 31.81Q590-724.08 590-677.69q0 45.38-31.81 77.69-31.81 32.31-78.19 32.31Z"/></svg><span><strong>Partners</strong><span>Samen sterker in GRC.</span></span></a><a class="cx-item" href="#"><svg class="cx-ic" fill="currentColor" data-icon="work" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M172.31-140Q142-140 121-161q-21-21-21-51.31v-415.38Q100-658 121-679q21-21 51.31-21H340v-67.69Q340-798 361-819q21-21 51.31-21h135.38Q578-840 599-819q21 21 21 51.31V-700h167.69Q818-700 839-679q21 21 21 51.31v415.38Q860-182 839-161q-21 21-51.31 21H172.31Zm0-60h615.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46v-415.38q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H172.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v415.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85ZM400-700h160v-67.69q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H412.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46V-700ZM160-200v-440 440Z"/></svg><span><strong>Vacatures</strong><span>Kom bij het team.</span></span></a></div></div></div></div></div>
 
-<section class="section_video" id="video">
-  <div class="container">
-    <div class="video-glow g1"></div><div class="video-glow g2"></div><div class="video-glow g3"></div>
-    <div class="video-frame" role="button" aria-label="Speel de merkvideo af">
-      <div class="play"><svg width="28" height="28" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.5l7.5 4.5L3 10.5z" fill="#fff"/></svg></div>
-      <div class="label">Merkvideo CERRIX · 60 tot 90 sec · placeholder</div>
-    </div>
+<section class="hp-sec hp-s1" data-sec="1" data-goal="herkenning" data-name="1 · Hero met video"><div class="wf-container hp-hero">
+  <div class="wf-hero-copy">
+    <div class="hp-badges"><span class="hp-badge"><svg class="cx-ic" fill="currentColor" data-icon="eu_stars" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><polygon points="12.00,0.80 12.69,2.45 14.47,2.60 13.11,3.76 13.53,5.50 12.00,4.57 10.47,5.50 10.89,3.76 9.53,2.60 11.31,2.45"/><polygon points="16.30,1.95 16.99,3.61 18.77,3.75 17.41,4.91 17.83,6.66 16.30,5.72 14.77,6.66 15.19,4.91 13.83,3.75 15.61,3.61"/><polygon points="19.45,5.10 20.14,6.75 21.92,6.90 20.56,8.06 20.98,9.80 19.45,8.87 17.92,9.80 18.34,8.06 16.98,6.90 18.76,6.75"/><polygon points="20.60,9.40 21.29,11.05 23.07,11.20 21.71,12.36 22.13,14.10 20.60,13.17 19.07,14.10 19.49,12.36 18.13,11.20 19.91,11.05"/><polygon points="19.45,13.70 20.14,15.35 21.92,15.50 20.56,16.66 20.98,18.40 19.45,17.47 17.92,18.40 18.34,16.66 16.98,15.50 18.76,15.35"/><polygon points="16.30,16.85 16.99,18.50 18.77,18.64 17.41,19.81 17.83,21.55 16.30,20.62 14.77,21.55 15.19,19.81 13.83,18.64 15.61,18.50"/><polygon points="12.00,18.00 12.69,19.65 14.47,19.80 13.11,20.96 13.53,22.70 12.00,21.77 10.47,22.70 10.89,20.96 9.53,19.80 11.31,19.65"/><polygon points="7.70,16.85 8.39,18.50 10.17,18.64 8.81,19.81 9.23,21.55 7.70,20.62 6.17,21.55 6.59,19.81 5.23,18.64 7.01,18.50"/><polygon points="4.55,13.70 5.24,15.35 7.02,15.50 5.66,16.66 6.08,18.40 4.55,17.47 3.02,18.40 3.44,16.66 2.08,15.50 3.86,15.35"/><polygon points="3.40,9.40 4.09,11.05 5.87,11.20 4.51,12.36 4.93,14.10 3.40,13.17 1.87,14.10 2.29,12.36 0.93,11.20 2.71,11.05"/><polygon points="4.55,5.10 5.24,6.75 7.02,6.90 5.66,8.06 6.08,9.80 4.55,8.87 3.02,9.80 3.44,8.06 2.08,6.90 3.86,6.75"/><polygon points="7.70,1.95 8.39,3.61 10.17,3.75 8.81,4.91 9.23,6.66 7.70,5.72 6.17,6.66 6.59,4.91 5.23,3.75 7.01,3.61"/></svg> Gebouwd voor DNB, AFM en DORA</span></div>
+    <h1 class="wf-h1">Van versnipperde GRC naar één bron van waarheid</h1>
+    <p class="wf-lead">Eén Europees platform voor risk, compliance en audit. Niet aangepast vanuit een Amerikaans pakket, maar gebouwd voor de regels waar jij mee werkt.</p>
+    <p class="hp-team"><svg class="cx-ic" fill="currentColor" data-icon="groups" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18"><path d="M20-248.46v-48.77q0-39.92 41.69-65.58 41.7-25.65 108.7-25.65 11.07 0 22.3.69t22.62 2.69q-11.69 18.7-17.35 38.81-5.65 20.12-5.65 41.27v56.54H20Zm240 0v-55q0-28.09 15.77-51.35 15.77-23.27 45.46-40.57 29.69-17.31 70.16-25.96 40.46-8.66 88.46-8.66 48.92 0 89.38 8.66 40.46 8.65 70.15 25.96 29.7 17.3 45.16 40.57Q700-331.55 700-303.46v55H260Zm507.69 0v-56.42q0-22.57-5.34-42.54-5.35-19.96-16.04-37.66 11.77-2 22.5-2.69t21.19-.69q67 0 108.5 25.35 41.5 25.34 41.5 65.88v48.77H767.69Zm-444.61-60h314.46v-4.23q-6.15-24.23-51.08-40.77Q541.54-370 480-370q-61.54 0-106.46 16.54-44.93 16.54-50.46 40.77v4.23Zm-152.8-118.85q-28.28 0-48.32-20.11t-20.04-48.35q0-28.61 20.12-48.34 20.11-19.73 48.35-19.73 28.61 0 48.53 19.73 19.93 19.73 19.93 48.46 0 27.88-19.72 48.11-19.71 20.23-48.85 20.23Zm619.72 0q-28 0-48.23-20.23-20.23-20.23-20.23-48.11 0-28.73 20.23-48.46t48.3-19.73q28.93 0 48.66 19.73 19.73 19.73 19.73 48.34 0 28.24-19.68 48.35-19.68 20.11-48.78 20.11ZM480.14-460q-43.22 0-73.6-30.29-30.38-30.28-30.38-73.55 0-44.14 30.28-73.99 30.29-29.86 73.56-29.86 44.13 0 73.99 29.82 29.85 29.81 29.85 73.89 0 43.21-29.81 73.6Q524.21-460 480.14-460Zm.05-60q18.35 0 31-12.84 12.66-12.85 12.66-31.2 0-18.34-12.61-31-12.61-12.65-31.24-12.65-18.15 0-31 12.61-12.85 12.6-12.85 31.24 0 18.15 12.85 31Q461.85-520 480.19-520Zm.43 211.54ZM480-563.84Z"/></svg> Met een team dat risk en compliance in de financiële sector van binnenuit kent.</p>
+    <div class="wf-row"><a class="wf-btn" href="#">Plan een demo</a><a class="wf-btn wf-btn--secondary" href="#"><svg class="cx-ic" fill="currentColor" data-icon="play_arrow" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18"><path d="M340-236.16v-487.68L723.07-480 340-236.16ZM400-480Zm0 134 210.77-134L400-614v268Z"/></svg>Bekijk de video</a><div class="hp-facts-inline"><div><strong>100+</strong><span>FSI-klanten</span></div><div><strong>20+</strong><span>landen</span></div><div><strong>10+</strong><span>jaar GRC</span></div></div></div>
+    
   </div>
-</section>
-
-<section class="section_logos">
-  <p>Vertrouwd door 100+ financiële instellingen in Europa</p>
-  <div class="marquee"><div class="marquee-track"><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681dfdfddaaf10d33b3acf25_Menzis.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681dff33aa18f31986597962_VDZ.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681dff5559978c4fef66da07_Nibc.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681dff9559978c4fef670364_BDO.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681dfeecb14ccd0b55e3caf6_Mazars.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681dff1c912d4f5ed5bcb225_Grant.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681dff8084cbb5f6e831884a_Geld.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681e0137aa18f319865addb4_Abn%20Amro.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/685a7994cf7ec89ffc6624bd_Bitvavo.png" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681e0127d96f98816b0d1917_RSM.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681e00e3345d95b351555dfb_CEB.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681e00fa345d95b351556c89_Montae.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/685a79af145a8475eed30b6d_Stichting%20Pensioenfonds.png" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681dfdfddaaf10d33b3acf25_Menzis.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681dff33aa18f31986597962_VDZ.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681dff5559978c4fef66da07_Nibc.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681dff9559978c4fef670364_BDO.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681dfeecb14ccd0b55e3caf6_Mazars.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681dff1c912d4f5ed5bcb225_Grant.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681dff8084cbb5f6e831884a_Geld.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681e0137aa18f319865addb4_Abn%20Amro.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/685a7994cf7ec89ffc6624bd_Bitvavo.png" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681e0127d96f98816b0d1917_RSM.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681e00e3345d95b351555dfb_CEB.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/681e00fa345d95b351556c89_Montae.avif" alt=""><img src="https://cdn.prod.website-files.com/6810004c7303cf46b583ae5a/685a79af145a8475eed30b6d_Stichting%20Pensioenfonds.png" alt=""></div></div>
-</section>
+  <div class="ds-ring proto-ring"><canvas id="donut"></canvas><canvas id="donut-blur"></canvas><img src="assets/ring.png" alt=""></div>
 </div>
-
-<section class="sectors">
-  <canvas id="sector-canvas"></canvas>
-  <div class="container">
-    <div class="inner">
-      <div class="sectors-head">
-        <h2>Gebouwd voor jouw sector</h2>
-        <p>Elke sector heeft zijn eigen toezichthouder, regels en tempo. Kies de jouwe en zie wat CERRIX daar voor je doet.</p>
-      </div>
-      <ul class="sector-list">
-        <li class="sector-row" data-index="0">
-          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="5.5"/></svg></div>
-          <div><h3>Banken</h3><div class="sub">DORA en third-party risk</div></div>
-          <p class="desc">DORA vraagt grip op ICT-risico en uitbesteding. Jij wilt dat zonder extra spreadsheet.</p>
-          <svg class="arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        </li>
-        <li class="sector-row" data-index="1">
-          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.2 7.5 9.5 4.3-1.3 7.5-4.9 7.5-9.5V6z"/><path d="M12 9v6M9 12h6"/></svg></div>
-          <div><h3>Verzekeraars</h3><div class="sub">Solvency II-governance</div></div>
-          <p class="desc">Sleutelfuncties, ORSA en DNB-rapportage uit één bron, in plaats van vier losse lijstjes.</p>
-          <svg class="arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        </li>
-        <li class="sector-row" data-index="2">
-          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M6 3h12M6 21h12M7 3c0 5 5 6 5 9s-5 4-5 9M17 3c0 5-5 6-5 9s5 4 5 9"/></svg></div>
-          <div><h3>Pensioenfondsen</h3><div class="sub">Grip tijdens de Wtp-transitie</div></div>
-          <p class="desc">Het bestuur wil zien waar de risico's zitten. Elk kwartaal, zonder weken voorbereiding.</p>
-          <svg class="arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        </li>
-        <li class="sector-row" data-index="3">
-          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M12 2 5 12l7 10 7-10z"/><path d="M5 12l7 3.5 7-3.5M12 2v13.5"/></svg></div>
-          <div><h3>Crypto</h3><div class="sub">MiCA en DORA <span class="concept">concepttekst</span></div></div>
-          <p class="desc">Een MiCA-vergunning vraagt aantoonbaar beheerste processen. Laat zien dat je controls op orde zijn, ook als je hard groeit.</p>
-          <svg class="arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        </li>
-        <li class="sector-row" data-index="4">
-          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M11 4a8 8 0 1 0 9 9h-9z"/><path d="M14 2.5V10h7.5A7.5 7.5 0 0 0 14 2.5z"/></svg></div>
-          <div><h3>Vermogensbeheer</h3><div class="sub">AFM-toezicht en MiFID II <span class="concept">concepttekst</span></div></div>
-          <p class="desc">Toezichthouder en klanten willen zien dat je beheerst werkt. Leg het bewijs vast terwijl je werkt, niet achteraf.</p>
-          <svg class="arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        </li>
-        <li class="sector-row" data-index="5">
-          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2.5" y="8" width="11" height="8" rx="4"/><rect x="10.5" y="8" width="11" height="8" rx="4"/></svg></div>
-          <div><h3>Financiële dienstverlening</h3><div class="sub">Wft, integriteit en uitbesteding <span class="concept">concepttekst</span></div></div>
-          <p class="desc">Van SIRA tot uitbestedingsregister: alle verplichtingen op één plek, passend bij de omvang van je organisatie.</p>
-          <svg class="arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        </li>
-      </ul>
-      <div class="reg-chips"><span>Of start bij je regelgeving</span>
-        <a href="#">DORA</a><a href="#">NIS2</a><a href="#">Solvency II</a><a href="#">GDPR</a><a href="#">EU AI Act</a><a href="#">MiCA</a><a href="#">Alle regelgeving →</a>
-      </div>
+<div class="wf-container">
+  <div class="wf-img hp-video" style="--ratio:21/9"><div class="cx-video"><svg class="cx-ic" fill="currentColor" data-icon="play_circle" xmlns="http://www.w3.org/2000/svg" height="56" viewBox="0 -960 960 960" width="56"><path d="M390-318.46 641.54-480 390-641.54v323.08ZM480.07-100q-78.84 0-148.21-29.92t-120.68-81.21q-51.31-51.29-81.25-120.63Q100-401.1 100-479.93q0-78.84 29.92-148.21t81.21-120.68q51.29-51.31 120.63-81.25Q401.1-860 479.93-860q78.84 0 148.21 29.92t120.68 81.21q51.31 51.29 81.25 120.63Q860-558.9 860-480.07q0 78.84-29.92 148.21t-81.21 120.68q-51.29 51.31-120.63 81.25Q558.9-100 480.07-100Zm-.07-60q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></svg><span>Video — merkvideo CERRIX, 60 tot 90 sec<br>Tot de video klaar is: stilstaand beeld met playknop</span></div></div>
+</div></section>
+<section class="hp-sec hp-s2" data-sec="2" data-goal="herkenning" data-name="2 · Logostrip"><div class="wf-container">
+  <p class="hp-trust">Vertrouwd door 100+ financiële instellingen in Europa</p>
+  <div class="hp-logos"><a class="wf-logo ds-logo" href="#"><img src="assets/logo-menzis.png" alt="Menzis"></a><a class="wf-logo ds-logo" href="#"><img src="assets/logo-vgz.png" alt="VGZ"></a><a class="wf-logo ds-logo" href="#"><img src="assets/logo-nibc.png" alt="NIBC"></a><a class="wf-logo ds-logo" href="#"><img src="assets/logo-bdo.png" alt="BDO"></a><a class="wf-logo ds-logo" href="#"><img src="assets/logo-mazars.png" alt="Mazars"></a><a class="wf-logo ds-logo hp-logo-tip" href="#"><img src="assets/logo-grant-thornton.png" alt="Grant Thornton"><span class="hp-tip"><strong>Grant Thornton</strong><span>[Resultaat in één zin, bijv. kwaliteitsbeheer volgens ISQM 1 in één omgeving]</span><em>Bekijk de case <svg class="cx-ic" fill="currentColor" data-icon="arrow_forward" xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 -960 960 960" width="16"><path d="M665.08-450H180v-60h485.08L437.23-737.85 480-780l300 300-300 300-42.77-42.15L665.08-450Z"/></svg></em></span><svg class="cx-ic" fill="currentColor" data-icon="touch_app" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M432.85-100q-30.31 0-57.31-12.77-27-12.77-45.15-36.69L126.62-413.39l14.77-15.76q15-16 35.88-19.23 20.88-3.24 39.11 7.92l97.47 52.31v-316.46q0-12.75 8.63-21.38 8.62-8.62 21.38-8.62t21.68 8.62q8.92 8.63 8.92 21.38v422.38l-120.08-65.39L379.15-185q9.85 12.38 24 18.69 14.16 6.31 29.7 6.31h196.76q37.62 0 64.01-26.19Q720-212.39 720-250v-150.77q0-20.6-13.93-34.53-13.94-13.93-34.53-13.93H469.85v-60h201.69q45.19 0 76.82 31.63Q780-445.96 780-400.77v150.74q0 62.18-44.18 106.11Q691.65-100 629.61-100H432.85ZM188.16-614.61q-11.85-20.08-18.08-42.94-6.23-22.86-6.23-47.06 0-74.93 52.54-127.46 52.53-52.54 127.46-52.54 74.92 0 127.46 52.54 52.53 52.53 52.53 127.41 0 24.35-6.23 47.16-6.23 22.81-18.07 42.89l-51.69-30q8-14 12-28.5t4-31.5q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 17 4 31.5t12 28.5l-51.69 30Zm299.22 280Z"/></svg></a><a class="wf-logo ds-logo" href="#"><img src="assets/logo-geldmaat.png" alt="Geldmaat"></a></div>
+</div></section>
+</div>
+<section class="hp-sec hp-s3" data-sec="3" data-goal="herkenning" data-name="3 · Voor wie"><div class="wf-container">
+  <div class="wf-section-head"><h2 class="wf-h2">Gebouwd voor jouw sector</h2><p class="wf-lead">Elke sector heeft zijn eigen toezichthouder, regels en tempo. Kies de jouwe en zie wat CERRIX daar voor je doet.</p></div>
+  <canvas id="sector-canvas"></canvas><div class="hp-srows"><a class="hp-srow" href="#"><span class="hp-srow-ic"><svg class="cx-ic" fill="currentColor" data-icon="sector_banken" xmlns="http://www.w3.org/2000/svg" height="28" viewBox="0 0 24 24" width="28"><g fill="none" stroke="currentColor" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="5.5"/></g></svg></span>
+  <span class="hp-srow-title"><strong>Banken</strong><span class="hp-srow-sub">DORA en third-party risk</span></span>
+  <span class="hp-srow-pain">DORA vraagt grip op ICT-risico en uitbesteding. Jij wilt dat zonder extra spreadsheet.</span><span class="ds-iconbtn"><svg class="cx-ic" fill="currentColor" data-icon="arrow_forward" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M665.08-450H180v-60h485.08L437.23-737.85 480-780l300 300-300 300-42.77-42.15L665.08-450Z"/></svg></span>
+  </a><a class="hp-srow" href="#"><span class="hp-srow-ic"><svg class="cx-ic" fill="currentColor" data-icon="sector_verzekeraars" xmlns="http://www.w3.org/2000/svg" height="28" viewBox="0 0 24 24" width="28"><g fill="none" stroke="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.2 7.5 9.5 4.3-1.3 7.5-4.9 7.5-9.5V6z"/><path d="M12 9v6M9 12h6"/></g></svg></span>
+  <span class="hp-srow-title"><strong>Verzekeraars</strong><span class="hp-srow-sub">Solvency II-governance</span></span>
+  <span class="hp-srow-pain">Sleutelfuncties, ORSA en DNB-rapportage uit één bron, in plaats van vier losse lijstjes.</span><span class="ds-iconbtn"><svg class="cx-ic" fill="currentColor" data-icon="arrow_forward" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M665.08-450H180v-60h485.08L437.23-737.85 480-780l300 300-300 300-42.77-42.15L665.08-450Z"/></svg></span>
+  </a><a class="hp-srow" href="sector-pensioenfondsen.html"><span class="hp-srow-ic"><svg class="cx-ic" fill="currentColor" data-icon="sector_pensioenfondsen" xmlns="http://www.w3.org/2000/svg" height="28" viewBox="0 0 24 24" width="28"><g fill="none" stroke="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M6 3h12M6 21h12M7 3c0 5 5 6 5 9s-5 4-5 9M17 3c0 5-5 6-5 9s5 4 5 9"/></g></svg></span>
+  <span class="hp-srow-title"><strong>Pensioenfondsen</strong><span class="hp-srow-sub">Grip tijdens de Wtp-transitie</span></span>
+  <span class="hp-srow-pain">Het bestuur wil zien waar de risico's zitten. Elk kwartaal, zonder weken voorbereiding.</span><span class="ds-iconbtn"><svg class="cx-ic" fill="currentColor" data-icon="arrow_forward" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M665.08-450H180v-60h485.08L437.23-737.85 480-780l300 300-300 300-42.77-42.15L665.08-450Z"/></svg></span>
+  </a><a class="hp-srow proto-more" href="#"><span class="hp-srow-ic"><svg class="cx-ic" fill="currentColor" data-icon="sector_crypto" xmlns="http://www.w3.org/2000/svg" height="28" viewBox="0 0 24 24" width="28"><g fill="none" stroke="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M12 2 5 12l7 10 7-10z"/><path d="M5 12l7 3.5 7-3.5M12 2v13.5"/></g></svg></span>
+  <span class="hp-srow-title"><strong>Crypto</strong><span class="hp-srow-sub">MiCA en DORA <em class="cx-tag">Concepttekst</em></span></span>
+  <span class="hp-srow-pain">Een MiCA-vergunning vraagt aantoonbaar beheerste processen. Laat zien dat je controls op orde zijn, ook als je hard groeit.</span><span class="ds-iconbtn"><svg class="cx-ic" fill="currentColor" data-icon="arrow_forward" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M665.08-450H180v-60h485.08L437.23-737.85 480-780l300 300-300 300-42.77-42.15L665.08-450Z"/></svg></span>
+  </a><a class="hp-srow proto-more" href="#"><span class="hp-srow-ic"><svg class="cx-ic" fill="currentColor" data-icon="sector_vermogensbeheer" xmlns="http://www.w3.org/2000/svg" height="28" viewBox="0 0 24 24" width="28"><g fill="none" stroke="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M11 4a8 8 0 1 0 9 9h-9z"/><path d="M14 2.5V10h7.5A7.5 7.5 0 0 0 14 2.5z"/></g></svg></span>
+  <span class="hp-srow-title"><strong>Vermogensbeheer</strong><span class="hp-srow-sub">AFM-toezicht en MiFID II <em class="cx-tag">Concepttekst</em></span></span>
+  <span class="hp-srow-pain">Toezichthouder en klanten willen zien dat je beheerst werkt. Leg het bewijs vast terwijl je werkt, niet achteraf.</span><span class="ds-iconbtn"><svg class="cx-ic" fill="currentColor" data-icon="arrow_forward" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M665.08-450H180v-60h485.08L437.23-737.85 480-780l300 300-300 300-42.77-42.15L665.08-450Z"/></svg></span>
+  </a><a class="hp-srow proto-more" href="#"><span class="hp-srow-ic"><svg class="cx-ic" fill="currentColor" data-icon="sector_findienst" xmlns="http://www.w3.org/2000/svg" height="28" viewBox="0 0 24 24" width="28"><g fill="none" stroke="currentColor" stroke="currentColor" stroke-width="1.5"><rect x="2.5" y="8" width="11" height="8" rx="4"/><rect x="10.5" y="8" width="11" height="8" rx="4"/></g></svg></span>
+  <span class="hp-srow-title"><strong>Financiële dienstverlening</strong><span class="hp-srow-sub">Wft, integriteit en uitbesteding <em class="cx-tag">Concepttekst</em></span></span>
+  <span class="hp-srow-pain">Van SIRA tot uitbestedingsregister: alle verplichtingen op één plek, passend bij de omvang van je organisatie.</span><span class="ds-iconbtn"><svg class="cx-ic" fill="currentColor" data-icon="arrow_forward" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M665.08-450H180v-60h485.08L437.23-737.85 480-780l300 300-300 300-42.77-42.15L665.08-450Z"/></svg></span>
+  </a><button class="hp-more" type="button">Bekijk meer sectoren<span class="hp-more-count">3</span><svg class="cx-ic" fill="currentColor" data-icon="add" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18"><path d="M450-450H220v-60h230v-230h60v230h230v60H510v230h-60v-230Z"/></svg></button></div>
+  <div class="hp-regs"><span class="wf-small">Of start bij je regelgeving</span><div class="wf-pills"><a class="wf-pill" href="regelgeving-dora.html">DORA</a><a class="wf-pill" href="#">NIS2</a><a class="wf-pill" href="#">Solvency II</a><a class="wf-pill" href="#">GDPR</a><a class="wf-pill" href="#">EU AI Act</a><a class="wf-pill" href="#">MiCA</a></div></div>
+</div></section>
+<section class="hp-sec hp-s4" data-sec="4" data-goal="product" data-name="4 · Product"><div class="wf-container">
+  <div class="wf-section-head"><h2 class="wf-h2">Eén platform voor risk, compliance en audit</h2><p class="wf-lead">Risico's, controls, bewijs en eigenaarschap op één plek. Voor alle drie de lijnen.</p></div>
+  <div class="hp-product">
+    <div class="hp-accs"><div class="hp-acc is-open"><div class="hp-acc-head"><span class="ds-tile"><svg class="cx-ic" fill="currentColor" data-icon="radar" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M331.86-129.92q-69.37-29.92-120.68-81.21-51.31-51.29-81.25-120.63Q100-401.1 100-479.93q0-78.84 29.92-148.21t81.21-120.68q51.29-51.31 120.63-81.25Q401.1-860 479.93-860q78.84 0 148.21 29.92t120.68 81.21q51.31 51.29 81.25 120.63Q860-558.9 860-480.07q0 78.84-29.92 148.21t-81.21 120.68q-51.29 51.31-120.63 81.25Q558.9-100 480.07-100q-78.84 0-148.21-29.92ZM480-160q58.5 0 110.21-19.42 51.71-19.43 93.48-54.12l-70.84-70.85q-27.47 21-61.48 32.7Q517.36-260 480-260q-91.67 0-155.83-64.14Q260-388.28 260-479.91q0-91.63 64.14-155.86Q388.28-700 479.91-700q91.63 0 155.86 64.17Q700-571.67 700-480q0 37.46-12 71.68-12 34.22-33 61.78l70.85 70.85q34.69-41.77 54.42-93.69Q800-421.31 800-480q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-160q24.55 0 47.43-7.23t42.03-20.54L495-422.23q-3.73 1.48-7.46 1.86-3.73.37-7.46.37-24.62 0-42.35-17.73T420-480q0-24.54 17.73-42.27Q455.46-540 480-540q24.54 0 42.27 17.73Q540-504.54 540-480.08q0 4.45-.37 8.53-.38 4.07-1.86 7.78l73.84 73.85q13.31-19.16 20.85-41.87Q640-454.51 640-480q0-66-47-113t-113-47q-66 0-113 47t-47 113q0 66 47 113t113 47Z"/></svg></span><strong>Regulatory monitoring (Ruler)</strong><em class="cx-tag">Nieuw</em></div>
+  <div class="hp-acc-body"><p class="hp-mod-desc">Regelgeving met de hand bijhouden over meerdere bronnen kost tijd en leidt tot fouten. Ruler en CERRIX geven je één traceerbare keten van wijziging tot control.</p>
+  <ul class="hp-usps"><li><span class="ds-check"><svg class="cx-ic" fill="currentColor" data-icon="check" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18"><path d="M382-253.85 168.62-467.23 211.38-510 382-339.38 748.62-706l42.76 42.77L382-253.85Z"/></svg></span><span>Doorlopende monitoring van Europese toezichthouders</span></li><li><span class="ds-check"><svg class="cx-ic" fill="currentColor" data-icon="check" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18"><path d="M382-253.85 168.62-467.23 211.38-510 382-339.38 748.62-706l42.76 42.77L382-253.85Z"/></svg></span><span>De regulatory bridge legt elke wijziging naast je risico's en controls</span></li><li><span class="ds-check"><svg class="cx-ic" fill="currentColor" data-icon="check" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18"><path d="M382-253.85 168.62-467.23 211.38-510 382-339.38 748.62-706l42.76 42.77L382-253.85Z"/></svg></span><span>AI stelt een gap-analyse op die je team beoordeelt en goedkeurt</span></li></ul>
+  <div class="wf-row"><a class="wf-btn" href="#">Plan een walkthrough</a><a class="cx-link" href="#">Naar de module <svg class="cx-ic" fill="currentColor" data-icon="arrow_forward" xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 -960 960 960" width="16"><path d="M665.08-450H180v-60h485.08L437.23-737.85 480-780l300 300-300 300-42.77-42.15L665.08-450Z"/></svg></a></div></div></div><a class="hp-acc" href="#"><div class="hp-acc-head"><span class="ds-tile"><svg class="cx-ic" fill="currentColor" data-icon="shield" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M480-100.77q-129.77-35.39-214.88-152.77Q180-370.92 180-516v-230.15l300-112.31 300 112.31V-516q0 145.08-85.12 262.46Q609.77-136.16 480-100.77Zm0-63.23q104-33 172-132t68-220v-189l-240-89.62L240-705v189q0 121 68 220t172 132Zm0-315.62Z"/></svg></span><span>Risico- en controlebeheer</span><svg class="cx-ic" fill="currentColor" data-icon="expand_more" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18"><path d="M480-358.46 253.85-584.62 296-626.77l184 184 184-184 42.15 42.15L480-358.46Z"/></svg></div></a><a class="hp-acc" href="#"><div class="hp-acc-head"><span class="ds-tile"><svg class="cx-ic" fill="currentColor" data-icon="verified" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="m352.46-85.39-71.38-120.3-135.54-29.7 13.23-139.53L66.93-480l91.84-105.08-13.23-139.53 135.54-29.7 71.38-120.3L480-820.46l127.54-54.15 71.38 120.3 135.54 29.7-13.23 139.53L893.07-480l-91.84 105.08 13.23 139.53-135.54 29.7-71.38 120.3L480-139.54 352.46-85.39ZM378-162l102-43.23L583.23-162 640-258l110-25.23L740-396l74-84-74-85.23L750-678l-110-24-58-96-102 43.23L376.77-798 320-702l-110 24 10 112.77L146-480l74 84-10 114 110 24 58 96Zm102-318Zm-42 128.15L650.15-564 608-607.38l-170 170-86-84.77L309.85-480 438-351.85Z"/></svg></span><span>Compliancemanagement</span><svg class="cx-ic" fill="currentColor" data-icon="expand_more" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18"><path d="M480-358.46 253.85-584.62 296-626.77l184 184 184-184 42.15 42.15L480-358.46Z"/></svg></div></a><a class="hp-acc" href="#"><div class="hp-acc-head"><span class="ds-tile"><svg class="cx-ic" fill="currentColor" data-icon="fact_check" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M172.31-140Q142-140 121-161q-21-21-21-51.31v-535.38Q100-778 121-799q21-21 51.31-21h615.38Q818-820 839-799q21 21 21 51.31v535.38Q860-182 839-161q-21 21-51.31 21H172.31Zm0-60h615.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46v-535.38q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H172.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v535.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85ZM210-290h180v-60H210v60Zm372-84.23L765.77-558 723-600.77l-141 142-57-57L483.23-473 582-374.23ZM210-450h180v-60H210v60Zm0-160h180v-60H210v60Zm-50 410v-560 560Z"/></svg></span><span>Auditmanagement</span><svg class="cx-ic" fill="currentColor" data-icon="expand_more" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18"><path d="M480-358.46 253.85-584.62 296-626.77l184 184 184-184 42.15 42.15L480-358.46Z"/></svg></div></a><a class="hp-acc" href="#"><div class="hp-acc-head"><span class="ds-tile"><svg class="cx-ic" fill="currentColor" data-icon="report" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M480-291.54q13.73 0 23.02-9.38 9.29-9.39 9.29-22.93 0-13.53-9.29-22.92-9.29-9.38-23.02-9.38t-23.02 9.38q-9.29 9.39-9.29 22.92 0 13.54 9.29 22.93 9.29 9.38 23.02 9.38Zm-30-139.23h60v-241.54h-60v241.54ZM338.46-140 140-338.28v-283.26L338.28-820h283.26L820-621.72v283.26L621.72-140H338.46ZM364-200h232l164-164v-232L596-760H364L200-596v232l164 164Zm116-280Z"/></svg></span><span>Incidentmanagement</span><svg class="cx-ic" fill="currentColor" data-icon="expand_more" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18"><path d="M480-358.46 253.85-584.62 296-626.77l184 184 184-184 42.15 42.15L480-358.46Z"/></svg></div></a><a class="hp-acc" href="#"><div class="hp-acc-head"><span class="ds-tile"><svg class="cx-ic" fill="currentColor" data-icon="account_tree" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M610-130v-120H450v-400H350v120H90v-300h260v120h260v-120h260v300H610v-120H510v340h100v-120h260v300H610ZM150-770v180-180Zm520 400v180-180Zm0-400v180-180Zm0 180h140v-180H670v180Zm0 400h140v-180H670v180ZM150-590h140v-180H150v180Z"/></svg></span><span>Procesmanagement</span><svg class="cx-ic" fill="currentColor" data-icon="expand_more" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18"><path d="M480-358.46 253.85-584.62 296-626.77l184 184 184-184 42.15 42.15L480-358.46Z"/></svg></div></a><a class="hp-acc" href="#"><div class="hp-acc-head"><span class="ds-tile"><svg class="cx-ic" fill="currentColor" data-icon="handshake" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M471.54-161.15q5.92 0 12.04-2.77 6.11-2.77 9.65-6.31l319.92-319.92q13.54-13.54 20.39-28.93 6.84-15.38 6.84-32.3 0-17.54-6.84-33.77-6.85-16.24-20.39-29.16l-160-160q-12.92-13.54-28-19.81-15.07-6.26-32.61-6.26-16.92 0-32.5 6.26-15.58 6.27-28.73 19.81l-22.93 22.93 74 74.61q13.46 12.85 19.89 29.31 6.42 16.46 6.42 34.15 0 36.62-24.46 61.08t-61.08 24.46q-17.69 0-34.27-5.85-16.57-5.84-29.42-18.69l-75.77-75.15-173.84 173.84q-4.54 4.54-6.81 10.16-2.27 5.61-2.27 11.54 0 11.07 7.54 18.92 7.54 7.85 18.61 7.85 5.93 0 12.04-2.77 6.12-2.77 9.66-6.31L380-545.61l42.15 42.15-130.77 131.38q-4.53 4.54-6.8 10.16-2.27 5.61-2.27 11.54 0 10.69 7.73 18.42 7.73 7.73 18.42 7.73 5.93 0 12.04-2.77 6.12-2.77 9.65-6.31l136-135.38 42.16 42.15-135.39 136q-4.15 3.54-6.61 9.65-2.46 6.12-2.46 12.04 0 10.7 7.73 18.43t18.42 7.73q5.92 0 11.54-2.27 5.61-2.27 10.15-6.81l136-135.38L589.85-345l-136 136q-4.54 4.54-6.81 10.54-2.27 6-2.27 11.54 0 11.07 8.23 18.42 8.23 7.35 18.54 7.35Zm-.62 59.99q-33.92 0-59.15-23.53-25.23-23.54-26.38-58.62-34-2.31-56.81-24.15-22.81-21.85-24.73-57.39-35.54-2.3-57.46-24.84-21.93-22.54-23.47-56.7-35.69-2.3-58.92-25.88-23.23-23.58-23.23-59.65 0-17.69 6.73-34.66 6.73-16.96 19.58-29.8l216.61-216 117.16 117.15q3.53 4.15 9.26 6.62 5.74 2.46 12.43 2.46 10.92 0 18.84-7.23 7.93-7.23 7.93-18.93 0-6.69-2.46-12.42-2.47-5.73-6.62-9.27L399.92-774.31q-12.92-13.54-28.19-19.81-15.27-6.26-32.81-6.26-16.92 0-32.11 6.26-15.2 6.27-28.73 19.81l-131.39 132q-10.92 10.92-17.88 25.81-6.96 14.88-8.19 30.35-1.24 12.77 1.15 25.27 2.38 12.5 8.38 23.5L86-493.23Q72.46-512.77 65.62-537q-6.85-24.23-5.62-49.15 1.23-27.62 12.46-53.35t31.46-45.96l131-131q22.47-21.85 48.89-32.88 26.42-11.04 55.5-11.04 29.07 0 55.3 11.04 26.24 11.03 48.08 32.88l22.93 22.92 22.92-22.92q22.46-21.85 48.69-32.88 26.23-11.04 55.31-11.04 29.08 0 55.5 11.04 26.42 11.03 48.27 32.88l159 159q21.84 21.85 33.46 49.73 11.61 27.88 11.61 56.96 0 29.08-11.61 55.31-11.62 26.23-33.46 48.07L535.38-128.08q-13.23 13.23-29.8 20.08-16.58 6.84-34.66 6.84Zm-113.61-532.3Z"/></svg></span><span>Third party management</span><svg class="cx-ic" fill="currentColor" data-icon="expand_more" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18"><path d="M480-358.46 253.85-584.62 296-626.77l184 184 184-184 42.15 42.15L480-358.46Z"/></svg></div></a><a class="hp-acc" href="#"><div class="hp-acc-head"><span class="ds-tile"><svg class="cx-ic" fill="currentColor" data-icon="lock" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M252.31-100q-29.92 0-51.12-21.19Q180-142.39 180-172.31v-375.38q0-29.92 21.19-51.12Q222.39-620 252.31-620H300v-80q0-74.92 52.54-127.46Q405.08-880 480-880q74.92 0 127.46 52.54Q660-774.92 660-700v80h47.69q29.92 0 51.12 21.19Q780-577.61 780-547.69v375.38q0 29.92-21.19 51.12Q737.61-100 707.69-100H252.31Zm0-60h455.38q5.39 0 8.85-3.46t3.46-8.85v-375.38q0-5.39-3.46-8.85t-8.85-3.46H252.31q-5.39 0-8.85 3.46t-3.46 8.85v375.38q0 5.39 3.46 8.85t8.85 3.46Zm277.27-150.42Q550-330.85 550-360t-20.42-49.58Q509.15-430 480-430t-49.58 20.42Q410-389.15 410-360t20.42 49.58Q450.85-290 480-290t49.58-20.42ZM360-620h240v-80q0-50-35-85t-85-35q-50 0-85 35t-35 85v80ZM240-160v-400 400Z"/></svg></span><span>Privacy en GDPR</span><svg class="cx-ic" fill="currentColor" data-icon="expand_more" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18"><path d="M480-358.46 253.85-584.62 296-626.77l184 184 184-184 42.15 42.15L480-358.46Z"/></svg></div></a><a class="hp-acc" href="#"><div class="hp-acc-head"><span class="ds-tile"><svg class="cx-ic" fill="currentColor" data-icon="monitoring" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M130-130v-65.77l60-60V-130h-60Zm160 0v-225.77l60-60V-130h-60Zm160 0v-285.77l60 61V-130h-60Zm160 0v-224.77l60-60V-130h-60Zm160 0v-385.77l60-60V-130h-60ZM130-351.23v-84.54l270-270 160 160 270-270v84.54l-270 270-160-160-270 270Z"/></svg></span><span>Rapportage en dashboards</span><svg class="cx-ic" fill="currentColor" data-icon="expand_more" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18"><path d="M480-358.46 253.85-584.62 296-626.77l184 184 184-184 42.15 42.15L480-358.46Z"/></svg></div></a><a class="hp-acc" href="#"><div class="hp-acc-head"><span class="ds-tile"><svg class="cx-ic" fill="currentColor" data-icon="auto_awesome" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M740-616.16 697.69-710l-93.84-42.31 93.84-42.3L740-888.46l42.31 93.85 93.84 42.3L782.31-710 740-616.16Zm0 544.62-42.31-93.85-93.84-42.3L697.69-250 740-343.84 782.31-250l93.84 42.31-93.84 42.3L740-71.54ZM355.38-208.47l-84.61-186.92L83.85-480l186.92-84.61 84.61-186.92L440-564.61 626.92-480 440-395.39l-84.62 186.92Zm0-145.53 40-86 86-40-86-40-40-86-40 86-86 40 86 40 40 86Zm0-126Z"/></svg></span><span>AI en automatisering</span><svg class="cx-ic" fill="currentColor" data-icon="expand_more" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18"><path d="M480-358.46 253.85-584.62 296-626.77l184 184 184-184 42.15 42.15L480-358.46Z"/></svg></div></a></div>
+    <div class="hp-sticky"><img class="ds-shot" src="assets/prod-ruler.png" alt=""></div>
+  </div>
+</div></section>
+<section class="hp-sec hp-s5" data-sec="5" data-goal="product" data-name="5 · AI"><div class="wf-container hp-ai-wrap"><p class="wf-eyebrow">Nieuw · AI in CERRIX</p>
+  <h2 class="wf-h2">Stel je risicodata gewoon een vraag</h2>
+  <p class="hp-ai-lead">Geen rapport bouwen, geen export naar Excel. Je vraagt het, CERRIX zoekt het antwoord in je eigen data.</p>
+  <div class="hp-tabs"><a class="hp-tab is-active" href="#"><svg class="cx-ic" fill="currentColor" data-icon="chat" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M250-410h300v-60H250v60Zm0-120h460v-60H250v60Zm0-120h460v-60H250v60ZM100-118.46v-669.23Q100-818 121-839q21-21 51.31-21h615.38Q818-860 839-839q21 21 21 51.31v455.38Q860-302 839-281q-21 21-51.31 21H241.54L100-118.46ZM216-320h571.69q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46v-455.38q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H172.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v523.08L216-320Zm-56 0v-480 480Z"/></svg><span>Stel je data een vraag</span></a><a class="hp-tab" href="#"><svg class="cx-ic" fill="currentColor" data-icon="summarize" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M345.62-614.38q10.53-10.54 10.53-25.62 0-15.08-10.53-25.62-10.54-10.53-25.62-10.53-15.08 0-25.62 10.53-10.53 10.54-10.53 25.62 0 15.08 10.53 25.62 10.54 10.53 25.62 10.53 15.08 0 25.62-10.53Zm0 160q10.53-10.54 10.53-25.62 0-15.08-10.53-25.62-10.54-10.53-25.62-10.53-15.08 0-25.62 10.53-10.53 10.54-10.53 25.62 0 15.08 10.53 25.62 10.54 10.53 25.62 10.53 15.08 0 25.62-10.53Zm0 160q10.53-10.54 10.53-25.62 0-15.08-10.53-25.62-10.54-10.53-25.62-10.53-15.08 0-25.62 10.53-10.53 10.54-10.53 25.62 0 15.08 10.53 25.62 10.54 10.53 25.62 10.53 15.08 0 25.62-10.53ZM212.31-140Q182-140 161-161q-21-21-21-51.31v-535.38Q140-778 161-799q21-21 51.31-21h419.23L820-631.54v419.23Q820-182 799-161q-21 21-51.31 21H212.31Zm0-60h535.38q5.39 0 8.85-3.46t3.46-8.85V-600H600v-160H212.31q-5.39 0-8.85 3.46t-3.46 8.85v535.38q0 5.39 3.46 8.85t8.85 3.46ZM200-760v160-160V-200v-560Z"/></svg><span>Bestuursrapport in minuten</span></a><a class="hp-tab" href="#"><svg class="cx-ic" fill="currentColor" data-icon="rule" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="m570.23-180-41.77-41.77 104-104-104-104 41.77-41.77 104 104 104-104L820-429.77l-104 104 104 104L778.23-180l-104-104-104 104Zm79.38-346.54L521.85-654.31l41.76-41.77 85 85 170-170 41.77 42.77-210.77 211.77ZM100-297.69v-60h340v60H100Zm0-304.62v-60h340v60H100Z"/></svg><span>Controls die zichzelf testen</span></a></div>
+  <div class="hp-compare">
+    <div class="hp-cmp hp-cmp--off"><p class="wf-eyebrow">Vandaag, vaak nog</p>
+      <ol><li><svg class="cx-ic" fill="currentColor" data-icon="table_chart" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18"><path d="M747.69-140H212.31Q182-140 161-161q-21-21-21-51.31v-535.38Q140-778 161-799q21-21 51.31-21h535.38Q778-820 799-799q21 21 21 51.31v535.38Q820-182 799-161q-21 21-51.31 21ZM200-630h560v-117.69q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H212.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46V-630Zm107.69 60H200v357.69q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85h95.38v-370Zm344.62 0v370h95.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46V-570H652.31Zm-60 0H367.69v370h224.62v-370Z"/></svg> Export uit drie systemen</li><li><svg class="cx-ic" fill="currentColor" data-icon="table_chart" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18"><path d="M747.69-140H212.31Q182-140 161-161q-21-21-21-51.31v-535.38Q140-778 161-799q21-21 51.31-21h535.38Q778-820 799-799q21 21 21 51.31v535.38Q820-182 799-161q-21 21-51.31 21ZM200-630h560v-117.69q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H212.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46V-630Zm107.69 60H200v357.69q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85h95.38v-370Zm344.62 0v370h95.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46V-570H652.31Zm-60 0H367.69v370h224.62v-370Z"/></svg> Samenvoegen in Excel</li><li><svg class="cx-ic" fill="currentColor" data-icon="table_chart" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18"><path d="M747.69-140H212.31Q182-140 161-161q-21-21-21-51.31v-535.38Q140-778 161-799q21-21 51.31-21h535.38Q778-820 799-799q21 21 21 51.31v535.38Q820-182 799-161q-21 21-51.31 21ZM200-630h560v-117.69q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H212.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46V-630Zm107.69 60H200v357.69q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85h95.38v-370Zm344.62 0v370h95.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46V-570H652.31Zm-60 0H367.69v370h224.62v-370Z"/></svg> Draaitabel en controle</li><li><svg class="cx-ic" fill="currentColor" data-icon="hourglass_top" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18"><path d="M316.15-160h327.7v-120q0-68.31-47.77-116.85-47.77-48.54-116.08-48.54t-116.08 48.54Q316.15-348.31 316.15-280v120ZM180-100v-60h76.16v-120q0-67.54 36.96-122.96 36.96-55.43 97.96-77.04-61-22-97.96-77.23-36.96-55.23-36.96-122.77v-120H180v-60h600v60h-76.16v120q0 67.54-36.96 122.77Q629.92-502 568.92-480q61 21.61 97.96 77.04 36.96 55.42 36.96 122.96v120H780v60H180Z"/></svg> Twee tot drie dagen later een antwoord</li></ol></div>
+    <div class="hp-cmp hp-cmp--on"><p class="wf-eyebrow">Met CERRIX AI</p><div class="hp-msg-q">Welke controls zijn dit kwartaal nog niet getest?</div><div class="hp-msg-a">
+      <div><p><strong>Vier controls</strong>, waarvan drie bij IT. Twee daarvan horen bij DORA.</p>
+        <div class="hp-rows"><span>IT-04 · Toegangsbeheer</span><span>IT-11 · Back-up en herstel</span><span>IT-17 · Leveranciers</span></div></div>
+      <div class="hp-bars"><i style="height:30%"></i><i style="height:55%"></i><i style="height:85%"></i><i style="height:45%"></i></div>
+    </div>
+      <p class="hp-fast"><svg class="cx-ic" fill="currentColor" data-icon="bolt" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18"><path d="m422-232 207-248H469l29-227-185 267h139l-30 208Zm-78.92 129.69 40-277.69h-185l329.61-475.77h49.23L537.31-540H757.3L392.31-102.31h-49.23ZM471-470Z"/></svg> Antwoord in seconden</p></div>
+  </div>
+  <p class="hp-ui-label">Elke tab is een AI-functie met zijn eigen voor en na. Links neutraal, rechts beweegt.</p>
+</div></section>
+<section class="hp-sec hp-s6" data-sec="6" data-goal="bewijs" data-name="6 · Klantverhaal"><div class="wf-container">
+  <h2 class="wf-h2">Zo werken klanten met CERRIX</h2>
+  <div class="hp-case">
+    <img class="ds-case-photo" src="assets/case-team.png" alt="">
+    <div class="hp-case-body">
+      <blockquote class="hp-quote">“We zien nu in één oogopslag waar onze risico's zitten, en bewijzen dat zonder extra werk.”</blockquote>
+      <div class="hp-stats"><div><strong>38%</strong><span>minder tijd aan rapportage</span></div><div><strong>2 dagen</strong><span>voor het kwartaalrapport, was 3 weken</span></div></div>
+      <div class="hp-case-foot"><div class="wf-person"><img class="ds-avatar" src="assets/case-avatar.png" alt=""><span><strong>Sanne de Vries</strong><span class="ds-role">Manager risk en compliance, VGZ</span></span></div>
+      <a class="wf-btn wf-btn--secondary" href="#">Lees de case</a></div>
     </div>
   </div>
-</section>
+  <div class="hp-case-tabs"><a class="wf-logo ds-logo is-active" href="#"><img src="assets/logo-vgz-dark.png" alt="VGZ"><span class="hp-progress"><i></i></span></a><a class="wf-logo ds-logo" href="#"><img src="assets/logo-menzis-dark.png" alt="Menzis"></a><a class="wf-logo ds-logo" href="#"><img src="assets/logo-nibc-dark.png" alt="NIBC"></a><a class="wf-logo ds-logo" href="#"><img src="assets/logo-grant-thornton-dark.png" alt="Grant Thornton"></a><a class="wf-logo ds-logo" href="#"><img src="assets/logo-geldmaat-dark.png" alt="Geldmaat"></a></div>
+</div></section>
+<section class="hp-sec hp-s7" data-sec="7" data-goal="bewijs" data-name="7 · Beveiliging"><div class="lv"><section class="enterprise-security"><div class="container-large"><div class="home_solutions-list_component"><div class="text-align-center"><div class="max-width-large align-center"><h2 class="heading-style-h2">Beveiliging op Enterprise-niveau</h2></div></div><div class="spacer-xxlarge"></div><div class="enterprise_list u-grid-column-3"><div class="home_solutions-list_card-content-top"><div class="home_solutions-list_item-icon-wrapper"><img src="https://cdn.prod.website-files.com/680635202bcf9a66844338c8/6810f0e0edd8aede98e144ac_Group%201321317415.svg" alt="" class="icon-1x1-medium"/></div><h3 class="enterprise_item_title text-size-26">Databescherming</h3><div class="spacer _12"></div><div class="max-width-small_320"><p class="enterprise_item_text u-text-size_16p line-space-036 u-opacity-0-8">ISO/IEC 27001-gecertificeerd, volgens de internationale standaard voor informatiebeveiliging.</p></div></div><div class="home_solutions-list_card-content-top"><div class="home_solutions-list_item-icon-wrapper"><img src="https://cdn.prod.website-files.com/680635202bcf9a66844338c8/6810f77dd1f9ddb1d47019a2_spc2.svg" alt="" class="icon-1x1-medium"/></div><h3 class="enterprise_item_title text-size-26">Aantoonbare beheersing</h3><div class="spacer _12"></div><div class="max-width-small_320"><p class="enterprise_item_text u-text-size_16p line-space-036 u-opacity-0-8">ISAE 3402 Type II: onze interne beheersing wordt onafhankelijk getoetst.</p></div></div><div class="home_solutions-list_card-content-top"><div class="home_solutions-list_item-icon-wrapper"><img src="https://cdn.prod.website-files.com/680635202bcf9a66844338c8/6810f79617e9ddae48a189e8_sso.svg" alt="" class="icon-1x1-medium"/></div><h3 class="enterprise_item_title text-size-26">Klaar voor de financiële sector</h3><div class="spacer _12"></div><div class="max-width-small_320"><p class="enterprise_item_text u-text-size_16p line-space-036 u-opacity-0-8">FSQS-NL-geregistreerd en daarmee vooraf gekwalificeerd voor inkoop door banken en verzekeraars in Nederland.</p></div></div></div></div></div></section></div></section>
+<section class="hp-sec hp-s8" data-sec="8" data-goal="volgende" data-name="8 · Events en kennis"><div class="wf-container">
+  <div class="wf-section-head--bar"><h2 class="wf-h2">Leer van experts en vakgenoten</h2><a class="wf-btn wf-btn--secondary" href="#">Alle artikelen en webinars</a></div>
+  <div class="tp-cards3"><a class="hp-acard hp-wcard" href="#"><div class="wf-img" style="--ratio:16/10">
+  Beeld — sprekers</div>
+  <div class="hp-acard-body"><span class="ds-ctype">Webinar · 12 nov</span><strong>Risicomanagement en AI: wat werkt nu al in de praktijk?</strong><p>Met Jeroen Tacke en Ruben Andeweg. Live, met ruimte voor jouw vragen.</p><span class="ds-cfoot"><span class="hp-wmeta"><svg class="cx-ic" fill="currentColor" data-icon="schedule" xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 -960 960 960" width="16"><path d="m618.92-298.92 42.16-42.16L510-492.16V-680h-60v212.15l168.92 168.93ZM480.07-100q-78.84 0-148.21-29.92t-120.68-81.21q-51.31-51.29-81.25-120.63Q100-401.1 100-479.93q0-78.84 29.92-148.21t81.21-120.68q51.29-51.31 120.63-81.25Q401.1-860 479.93-860q78.84 0 148.21 29.92t120.68 81.21q51.31 51.29 81.25 120.63Q860-558.9 860-480.07q0 78.84-29.92 148.21t-81.21 120.68q-51.29 51.31-120.63 81.25Q558.9-100 480.07-100ZM480-480Zm0 320q133 0 226.5-93.5T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 133 93.5 226.5T480-160Z"/></svg> 45 minuten · online · met Q&amp;A</span><span class="ds-iconbtn ds-cardbtn"><svg class="cx-ic" fill="currentColor" data-icon="arrow_forward" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M665.08-450H180v-60h485.08L437.23-737.85 480-780l300 300-300 300-42.77-42.15L665.08-450Z"/></svg></span></span></div></a><a class="hp-acard" href="#"><div class="wf-img" style="--ratio:16/10">Beeld — artikel</div>
+  <div class="hp-acard-body"><span class="ds-ctype">Blog</span><strong>Drie signalen in je GRC-data die laten zien hoe je organisatie met risico omgaat</strong><p>Lessen uit het webinar met Jeroen Tacke en Ruben Andeweg: drie signalen die je al uit je eigen data kunt lezen.</p><span class="ds-cfoot"><span></span><span class="ds-iconbtn ds-cardbtn"><svg class="cx-ic" fill="currentColor" data-icon="arrow_forward" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M665.08-450H180v-60h485.08L437.23-737.85 480-780l300 300-300 300-42.77-42.15L665.08-450Z"/></svg></span></span></div></a><a class="hp-acard" href="#"><div class="wf-img" style="--ratio:16/10">Beeld — artikel</div>
+  <div class="hp-acard-body"><span class="ds-ctype">Blog</span><strong>CERRIX vs. Diligent: GRC-software vergeleken op functies en Europese fit</strong><p>Twee platformen naast elkaar, en welke past bij de DORA-, NIS2- en ISQM-verplichtingen van Europese teams.</p><span class="ds-cfoot"><span></span><span class="ds-iconbtn ds-cardbtn"><svg class="cx-ic" fill="currentColor" data-icon="arrow_forward" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M665.08-450H180v-60h485.08L437.23-737.85 480-780l300 300-300 300-42.77-42.15L665.08-450Z"/></svg></span></span></div></a></div>
+</div></section>
+<section class="hp-sec hp-s9" data-sec="9" data-goal="volgende" data-name="9 · Afsluitende CTA en footer"><div class="lv"><footer class="footer_component"><div class="container-large"><div class="ds-foot-cta"><div class="max-width-xlarge_1095 align-center"><div class="text-align-center"><h2 class="heading-style-h2">Zien hoe CERRIX voor jullie werkt?</h2><p class="ds-foot-sub">In 30 minuten laten we het zien, met voorbeelden uit jouw sector.</p></div></div><div class="spacer _40"></div><div class="button-group is-center"><div data-modal-trigger="" class="button-wrap"><a href="/nl/request-a-demo" class="button w-button">Plan een demo</a></div></div></div><div class="footer-component_wrap"><div class="padding-bottom padding-xxlarge"><div class="footer_layout"><div id="w-node-e8f0bb6e-b478-c36c-d35f-07abccca792a-ccca791a" class="footer_left"><a href="/nl" aria-current="page" class="footer_logo-link w-nav-brand w--current"><img src="https://cdn.prod.website-files.com/680635202bcf9a66844338c8/680f32a3e014d4125336d8b5_cerrixdark.svg" alt="" class="footer_logo"/></a><p class="text-size-15 opac-70">We lopen al meer dan 10 jaar voorop op het gebied van GRC-innovatie en helpen meer dan 100 klanten in meer dan 20 landen om compliance en risicobeheer in de dagelijkse bedrijfsvoering te integreren.</p><div class="footer_social-list"><a href="https://www.linkedin.com/company/cerrix/" target="_blank" class="footer_social-link w-inline-block"><img src="https://cdn.prod.website-files.com/680635202bcf9a66844338c8/68111a474aca9a2da3e20bb4_Group%201321317561.svg" alt=""/></a></div><div class="w-locales-list"><div role="list" class="footer-language w-locales-items"><div role="listitem" class="loc w-locales-item"><a aria-label="link to x" hreflang="en" href="/en" class="footer-language_link w-inline-block"><div class="all-caps">en</div></a></div><div role="listitem" class="loc w-locales-item"><a aria-label="link to x" hreflang="nl" href="/nl" aria-current="page" class="footer-language_link w-inline-block w--current"><div class="all-caps">nl</div></a></div></div></div></div><div class="footer_right u-grid-autofit"><div class="ds-foot-stack"><div class="footer_link-column"><div class="text-weight-semibold">Sectoren</div><div class="spacer _15"></div><a href="#" class="footer_link">Banken</a><a href="#" class="footer_link">Verzekeraars</a><a href="#" class="footer_link">Pensioenfondsen</a><a href="#" class="footer_link">Crypto</a><a href="#" class="footer_link">Vermogensbeheer</a><a href="#" class="footer_link">Financiële dienstverlening</a></div><div class="footer_link-column"><div class="text-weight-semibold">Hulpbronnen</div><div class="spacer _15"></div><a href="/nl/insights/news" class="footer_link">Nieuws en persberichten</a><a href="/nl/insights/white-papers" class="footer_link">Whitepapers</a><a href="/nl/insights/webinars" class="footer_link">Evenementen en webinars</a><a href="#" class="footer_link">Succesverhalen van klanten</a></div></div><div class="ds-foot-stack"><div class="footer_link-column"><div class="text-weight-semibold">Regelgeving</div><div class="spacer _15"></div><a href="#" class="footer_link">DORA</a><a href="#" class="footer_link">NIS2</a><a href="#" class="footer_link">Solvency II</a><a href="#" class="footer_link">GDPR</a><a href="#" class="footer_link">EU AI Act</a><a href="#" class="footer_link">MiCA</a></div><div class="footer_link-column"><div class="text-weight-semibold">Bedrijf</div><div class="spacer _15"></div><a href="/nl/company/about-us" class="footer_link">Over ons</a><a href="/nl/company/partners" class="footer_link">Partners</a><a href="/nl/careers" class="footer_link">Carrières</a><a href="#" class="footer_link">Contact</a></div></div><div class="ds-foot-stack"><div class="footer_link-column"><div class="text-weight-semibold">Producten</div><div class="spacer _15"></div><div class="footer_links-list w-dyn-list"><div role="list" class="footer_link-list w-dyn-items"><div role="listitem" class="w-dyn-item"><a href="/nl/grc-tooling/ai-automation" class="footer_link">AI &amp; Automation</a></div><div role="listitem" class="w-dyn-item"><a href="/nl/grc-tooling/regulatory-monitoring" class="footer_link">Regulatory monitoring</a></div><div role="listitem" class="w-dyn-item"><a href="/nl/grc-tooling/risk-controls-management" class="footer_link">Risico- en controlebeheer</a></div><div role="listitem" class="w-dyn-item"><a href="/nl/grc-tooling/compliance-management" class="footer_link">Nalevingsbeheer</a></div><div role="listitem" class="w-dyn-item"><a href="/nl/grc-tooling/process-management" class="footer_link">Procesbeheer</a></div><div role="listitem" class="w-dyn-item"><a href="/nl/grc-tooling/third-party-management" class="footer_link">Beheer door derden</a></div><div role="listitem" class="w-dyn-item"><a href="/nl/grc-tooling/gdpr-management" class="footer_link">GDPR Management</a></div><div role="listitem" class="w-dyn-item"><a href="/nl/grc-tooling/incident-management" class="footer_link">Incidentbeheer</a></div><div role="listitem" class="w-dyn-item"><a href="/nl/grc-tooling/audit-management" class="footer_link">Auditbeheer</a></div><div role="listitem" class="w-dyn-item"><a href="/nl/grc-tooling/real-time-reporting-dashboard" class="footer_link">Rapportage en dashboard in realtime</a></div></div></div></div></div></div></div></div><div class="divider-horizontal"></div><div class="footer-component_badges"><div class="footer-component_bade-item"><img src="https://cdn.prod.website-files.com/680635202bcf9a66844338c8/68111bd270f511abf38623d3_image%20420.avif" alt="" class="footer-component_img-badge"/></div><div class="footer-component_bade-item smaller"><img src="https://cdn.prod.website-files.com/680635202bcf9a66844338c8/68111c2ccaa4b1e7bbdb4e2d_Group%201321316785.avif" alt="" class="footer-component_img-badge"/></div><div class="footer-component_bade-item smaller"><img src="https://cdn.prod.website-files.com/680635202bcf9a66844338c8/68111c2c57b5cc288735fae6_Group%201321316788.avif" alt="" class="footer-component_img-badge"/></div></div></div><div class="spacer _56"></div><div class="footer_post-legal-list"><a href="/nl/legal/legal-compliance" class="footer_legal-link w-inline-block"><div>Juridische zaken en naleving</div></a><a href="/nl/legal/privacy-statement" class="footer_legal-link w-inline-block"><div>Privacybeleid</div></a><a href="/nl/legal/cookie-policy" class="footer_legal-link w-inline-block"><div>Cookie-voorkeur</div></a><a href="/nl/legal/terms-of-use" class="footer_legal-link w-inline-block"><div>Algemene voorwaarden</div></a></div></div></footer></div></section>
 
-
-
-<script type="module">
-import * as THREE from 'three';
-import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
-
-const params = new URLSearchParams(location.search);
-const freezeT = parseFloat(params.get('t'));   // ?t=1.2 freezes the timeline, for review
-const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-// ============================================================================
-// Donut
-// ============================================================================
-const CONFIG = {
-  count: 30,              // number of discs
-  ringRadius: 1.6,        // radius of the circle the discs sit on
-  discRadius: 0.68,       // radius of each disc (smaller = bigger hole)
-  thickness: 0.046,
-  bevel: 0.014,           // rounded edge, so the discs aren't razor-sharp coins
-  capColor: 0x91a6c2,     // face colour (lit faces read as pale grey-blue)
-  rimColor: 0x5a729c,     // thin blue edge
-  // orientation, starting from the ring facing the camera (looking through the hole):
-  // first rolled in the screen plane (positive = counter-clockwise), then tipped
-  // backwards around the centre. Tuned against the live hero image.
-  rollDeg: -60,
-  tiltBackDeg: 47,
-  offset: [-0.08, 0.12],  // nudge within the frame to line up with the original image
-  spinSpeed: 0.1,         // rad/s the discs travel along the ring
-  introDuration: 2.6,     // seconds
-  cameraDistance: 12.2,
-};
-
-const canvas = document.getElementById('donut');
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.0;
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.VSMShadowMap;   // variance shadows: blurrable, soft edges
-
-const scene = new THREE.Scene();
-const pmrem = new THREE.PMREMGenerator(renderer);
-scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-scene.environmentIntensity = 0.08;
-
-const BLEED = 1.3;   // canvas is 130% of the image frame (see CSS)
-const camera = new THREE.PerspectiveCamera(
-  THREE.MathUtils.radToDeg(2 * Math.atan(BLEED * Math.tan(THREE.MathUtils.degToRad(11)))), 1, 0.1, 100);
-camera.position.set(0, 0, CONFIG.cameraDistance);
-
-// Two spotlights close to the ring, like the original: one from above, one
-// from below. Because they sit close, the light angle and falloff change around the
-// ring, so some discs catch light and others fall into shadow.
-function spot(color, intensity, pos, target) {
-  const l = new THREE.SpotLight(color, intensity, 0, 0.55, 1, 2);
-  l.position.set(...pos);
-  l.target.position.set(...target);
-  l.castShadow = true;
-  l.shadow.mapSize.set(256, 256);
-  l.shadow.bias = -0.0004;
-  l.shadow.radius = 22;        // softness of the shadow edge
-  l.shadow.blurSamples = 24;
-  scene.add(l, l.target);
-  return l;
-}
-spot(0xd0e3fb, 120, [0.5, 4.0, 3.5], [0, 1.3, 0]);      // above
-spot(0xcde0fa, 65, [-0.6, -3.6, 2.4], [0, -1.0, 0]);  // below
-// faint blue backlight catches the rims; low fill keeps shadows navy, not black
-const back = new THREE.DirectionalLight(0x8d9cd0, 1.2);
-back.position.set(-2, -1, -6);
-scene.add(back);
-scene.add(new THREE.HemisphereLight(0x4d64a8, 0x08102a, 0.55));
-
-// seeded random so the irregularity is the same on every load
-let seed = 7;
-const rand = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
-
-// Procedural powder-coat / sandblasted texture: layered noise at a few scales for
-// soft mottling, plus fine speckle for grain.
-function grainTextures(size = 512) {
-  const layer = n => {
-    const c = document.createElement('canvas');
-    c.width = c.height = n;
-    const x = c.getContext('2d');
-    const img = x.createImageData(n, n);
-    for (let i = 0; i < img.data.length; i += 4) {
-      const v = rand() * 255;
-      img.data[i] = img.data[i + 1] = img.data[i + 2] = v;
-      img.data[i + 3] = 255;
-    }
-    x.putImageData(img, 0, 0);
-    return c;
-  };
-  const c = document.createElement('canvas');
-  c.width = c.height = size;
-  const ctx = c.getContext('2d');
-  ctx.imageSmoothingEnabled = true;
-  ctx.fillStyle = '#808080';
-  ctx.fillRect(0, 0, size, size);
-  // [cells, weight]: large soft blotches -> fine grain
-  for (const [n, w] of [[6, 0.35], [24, 0.25], [96, 0.2], [size, 0.45]]) {
-    ctx.globalAlpha = w;
-    ctx.drawImage(layer(n), 0, 0, size, size);
-  }
-  ctx.globalAlpha = 1;
-  const make = (repeat) => {
-    const t = new THREE.CanvasTexture(c);
-    t.wrapS = t.wrapT = THREE.RepeatWrapping;
-    t.repeat.set(repeat, repeat);
-    t.anisotropy = 4;
-    return t;
-  };
-  // colour map: same noise, washed towards white so it only mottles lightly
-  ctx.globalAlpha = 0.7;
-  ctx.fillStyle = '#fff';
-  const bumpCanvas = document.createElement('canvas');
-  bumpCanvas.width = bumpCanvas.height = size;
-  bumpCanvas.getContext('2d').drawImage(c, 0, 0);
-  ctx.fillRect(0, 0, size, size);
-  ctx.globalAlpha = 1;
-  const colorMap = make(1);
-  colorMap.colorSpace = THREE.SRGBColorSpace;
-  const bump = new THREE.CanvasTexture(bumpCanvas);
-  bump.wrapS = bump.wrapT = THREE.RepeatWrapping;
-  bump.repeat.set(2, 2);
-  return { bump, rough: bump, color: colorMap };
-}
-const tex = grainTextures();
-
-const capMat = new THREE.MeshStandardMaterial({
-  color: CONFIG.capColor, map: tex.color,   // slight mottling in the colour
-  roughness: 0.92, roughnessMap: tex.rough, metalness: 0.0,
-  bumpMap: tex.bump, bumpScale: 0.7,
-});
-const capBase = capMat.color.clone();
-const rimMat = new THREE.MeshStandardMaterial({
-  color: CONFIG.rimColor, roughness: 0.45, metalness: 0.25,
-  emissive: new THREE.Color(0x1d44e0), emissiveIntensity: 0.0,
-});
-// Disc with a rounded (bevelled) edge: an extruded circle. Group 0 = flat faces,
-// group 1 = edge + bevel (gets the blue rim material).
-function bevelledDisc(r, thickness, bevel) {
-  const shape = new THREE.Shape().absarc(0, 0, r - bevel, 0, Math.PI * 2);
-  const geo = new THREE.ExtrudeGeometry(shape, {
-    depth: Math.max(thickness - bevel * 2, 0.001),
-    bevelEnabled: true, bevelThickness: bevel, bevelSize: bevel, bevelSegments: 4,
-    curveSegments: 96,
-  });
-  // planar UVs across the face so the grain texture maps like on a coin
-  const pos = geo.attributes.position, uv = geo.attributes.uv;
-  for (let i = 0; i < pos.count; i++) uv.setXY(i, pos.getX(i) / (2 * r) + .5, pos.getY(i) / (2 * r) + .5);
-  geo.center();
-  geo.rotateX(-Math.PI / 2);   // face normal along Y, like the cylinder it replaces
-  return geo;
-}
-const rimBase = rimMat.color.clone();
-const discGeo = bevelledDisc(CONFIG.discRadius, CONFIG.thickness, CONFIG.bevel);
-
-const ring = new THREE.Group();   // spins on its own axis: discs travel along the circle
-const tilt = new THREE.Group();   // fixed presentation angle
-// ?roll=45&tilt=45 overrides the angles, handy while fine-tuning
-const deg = THREE.MathUtils.degToRad;
-const rollDeg = parseFloat(params.get('roll') ?? CONFIG.rollDeg);
-const tiltBackDeg = parseFloat(params.get('tilt') ?? CONFIG.tiltBackDeg);
-// 'ZXY': roll in the screen plane first, then tip back around the ring's own horizontal axis
-tilt.rotation.set(-deg(tiltBackDeg), 0, deg(rollDeg), 'ZXY');
-tilt.add(ring);
-// parallax group: follows the cursor a little; the lights stay put, so the light
-// shifts subtly over the discs as you move
-const parallax = new THREE.Group();
-parallax.add(tilt);
-scene.add(parallax);
-
-const Y = new THREE.Vector3(0, 1, 0);
-const discs = [];
-for (let i = 0; i < CONFIG.count; i++) {
-  const pivot = new THREE.Group();
-  const mats = [capMat.clone(), rimMat.clone()];   // per disc, for the intro fade
-  const mesh = new THREE.Mesh(discGeo, mats);
-  mesh.castShadow = mesh.receiveShadow = true;
-  pivot.add(mesh);
-  ring.add(pivot);
-  discs.push({
-    pivot, mesh, mats,
-    theta: (i / CONFIG.count) * Math.PI * 2 + (rand() - .5) * 0.05,
-    jx: (rand() - .5) * 0.16, jz: (rand() - .5) * 0.16,
-  });
-}
-
-const tangent = new THREE.Vector3();
-const q = new THREE.Quaternion();
-function placeDisc(d, theta, scale, open) {
-  const r = CONFIG.ringRadius;
-  d.pivot.position.set(Math.cos(theta) * r, Math.sin(theta) * r, 0);
-  tangent.set(-Math.sin(theta), Math.cos(theta), 0);
-  q.setFromUnitVectors(Y, tangent);
-  d.pivot.quaternion.copy(q);
-  // 'open' flips the disc from lying in the ring plane to upright
-  d.mesh.rotation.set(d.jx + (1 - open) * Math.PI / 2, 0, d.jz);
-  d.mesh.scale.setScalar(Math.max(scale, 0.0001));
-}
-
-const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
-const easeOutBack = t => { const c = 1.3; return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2); };
-const clamp01 = t => Math.min(1, Math.max(0, t));
-
-let introStart = performance.now();
-let spin = 0;
-
-function updateDonut(t, dt) {
-  const stagger = CONFIG.introDuration * 0.55 / CONFIG.count;
-  const each = CONFIG.introDuration * 0.45;
-  for (let i = 0; i < discs.length; i++) {
-    const d = discs[i];
-    const p = clamp01((t - i * stagger) / each);
-    placeDisc(d, d.theta + (1 - easeOutCubic(p)) * -0.5, easeOutBack(p), easeOutCubic(p));
-    // rise out of the shadow: stay dark while flat, brighten as the disc stands up
-    const lum = p * p * p;
-    d.mats[0].color.copy(capBase).multiplyScalar(lum);
-    d.mats[1].color.copy(rimBase).multiplyScalar(lum);
-  }
-  const done = clamp01(t / (CONFIG.introDuration + 0.4));
-  spin += dt * (CONFIG.spinSpeed * (0.25 + 0.75 * done) + scroll.boost);
-  ring.rotation.z = spin;
-  tilt.position.set(...CONFIG.offset, (1 - easeOutCubic(done)) * -1.5);
-  renderer.render(scene, camera);
-  // copy for the depth-of-field layer (half resolution is plenty once blurred)
-  bctx.clearRect(0, 0, blurCanvas.width, blurCanvas.height);
-  bctx.drawImage(canvas, 0, 0, blurCanvas.width, blurCanvas.height);
-}
-
-const blurCanvas = document.getElementById('donut-blur');
-const bctx = blurCanvas.getContext('2d');
-function resizeDonut() {
-  const w = canvas.clientWidth, h = canvas.clientHeight;
-  if (!w || !h) return;
-  blurCanvas.width = Math.round(w * renderer.getPixelRatio() / 2);
-  blurCanvas.height = Math.round(h * renderer.getPixelRatio() / 2);
-  renderer.setSize(w, h, false);
-  camera.aspect = w / h;
-  camera.updateProjectionMatrix();
-}
-
-// ============================================================================
-// Dust: tiny white specks drifting down, densest top-right (like Stars.avif)
-// ============================================================================
-const dustCanvas = document.getElementById('dust');
-const dctx = dustCanvas.getContext('2d');
-let specks = [], dw = 0, dh = 0, dpr = 1;
-
-function spawn(s, anywhere) {
-  // bias towards the top-right corner
-  s.x = (1 - Math.pow(rand(), 1.5) * 0.45) * dw;
-  s.y = anywhere ? Math.pow(rand(), 1.4) * dh * 0.6 : -5;
-  s.r = 1 + Math.round(Math.pow(rand(), 5) * 1.6);   // size in device pixels
-  s.vy = 2 + rand() * 7;              // px/s, very slow fall
-  s.sway = 4 + rand() * 10;
-  s.phase = rand() * Math.PI * 2;
-  s.freq = 0.15 + rand() * 0.35;
-  s.a = 0.6 + rand() * 0.4;
-  return s;
-}
-function resizeDust() {
-  dpr = Math.min(devicePixelRatio, 2);
-  dw = dustCanvas.clientWidth; dh = dustCanvas.clientHeight;
-  dustCanvas.width = dw * dpr; dustCanvas.height = dh * dpr;
-  const n = Math.round(Math.min(420, dw * dh / 3000));
-  specks = Array.from({ length: n }, () => spawn({}, true));
-}
-function updateDust(t, dt) {
-  dctx.setTransform(1, 0, 0, 1, 0, 0);
-  dctx.clearRect(0, 0, dustCanvas.width, dustCanvas.height);
-  dctx.fillStyle = '#fff';
-  for (const s of specks) {
-    s.y += s.vy * dt;
-    if (s.y > dh * 0.65) spawn(s, false);
-    const x = s.x + Math.sin(t * s.freq + s.phase) * s.sway + follow.x * PARALLAX.dust * s.r;
-    // fade out towards the bottom and the left, twinkle a little
-    const fade = clamp01((1 - s.y / (dh * 0.65)) * 1.5) * clamp01((x / dw - 0.55) * 5);
-    const tw = 0.75 + 0.25 * Math.sin(t * 1.7 + s.phase * 3);
-    dctx.globalAlpha = s.a * fade * tw;
-    // snapped to whole device pixels so the specks stay crisp
-    dctx.fillRect(Math.round(x * dpr), Math.round((s.y + follow.y * PARALLAX.dust * 0.6 * s.r) * dpr), s.r, s.r);
-  }
-  dctx.globalAlpha = 1;
-}
-
-// ============================================================================
-// Loop
-// ============================================================================
-function resize() { resizeDonut(); resizeDust(); }
-addEventListener('resize', resize);
-resize();
-
-let last = performance.now(), visible = true;
-// cursor position, -1..1 from the viewport centre (mouse only, not touch)
-const pointer = { x: 0, y: 0 }, follow = { x: 0, y: 0 };
-const PARALLAX = { rotY: 0.09, rotX: 0.06, moveX: 0.2, moveY: 0.15, dust: 8 };   // rotation (rad, ~5°), shift (world units, ~20px), dust px
-if (!reduceMotion) {
-  addEventListener('pointermove', e => {
-    if (e.pointerType !== 'mouse') return;
-    pointer.x = e.clientX / innerWidth * 2 - 1;
-    pointer.y = e.clientY / innerHeight * 2 - 1;
-  });
-  document.addEventListener('pointerleave', () => { pointer.x = pointer.y = 0; });
-}
-// ?px=1&py=-1 pins the cursor position, for review screenshots
-if (params.has('px')) {
-  follow.x = pointer.x = parseFloat(params.get('px'));
-  follow.y = pointer.y = parseFloat(params.get('py') ?? 0);
-}
-function updateParallax(dt) {
-  const k = 1 - Math.exp(-dt * 2.5);   // slow, damped follow
-  follow.x += (pointer.x - follow.x) * k;
-  follow.y += (pointer.y - follow.y) * k;
-  parallax.rotation.set(follow.y * PARALLAX.rotX + scroll.tilt, follow.x * PARALLAX.rotY, 0);
-  parallax.position.set(follow.x * PARALLAX.moveX, -follow.y * PARALLAX.moveY, 0);
-}
-
-// Scroll: the ring trails the page (moves down at a fraction of the scroll, so it drifts
-// behind the video), tips back a little, and its discs speed up in the scroll direction.
-const SCROLL = { follow: 0.38, tiltMax: 0.35, tiltPerPx: 0.0006, boostPerPxs: 0.0016, boostMax: 2.2 };
-const scroll = { y: scrollY, last: scrollY, boost: 0, tilt: 0 };
-const ringWrap = document.querySelector('.home_hero-header_image-wrapper');
-if (params.has('scrollto')) setTimeout(() => scrollTo(0, +params.get('scrollto')), 300);   // review only
-function updateScroll(dt) {
-  const y = scrollY;
-  const v = dt > 0 ? (y - scroll.last) / dt : 0;   // px/s, signed
-  scroll.last = y;
-  const target = Math.max(-SCROLL.boostMax, Math.min(SCROLL.boostMax, v * SCROLL.boostPerPxs));
-  scroll.boost += (target - scroll.boost) * (1 - Math.exp(-dt * (Math.abs(target) > Math.abs(scroll.boost) ? 6 : 1.5)));
-  scroll.tilt = Math.min(SCROLL.tiltMax, y * SCROLL.tiltPerPx);
-  ringWrap.style.transform = `translate3d(0, ${(y * SCROLL.follow).toFixed(1)}px, 0)`;
-}
-
-function frame(now) {
-  const dt = Math.min((now - last) / 1000, 0.05);
-  last = now;
-  const live = !reduceMotion && isNaN(freezeT);
-  if (!reduceMotion) updateScroll(dt);
-  updateParallax(dt);
-  const t = !isNaN(freezeT) ? freezeT : reduceMotion ? 999 : (now - introStart) / 1000;
-  updateDonut(t, live ? dt : 0);
-  updateDust(now / 1000, live ? dt : 0);
-  if (visible) requestAnimationFrame(frame);
-}
-new IntersectionObserver(([e]) => {
-  const was = visible;
-  visible = e.isIntersecting;
-  if (visible && !was) { last = performance.now(); requestAnimationFrame(frame); }
-}).observe(document.querySelector('.section_home_hero-header'));
-requestAnimationFrame(frame);
-
-
-</script>
-
-<script type="module">
-// ============================================================================
-// Sector objects: a simple 3D form per sector grows out of the cursor while you
-// hover its row, spins at a constant speed, and swaps quickly to the next row.
-// Same material and light rig as the hero ring, so they read as one family.
-// ============================================================================
-import * as THREE from 'three';
-import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
-
-const params = new URLSearchParams(location.search);
-const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const section = document.querySelector('.sectors');
-const canvas = document.getElementById('sector-canvas');
-const rows = [...document.querySelectorAll('.sector-row')];
-
-const S = {
-  sizePx: 150,           // on-screen size of an object
-  offset: [56, -8],      // object centre relative to the cursor (px, right / down)
-  // lean: the object tilts in the direction the cursor moves and springs back upright
-  leanPerPx: 0.0011,     // radians of tilt per px/s of cursor speed
-  leanMax: 0.55,         // cap, ~30 degrees
-  leanStiffness: 90, leanDamping: 11,   // spring back: a little wobble before settling
-  spin: 0.8,             // rad/s, identical for every object so a swap keeps the rhythm
-  follow: 10,            // how quickly the object trails the cursor
-  stiffness: 320,        // grow/shrink spring: higher = snappier
-  damping: 22,           // lower = more overshoot
-  capColor: 0x91a6c2, rimColor: 0x5a729c,   // as the hero ring
-};
-const UNIT = 2.4;        // every object is modelled to fit roughly a 2.4-unit box
-
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.VSMShadowMap;
-
-const scene = new THREE.Scene();
-scene.environment = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), 0.04).texture;
-scene.environmentIntensity = 0.08;
-scene.add(new THREE.HemisphereLight(0x4d64a8, 0x08102a, 0.55));
-
-// narrow lens from far away: close to orthographic, so an object looks the same
-// wherever the cursor is in the section
-const FOV = 12;
-const camera = new THREE.PerspectiveCamera(FOV, 1, 1, 400);
-
-// the follower carries the object AND its lights, so the lighting stays identical
-// wherever the object is on screen
-const follower = new THREE.Group();
-scene.add(follower);
-function spot(color, intensity, pos, target) {
-  const l = new THREE.SpotLight(color, intensity, 0, 0.6, 1, 2);
-  l.position.set(...pos);
-  l.target.position.set(...target);
-  l.castShadow = true;
-  l.shadow.mapSize.set(256, 256);
-  l.shadow.bias = -0.0004;
-  l.shadow.radius = 18;
-  l.shadow.blurSamples = 20;
-  follower.add(l, l.target);
-}
-spot(0xd0e3fb, 120, [0.6, 4.2, 3.8], [0, 0.4, 0]);    // above
-spot(0xcde0fa, 55, [-0.8, -3.8, 2.8], [0, -0.4, 0]);  // below
-const back = new THREE.PointLight(0x8d9cd0, 18, 0, 2);
-back.position.set(-2.5, 1, -4);
-follower.add(back);
-
-// ---- material (same powder-coat grain as the hero) ----
-let seed = 11;
-const rand = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
-function grainTextures(size = 512) {
-  const layer = n => {
-    const c = document.createElement('canvas'); c.width = c.height = n;
-    const x = c.getContext('2d'); const img = x.createImageData(n, n);
-    for (let i = 0; i < img.data.length; i += 4) { const v = rand() * 255; img.data[i] = img.data[i + 1] = img.data[i + 2] = v; img.data[i + 3] = 255; }
-    x.putImageData(img, 0, 0); return c;
-  };
-  const c = document.createElement('canvas'); c.width = c.height = size;
-  const ctx = c.getContext('2d');
-  ctx.fillStyle = '#808080'; ctx.fillRect(0, 0, size, size);
-  for (const [n, w] of [[6, 0.35], [24, 0.25], [96, 0.2], [size, 0.45]]) { ctx.globalAlpha = w; ctx.drawImage(layer(n), 0, 0, size, size); }
-  const bumpCanvas = document.createElement('canvas'); bumpCanvas.width = bumpCanvas.height = size;
-  ctx.globalAlpha = 1; bumpCanvas.getContext('2d').drawImage(c, 0, 0);
-  ctx.globalAlpha = 0.7; ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, size, size); ctx.globalAlpha = 1;
-  const color = new THREE.CanvasTexture(c); color.colorSpace = THREE.SRGBColorSpace;
-  const bump = new THREE.CanvasTexture(bumpCanvas); bump.wrapS = bump.wrapT = THREE.RepeatWrapping; bump.repeat.set(2, 2);
-  return { color, bump };
-}
-const tex = grainTextures();
-const cap = new THREE.MeshStandardMaterial({
-  color: S.capColor, map: tex.color, roughness: 0.92, roughnessMap: tex.bump, metalness: 0,
-  bumpMap: tex.bump, bumpScale: 0.7,
-});
-const rim = new THREE.MeshStandardMaterial({ color: S.rimColor, roughness: 0.45, metalness: 0.25 });
-const capFlat = cap.clone(); capFlat.flatShading = true;
-
-const mesh = (geo, mat) => { const m = new THREE.Mesh(geo, mat); m.castShadow = m.receiveShadow = true; return m; };
-// planar UVs so the grain maps evenly across flat faces
-function planarUV(geo, size) {
-  const p = geo.attributes.position, uv = geo.attributes.uv;
-  for (let i = 0; i < p.count; i++) uv.setXY(i, p.getX(i) / size + .5, p.getY(i) / size + .5);
-  return geo;
-}
-function extrude(shape, depth, bevel, size, center = true) {
-  const g = new THREE.ExtrudeGeometry(shape, {
-    depth, bevelEnabled: true, bevelThickness: bevel, bevelSize: bevel, bevelSegments: 4, curveSegments: 64,
-  });
-  planarUV(g, size);
-  if (center) g.center(); else g.translate(0, 0, -depth / 2);
-  return g;
-}
-function coin(r, h, bevel = 0.05) {
-  const g = extrude(new THREE.Shape().absarc(0, 0, r - bevel, 0, Math.PI * 2), Math.max(h - bevel * 2, 0.001), bevel, r * 2);
-  g.rotateX(-Math.PI / 2);
-  return g;
-}
-
-// ---- the six forms ---------------------------------------------------------
-// Outline of a character in the site font, traced from a canvas render, as a
-// THREE.Path in object units (max dimension = size). Used to cut the euro out of the coin.
-async function glyphPath(ch, size, weight = 600) {
-  const font = `${weight} 200px "Inter 18 Pt"`;
-  await document.fonts.load(font, ch);
-  const N = 256, c = document.createElement('canvas');
-  c.width = c.height = N;
-  const x = c.getContext('2d');
-  x.font = font; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillStyle = '#000';
-  x.fillText(ch, N / 2, N / 2);
-  const a = x.getImageData(0, 0, N, N).data;
-  const inside = (px, py) => px >= 0 && py >= 0 && px < N && py < N && a[(py * N + px) * 4 + 3] > 127;
-  // start: first filled pixel, scanning rows from the top
-  let start = null;
-  for (let py = 0; py < N && !start; py++) for (let px = 0; px < N; px++) if (inside(px, py)) { start = [px, py]; break; }
-  // Moore-neighbour tracing (8 directions, clockwise on screen)
-  const D = [[1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1], [0, -1], [1, -1]];
-  const pts = [];
-  let cur = start, dir = 7;
-  for (let guard = 0; guard < 20000; guard++) {
-    pts.push(cur);
-    let moved = false;
-    for (let k = 0; k < 8; k++) {
-      const d = (dir + 6 + k) % 8, nx = cur[0] + D[d][0], ny = cur[1] + D[d][1];
-      if (inside(nx, ny)) { cur = [nx, ny]; dir = d; moved = true; break; }
-    }
-    if (!moved || (cur[0] === start[0] && cur[1] === start[1] && pts.length > 2)) break;
-  }
-  // simplify (Ramer-Douglas-Peucker), then scale/centre into object units
-  const rdp = (p, eps) => {
-    if (p.length < 3) return p;
-    const [ax, ay] = p[0], [bx, by] = p[p.length - 1];
-    let max = 0, idx = 0;
-    for (let i = 1; i < p.length - 1; i++) {
-      const dd = Math.abs((by - ay) * p[i][0] - (bx - ax) * p[i][1] + bx * ay - by * ax) / (Math.hypot(bx - ax, by - ay) || 1);
-      if (dd > max) { max = dd; idx = i; }
-    }
-    return max > eps ? [...rdp(p.slice(0, idx + 1), eps).slice(0, -1), ...rdp(p.slice(idx), eps)] : [p[0], p[p.length - 1]];
-  };
-  const simple = rdp(pts, 0.7);
-  let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
-  for (const [px, py] of simple) { x0 = Math.min(x0, px); x1 = Math.max(x1, px); y0 = Math.min(y0, py); y1 = Math.max(y1, py); }
-  const k = size / Math.max(x1 - x0, y1 - y0), cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
-  return new THREE.Path(simple.map(([px, py]) => new THREE.Vector2((px - cx) * k, -(py - cy) * k)));
-}
-
-// 3D versions of the list icons: extruded solids with a rounded edge, small and simple
-function roundedRect(w, h, r) {
-  const p = new THREE.Shape(), x = -w / 2, y = -h / 2;
-  p.moveTo(x + r, y); p.lineTo(x + w - r, y); p.absarc(x + w - r, y + r, r, -Math.PI / 2, 0);
-  p.lineTo(x + w, y + h - r); p.absarc(x + w - r, y + h - r, r, 0, Math.PI / 2);
-  p.lineTo(x + r, y + h); p.absarc(x + r, y + h - r, r, Math.PI / 2, Math.PI);
-  p.lineTo(x, y + r); p.absarc(x + r, y + r, r, Math.PI, Math.PI * 1.5);
-  return p;
-}
-const BUILD = [
-  // Banken: a coin with a raised rim and a raised euro sign on both faces
-  () => {
-    const g = new THREE.Group();
-    g.add(mesh(extrude(new THREE.Shape().absarc(0, 0, 1.0, 0, Math.PI * 2), 0.16, 0.06, 2.1), [cap, rim]));
-    const FACE = 0.14;   // half the coin thickness (depth 0.16 + 2 x bevel 0.06)
-    const ring = new THREE.TorusGeometry(0.8, 0.04, 16, 96);
-    for (const z of [-FACE + 0.01, FACE - 0.01]) { const m = mesh(ring, cap); m.position.z = z; g.add(m); }
-    // the euro arrives once the font is loaded
-    glyphPath('€', 0.9).then(euro => {
-      const geo = extrude(new THREE.Shape(euro.getPoints()), 0.06, 0.02, 1.0);
-      // optical centre: a hair left of the bounding-box centre (tuned by eye on a face-on render)
-      geo.translate(-0.015, 0, 0);
-      const front = mesh(geo, [cap, rim]); front.position.z = FACE + 0.045;
-      const back = mesh(geo, [cap, rim]); back.position.z = -FACE - 0.045; back.rotation.y = Math.PI;   // reads correctly from behind
-      g.add(front, back);
-    });
-    return { g, tilt: 0.18 };
-  },
-  // Verzekeraars: a shield with a raised plus on both faces
-  () => {
-    const s = new THREE.Shape();
-    s.moveTo(0, 1.12);
-    s.bezierCurveTo(0.35, 0.98, 0.68, 0.94, 0.9, 0.94);
-    s.lineTo(0.9, 0.18);
-    s.bezierCurveTo(0.9, -0.48, 0.48, -0.88, 0, -1.12);
-    s.bezierCurveTo(-0.48, -0.88, -0.9, -0.48, -0.9, 0.18);
-    s.lineTo(-0.9, 0.94);
-    s.bezierCurveTo(-0.68, 0.94, -0.35, 0.98, 0, 1.12);
-    const a = 0.17, l = 0.52, cy = 0.06;     // half arm width, half arm length
-    const plusPts = [[-a, l], [a, l], [a, a], [l, a], [l, -a], [a, -a], [a, -l], [-a, -l], [-a, -a], [-l, -a], [-l, a], [-a, a]]
-      .map(([x, y]) => new THREE.Vector2(x, y));
-    const g = new THREE.Group();
-    g.add(mesh(extrude(s, 0.22, 0.06, 2.2), [cap, rim]));
-    const FACE = 0.17;   // half the shield thickness (depth 0.22 + 2 x bevel 0.06)
-    const plusGeo = extrude(new THREE.Shape(plusPts), 0.06, 0.02, 1.1);
-    for (const side of [1, -1]) {
-      const m = mesh(plusGeo, [cap, rim]);
-      m.position.set(0, cy, side * (FACE + 0.045));
-      g.add(m);
-    }
-    return { g, tilt: 0.12 };
-  },
-  // Pensioenfondsen: an hourglass, as in the icon - two plates and a slim glass
-  () => {
-    const g = new THREE.Group();
-    const pts = [new THREE.Vector2(0, -0.86)];
-    for (let i = 0; i <= 40; i++) {
-      const y = -0.86 + (i / 40) * 1.72;
-      pts.push(new THREE.Vector2(0.1 + 0.48 * Math.pow(Math.abs(y) / 0.86, 1.3), y));
-    }
-    pts.push(new THREE.Vector2(0, 0.86));
-    g.add(mesh(new THREE.LatheGeometry(pts, 64), cap));
-    const plate = coin(0.68, 0.14, 0.045);
-    for (const y of [-0.93, 0.93]) { const m = mesh(plate, [cap, rim]); m.position.y = y; g.add(m); }
-    return { g, tilt: 0.22 };
-  },
-  // Crypto: a faceted crystal / token
-  () => {
-    const geo = new THREE.OctahedronGeometry(1.0, 0);
-    geo.scale(0.9, 1.2, 0.9);
-    const g = new THREE.Group();
-    g.add(mesh(geo, capFlat));
-    return { g, tilt: 0.1 };
-  },
-  // Vermogensbeheer: a pie with one slice pulled out, as in the icon
-  () => {
-    const g = new THREE.Group();
-    const slice = (a0, a1) => {
-      const s = new THREE.Shape(); s.moveTo(0, 0); s.absarc(0, 0, 0.92, a0, a1, false); s.lineTo(0, 0);
-      return mesh(extrude(s, 0.18, 0.05, 1.9, false), [cap, rim]);   // keep the shared pie centre
-    };
-    const big = slice(Math.PI / 2 + 0.05, Math.PI * 2 - 0.05);
-    const wedge = slice(0.05, Math.PI / 2 - 0.05);
-    wedge.position.set(0.14, 0.14, 0);   // pulled out along its middle (45 degrees)
-    g.add(big, wedge);
-    g.position.set(-0.06, -0.06, 0);     // re-centre the whole
-    return { g, tilt: 0.12 };
-  },
-  // Financiële dienstverlening: two interlocking links, as in the icon
-  () => {
-    const g = new THREE.Group();
-    const s = roundedRect(1.25, 0.8, 0.4);
-    s.holes.push(roundedRect(0.85, 0.4, 0.2));
-    const geo = extrude(s, 0.16, 0.05, 1.3);
-    const a = mesh(geo, [cap, rim]); a.position.x = -0.36;
-    const b = mesh(geo, [cap, rim]); b.position.x = 0.36; b.rotation.x = Math.PI / 2;
-    g.add(a, b);
-    return { g, tilt: 0.3 };
-  },
-];
-
-// lean group: tilts with the cursor's speed (the lights stay put, so the light
-// also slides over the object while it leans)
-const lean = new THREE.Group();
-follower.add(lean);
-const L = { x: 0, vx: 0, y: 0, vy: 0, z: 0, vz: 0 };
-
-const objects = BUILD.map(build => {
-  const { g, tilt } = build();
-  const spinner = new THREE.Group(); spinner.add(g);
-  const tiltG = new THREE.Group(); tiltG.rotation.set(tilt, 0, -0.08); tiltG.add(spinner);
-  const holder = new THREE.Group(); holder.add(tiltG); holder.visible = false;
-  lean.add(holder);
-  return { holder, spinner, s: 0, v: 0 };
-});
-
-// ---- sizing: camera distance chosen so 1 world unit = sizePx / UNIT pixels ----
-let W = 1, H = 1, wpp = 1;
-function resize() {
-  W = canvas.clientWidth; H = canvas.clientHeight;
-  if (!W || !H) return;
-  renderer.setSize(W, H, false);
-  wpp = UNIT / S.sizePx;                                  // world units per pixel
-  camera.aspect = W / H;
-  camera.position.set(0, 0, (H * wpp / 2) / Math.tan(THREE.MathUtils.degToRad(FOV / 2)));
-  camera.updateProjectionMatrix();
-}
-addEventListener('resize', resize);
-resize();
-
-// ---- interaction ----
-let active = -1;
-const cursor = { x: W / 2, y: H / 2 }, pos = { x: W / 2, y: H / 2 }, prev = { x: W / 2, y: H / 2 };
-const toWorld = (px, py) => [(px - W / 2) * wpp, -(py - H / 2) * wpp];
-section.addEventListener('pointermove', e => {
-  if (e.pointerType !== 'mouse') return;
-  const r = canvas.getBoundingClientRect();
-  cursor.x = e.clientX - r.left + S.offset[0];
-  cursor.y = e.clientY - r.top + S.offset[1];
-});
-rows.forEach((row, i) => row.addEventListener('pointerenter', e => {
-  if (e.pointerType !== 'mouse') return;
-  // nothing visible yet: start right at the cursor instead of sliding in from afar
-  if (objects.every(o => o.s < 0.02)) { pos.x = prev.x = cursor.x; pos.y = prev.y = cursor.y; }
-  active = i;
-}));
-document.querySelector('.sector-list').addEventListener('pointerleave', () => { active = -1; });
-
-// ?lean=0.4 shows a fixed lean, ?sector=2 pins a sector open (for review screenshots)
-const leanFix = parseFloat(params.get('lean'));
-if (params.has('sector')) {
-  active = parseInt(params.get('sector'), 10);
-  const r = rows[active].getBoundingClientRect(), c = canvas.getBoundingClientRect();
-  cursor.x = pos.x = r.left - c.left + r.width * 0.42 + S.offset[0];
-  cursor.y = pos.y = r.top - c.top + r.height / 2 + S.offset[1];
-  objects[active].s = 1;
-}
-
-// ---- loop ----
-let angle = parseFloat(params.get('spin') ?? 0), last = performance.now(), visible = false;
-const spinFrozen = params.has('spin');
-function frame(now) {
-  const dt = Math.min((now - last) / 1000, 0.05);
-  last = now;
-  if (!reduceMotion && !spinFrozen) angle += dt * S.spin;
-
-  const k = 1 - Math.exp(-dt * S.follow);
-  pos.x += (cursor.x - pos.x) * k;
-  pos.y += (cursor.y - pos.y) * k;
-  const [wx, wy] = toWorld(pos.x, pos.y);
-  follower.position.set(wx, wy, 0);
-
-  // lean into the movement: right -> top falls back to the left, down -> top tips away,
-  // plus a little turn; when the cursor stops the spring brings it back upright
-  if (!reduceMotion && dt > 0) {
-    const vx = (pos.x - prev.x) / dt, vy = (pos.y - prev.y) / dt;
-    const c = v => Math.max(-S.leanMax, Math.min(S.leanMax, v * S.leanPerPx));
-    for (const [axis, target] of [['z', c(vx)], ['x', c(vy)], ['y', c(vx) * 0.6]]) {
-      const v = 'v' + axis;
-      L[v] += (target - L[axis]) * S.leanStiffness * dt;
-      L[v] *= Math.exp(-S.leanDamping * dt);
-      L[axis] += L[v] * dt;
-    }
-    lean.rotation.set(L.x, L.y, L.z);
-  }
-  prev.x = pos.x; prev.y = pos.y;
-  if (!isNaN(leanFix)) lean.rotation.set(leanFix * 0.5, leanFix * 0.6, leanFix);
-
-  objects.forEach((o, i) => {
-    const target = i === active ? 1 : 0;
-    if (reduceMotion) o.s = target;
-    else {
-      // spring: grows with a little overshoot, shrinks fast
-      o.v += (target - o.s) * S.stiffness * dt;
-      o.v *= Math.exp(-S.damping * dt);
-      o.s += o.v * dt;
-    }
-    const s = Math.max(o.s, 0);
-    o.holder.visible = s > 0.003;
-    o.holder.scale.setScalar(Math.max(s, 0.0001));
-    o.spinner.rotation.y = angle;   // shared angle: a new object picks up the same rotation
-  });
-
-  renderer.render(scene, camera);
-  if (visible) requestAnimationFrame(frame);
-}
-new IntersectionObserver(([e]) => {
-  const was = visible;
-  visible = e.isIntersecting;
-  if (visible && !was) { last = performance.now(); resize(); requestAnimationFrame(frame); }
-}).observe(section);
-
-</script>
+</div>
+<script>window.PROTO_MODULES = [{"title": "Regulatory monitoring (Ruler)", "tag": "Nieuw", "icon": "<svg class=\"cx-ic\" fill=\"currentColor\" data-icon=\"radar\" xmlns=\"http://www.w3.org/2000/svg\" height=\"24\" viewBox=\"0 -960 960 960\" width=\"24\"><path d=\"M331.86-129.92q-69.37-29.92-120.68-81.21-51.31-51.29-81.25-120.63Q100-401.1 100-479.93q0-78.84 29.92-148.21t81.21-120.68q51.29-51.31 120.63-81.25Q401.1-860 479.93-860q78.84 0 148.21 29.92t120.68 81.21q51.31 51.29 81.25 120.63Q860-558.9 860-480.07q0 78.84-29.92 148.21t-81.21 120.68q-51.29 51.31-120.63 81.25Q558.9-100 480.07-100q-78.84 0-148.21-29.92ZM480-160q58.5 0 110.21-19.42 51.71-19.43 93.48-54.12l-70.84-70.85q-27.47 21-61.48 32.7Q517.36-260 480-260q-91.67 0-155.83-64.14Q260-388.28 260-479.91q0-91.63 64.14-155.86Q388.28-700 479.91-700q91.63 0 155.86 64.17Q700-571.67 700-480q0 37.46-12 71.68-12 34.22-33 61.78l70.85 70.85q34.69-41.77 54.42-93.69Q800-421.31 800-480q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-160q24.55 0 47.43-7.23t42.03-20.54L495-422.23q-3.73 1.48-7.46 1.86-3.73.37-7.46.37-24.62 0-42.35-17.73T420-480q0-24.54 17.73-42.27Q455.46-540 480-540q24.54 0 42.27 17.73Q540-504.54 540-480.08q0 4.45-.37 8.53-.38 4.07-1.86 7.78l73.84 73.85q13.31-19.16 20.85-41.87Q640-454.51 640-480q0-66-47-113t-113-47q-66 0-113 47t-47 113q0 66 47 113t113 47Z\"/></svg>", "desc": "Regelgeving met de hand bijhouden over meerdere bronnen kost tijd en leidt tot fouten. Ruler en CERRIX geven je één traceerbare keten van wijziging tot control.", "usps": ["Doorlopende monitoring van Europese toezichthouders", "De regulatory bridge legt elke wijziging naast je risico's en controls", "AI stelt een gap-analyse op die je team beoordeelt en goedkeurt"], "img": "assets/prod-ruler.png"}, {"title": "Risico- en controlebeheer", "tag": "", "icon": "<svg class=\"cx-ic\" fill=\"currentColor\" data-icon=\"shield\" xmlns=\"http://www.w3.org/2000/svg\" height=\"24\" viewBox=\"0 -960 960 960\" width=\"24\"><path d=\"M480-100.77q-129.77-35.39-214.88-152.77Q180-370.92 180-516v-230.15l300-112.31 300 112.31V-516q0 145.08-85.12 262.46Q609.77-136.16 480-100.77Zm0-63.23q104-33 172-132t68-220v-189l-240-89.62L240-705v189q0 121 68 220t172 132Zm0-315.62Z\"/></svg>", "desc": "Breng risico's en controls samen in één register. Zo zie je altijd waar je staat, zonder losse spreadsheets bij te houden.", "usps": ["Eén risicoregister voor alle drie de lijnen", "Controls direct gekoppeld aan risico's en bewijs", "Actuele risicoscores, klaar voor het bestuur"], "img": "assets/prod-risk.png"}, {"title": "Compliancemanagement", "tag": "", "icon": "<svg class=\"cx-ic\" fill=\"currentColor\" data-icon=\"verified\" xmlns=\"http://www.w3.org/2000/svg\" height=\"24\" viewBox=\"0 -960 960 960\" width=\"24\"><path d=\"m352.46-85.39-71.38-120.3-135.54-29.7 13.23-139.53L66.93-480l91.84-105.08-13.23-139.53 135.54-29.7 71.38-120.3L480-820.46l127.54-54.15 71.38 120.3 135.54 29.7-13.23 139.53L893.07-480l-91.84 105.08 13.23 139.53-135.54 29.7-71.38 120.3L480-139.54 352.46-85.39ZM378-162l102-43.23L583.23-162 640-258l110-25.23L740-396l74-84-74-85.23L750-678l-110-24-58-96-102 43.23L376.77-798 320-702l-110 24 10 112.77L146-480l74 84-10 114 110 24 58 96Zm102-318Zm-42 128.15L650.15-564 608-607.38l-170 170-86-84.77L309.85-480 438-351.85Z\"/></svg>", "desc": "Aantoonbaar voldoen, bewijs op één plek.", "usps": [], "img": "assets/prod-compliance.png"}, {"title": "Auditmanagement", "tag": "", "icon": "<svg class=\"cx-ic\" fill=\"currentColor\" data-icon=\"fact_check\" xmlns=\"http://www.w3.org/2000/svg\" height=\"24\" viewBox=\"0 -960 960 960\" width=\"24\"><path d=\"M172.31-140Q142-140 121-161q-21-21-21-51.31v-535.38Q100-778 121-799q21-21 51.31-21h615.38Q818-820 839-799q21 21 21 51.31v535.38Q860-182 839-161q-21 21-51.31 21H172.31Zm0-60h615.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46v-535.38q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H172.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v535.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85ZM210-290h180v-60H210v60Zm372-84.23L765.77-558 723-600.77l-141 142-57-57L483.23-473 582-374.23ZM210-450h180v-60H210v60Zm0-160h180v-60H210v60Zm-50 410v-560 560Z\"/></svg>", "desc": "Audits gepland, bevindingen opgevolgd.", "usps": [], "img": "assets/prod-audit.png"}, {"title": "Incidentmanagement", "tag": "", "icon": "<svg class=\"cx-ic\" fill=\"currentColor\" data-icon=\"report\" xmlns=\"http://www.w3.org/2000/svg\" height=\"24\" viewBox=\"0 -960 960 960\" width=\"24\"><path d=\"M480-291.54q13.73 0 23.02-9.38 9.29-9.39 9.29-22.93 0-13.53-9.29-22.92-9.29-9.38-23.02-9.38t-23.02 9.38q-9.29 9.39-9.29 22.92 0 13.54 9.29 22.93 9.29 9.38 23.02 9.38Zm-30-139.23h60v-241.54h-60v241.54ZM338.46-140 140-338.28v-283.26L338.28-820h283.26L820-621.72v283.26L621.72-140H338.46ZM364-200h232l164-164v-232L596-760H364L200-596v232l164 164Zm116-280Z\"/></svg>", "desc": "Incidenten gemeld en afgehandeld.", "usps": [], "img": "assets/prod-incident.png"}, {"title": "Procesmanagement", "tag": "", "icon": "<svg class=\"cx-ic\" fill=\"currentColor\" data-icon=\"account_tree\" xmlns=\"http://www.w3.org/2000/svg\" height=\"24\" viewBox=\"0 -960 960 960\" width=\"24\"><path d=\"M610-130v-120H450v-400H350v120H90v-300h260v120h260v-120h260v300H610v-120H510v340h100v-120h260v300H610ZM150-770v180-180Zm520 400v180-180Zm0-400v180-180Zm0 180h140v-180H670v180Zm0 400h140v-180H670v180ZM150-590h140v-180H150v180Z\"/></svg>", "desc": "Processen gekoppeld aan controls.", "usps": [], "img": "assets/prod-process.png"}, {"title": "Third party management", "tag": "", "icon": "<svg class=\"cx-ic\" fill=\"currentColor\" data-icon=\"handshake\" xmlns=\"http://www.w3.org/2000/svg\" height=\"24\" viewBox=\"0 -960 960 960\" width=\"24\"><path d=\"M471.54-161.15q5.92 0 12.04-2.77 6.11-2.77 9.65-6.31l319.92-319.92q13.54-13.54 20.39-28.93 6.84-15.38 6.84-32.3 0-17.54-6.84-33.77-6.85-16.24-20.39-29.16l-160-160q-12.92-13.54-28-19.81-15.07-6.26-32.61-6.26-16.92 0-32.5 6.26-15.58 6.27-28.73 19.81l-22.93 22.93 74 74.61q13.46 12.85 19.89 29.31 6.42 16.46 6.42 34.15 0 36.62-24.46 61.08t-61.08 24.46q-17.69 0-34.27-5.85-16.57-5.84-29.42-18.69l-75.77-75.15-173.84 173.84q-4.54 4.54-6.81 10.16-2.27 5.61-2.27 11.54 0 11.07 7.54 18.92 7.54 7.85 18.61 7.85 5.93 0 12.04-2.77 6.12-2.77 9.66-6.31L380-545.61l42.15 42.15-130.77 131.38q-4.53 4.54-6.8 10.16-2.27 5.61-2.27 11.54 0 10.69 7.73 18.42 7.73 7.73 18.42 7.73 5.93 0 12.04-2.77 6.12-2.77 9.65-6.31l136-135.38 42.16 42.15-135.39 136q-4.15 3.54-6.61 9.65-2.46 6.12-2.46 12.04 0 10.7 7.73 18.43t18.42 7.73q5.92 0 11.54-2.27 5.61-2.27 10.15-6.81l136-135.38L589.85-345l-136 136q-4.54 4.54-6.81 10.54-2.27 6-2.27 11.54 0 11.07 8.23 18.42 8.23 7.35 18.54 7.35Zm-.62 59.99q-33.92 0-59.15-23.53-25.23-23.54-26.38-58.62-34-2.31-56.81-24.15-22.81-21.85-24.73-57.39-35.54-2.3-57.46-24.84-21.93-22.54-23.47-56.7-35.69-2.3-58.92-25.88-23.23-23.58-23.23-59.65 0-17.69 6.73-34.66 6.73-16.96 19.58-29.8l216.61-216 117.16 117.15q3.53 4.15 9.26 6.62 5.74 2.46 12.43 2.46 10.92 0 18.84-7.23 7.93-7.23 7.93-18.93 0-6.69-2.46-12.42-2.47-5.73-6.62-9.27L399.92-774.31q-12.92-13.54-28.19-19.81-15.27-6.26-32.81-6.26-16.92 0-32.11 6.26-15.2 6.27-28.73 19.81l-131.39 132q-10.92 10.92-17.88 25.81-6.96 14.88-8.19 30.35-1.24 12.77 1.15 25.27 2.38 12.5 8.38 23.5L86-493.23Q72.46-512.77 65.62-537q-6.85-24.23-5.62-49.15 1.23-27.62 12.46-53.35t31.46-45.96l131-131q22.47-21.85 48.89-32.88 26.42-11.04 55.5-11.04 29.07 0 55.3 11.04 26.24 11.03 48.08 32.88l22.93 22.92 22.92-22.92q22.46-21.85 48.69-32.88 26.23-11.04 55.31-11.04 29.08 0 55.5 11.04 26.42 11.03 48.27 32.88l159 159q21.84 21.85 33.46 49.73 11.61 27.88 11.61 56.96 0 29.08-11.61 55.31-11.62 26.23-33.46 48.07L535.38-128.08q-13.23 13.23-29.8 20.08-16.58 6.84-34.66 6.84Zm-113.61-532.3Z\"/></svg>", "desc": "Leveranciers en uitbesteding in beeld.", "usps": [], "img": "assets/prod-thirdparty.png"}, {"title": "Privacy en GDPR", "tag": "", "icon": "<svg class=\"cx-ic\" fill=\"currentColor\" data-icon=\"lock\" xmlns=\"http://www.w3.org/2000/svg\" height=\"24\" viewBox=\"0 -960 960 960\" width=\"24\"><path d=\"M252.31-100q-29.92 0-51.12-21.19Q180-142.39 180-172.31v-375.38q0-29.92 21.19-51.12Q222.39-620 252.31-620H300v-80q0-74.92 52.54-127.46Q405.08-880 480-880q74.92 0 127.46 52.54Q660-774.92 660-700v80h47.69q29.92 0 51.12 21.19Q780-577.61 780-547.69v375.38q0 29.92-21.19 51.12Q737.61-100 707.69-100H252.31Zm0-60h455.38q5.39 0 8.85-3.46t3.46-8.85v-375.38q0-5.39-3.46-8.85t-8.85-3.46H252.31q-5.39 0-8.85 3.46t-3.46 8.85v375.38q0 5.39 3.46 8.85t8.85 3.46Zm277.27-150.42Q550-330.85 550-360t-20.42-49.58Q509.15-430 480-430t-49.58 20.42Q410-389.15 410-360t20.42 49.58Q450.85-290 480-290t49.58-20.42ZM360-620h240v-80q0-50-35-85t-85-35q-50 0-85 35t-35 85v80ZM240-160v-400 400Z\"/></svg>", "desc": "Verwerkingen en datalekken beheerst.", "usps": [], "img": "assets/prod-compliance.png"}, {"title": "Rapportage en dashboards", "tag": "", "icon": "<svg class=\"cx-ic\" fill=\"currentColor\" data-icon=\"monitoring\" xmlns=\"http://www.w3.org/2000/svg\" height=\"24\" viewBox=\"0 -960 960 960\" width=\"24\"><path d=\"M130-130v-65.77l60-60V-130h-60Zm160 0v-225.77l60-60V-130h-60Zm160 0v-285.77l60 61V-130h-60Zm160 0v-224.77l60-60V-130h-60Zm160 0v-385.77l60-60V-130h-60ZM130-351.23v-84.54l270-270 160 160 270-270v84.54l-270 270-160-160-270 270Z\"/></svg>", "desc": "Realtime inzicht voor het bestuur.", "usps": [], "img": "assets/prod-reporting.png"}, {"title": "AI en automatisering", "tag": "", "icon": "<svg class=\"cx-ic\" fill=\"currentColor\" data-icon=\"auto_awesome\" xmlns=\"http://www.w3.org/2000/svg\" height=\"24\" viewBox=\"0 -960 960 960\" width=\"24\"><path d=\"M740-616.16 697.69-710l-93.84-42.31 93.84-42.3L740-888.46l42.31 93.85 93.84 42.3L782.31-710 740-616.16Zm0 544.62-42.31-93.85-93.84-42.3L697.69-250 740-343.84 782.31-250l93.84 42.31-93.84 42.3L740-71.54ZM355.38-208.47l-84.61-186.92L83.85-480l186.92-84.61 84.61-186.92L440-564.61 626.92-480 440-395.39l-84.62 186.92Zm0-145.53 40-86 86-40-86-40-40-86-40 86-86 40 86 40 40 86Zm0-126Z\"/></svg>", "desc": "AI in elke stap van je GRC-werk.", "usps": [], "img": "assets/prod-reporting.png"}];</script>
+<script src="js/proto.js" defer></script>
+<script type="module" src="js/ring.js"></script>
+<script type="module" src="js/sectors.js"></script>
 </body>
 </html>

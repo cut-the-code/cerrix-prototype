@@ -1,0 +1,117 @@
+/* Prototype in motion (03-11-2026) — alleen beweging en interactiestaten bovenop het ontwerp (design.css).
+   Geen nieuwe vormgeving: kleuren, maten en componenten komen uit het ontwerp. */
+
+@property --progress { syntax: '<number>'; inherits: true; initial-value: 0; }
+@property --arrow { syntax: '<number>'; inherits: true; initial-value: 0; }
+
+/* ontwerpnotities zijn voor Figma, niet voor het prototype */
+.proto .hp-ui-label { display: none; }
+.proto .wf-frame { overflow: clip; }
+
+/* ---------- navigatie: dropdowns ---------- */
+.proto .cx-header { position: relative; z-index: 20; }
+.proto .proto-dd { z-index: 19; }
+.proto .proto-dd[hidden] { display: none; }
+.proto .proto-dd .cx-dropdown { animation: dd-in .22s cubic-bezier(.2, .7, .2, 1); transform-origin: top center; }
+@keyframes dd-in { from { opacity: 0; transform: translateY(-8px) scale(.985); } to { opacity: 1; transform: none; } }
+.proto .cx-header .wf-nav a { transition: opacity .2s ease; }
+.proto .cx-header .wf-nav a.has-sub svg { transition: transform .25s ease; }
+.proto .cx-header .wf-nav a.is-open svg { transform: rotate(180deg); }
+.proto .cx-item { transition: background-color .18s ease; }
+
+/* ---------- hero: 3D-ring en stofdeeltjes (uit het prototype van 30-10) ---------- */
+.proto .ds-band { position: relative; overflow: hidden; }
+.proto #dust { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+.proto .ds-band > :not(canvas) { position: relative; z-index: 1; }
+.proto .ds-band > .cx-header { z-index: 20; }
+.proto .ds-band > .proto-dd { z-index: 19; }
+.proto .cx-header { z-index: 20; }
+.proto .proto-ring { position: relative; will-change: transform; }
+.proto .proto-ring > img { visibility: hidden; }          /* statisch beeld blijft als maat en terugval */
+.proto #donut, .proto #donut-blur { position: absolute; inset: -15%; width: 130%; height: 130%; display: block; pointer-events: none; }
+.proto .proto-ring { --depth-blur: 1.8px; }
+.proto #donut-blur {
+  filter: blur(var(--depth-blur));
+  -webkit-mask-image: radial-gradient(46% 46% at 17% 19%, rgba(0,0,0,.55) 0%, rgba(0,0,0,.55) 20%, transparent 100%);
+          mask-image: radial-gradient(46% 46% at 17% 19%, rgba(0,0,0,.55) 0%, rgba(0,0,0,.55) 20%, transparent 100%);
+}
+.proto #donut {
+  -webkit-mask-image: radial-gradient(46% 46% at 17% 19%, rgba(0,0,0,.45) 0%, rgba(0,0,0,.45) 20%, #000 100%);
+          mask-image: radial-gradient(46% 46% at 17% 19%, rgba(0,0,0,.45) 0%, rgba(0,0,0,.45) 20%, #000 100%);
+}
+.proto.no-webgl .proto-ring > img { visibility: visible; }
+.proto.no-webgl #donut, .proto.no-webgl #donut-blur, .proto.no-webgl #dust { display: none; }
+
+/* hero-intro: tekst komt rustig binnen, na elkaar */
+.proto .proto-intro { opacity: 0; transform: translateY(18px); animation: intro .9s cubic-bezier(.2, .7, .2, 1) forwards; animation-delay: var(--d, 0ms); }
+@keyframes intro { to { opacity: 1; transform: none; } }
+
+/* ---------- scroll: blokken en kaarten komen binnen ---------- */
+.proto [data-reveal] { opacity: 0; transform: translateY(28px); transition: opacity .8s ease, transform .8s cubic-bezier(.2, .7, .2, 1); transition-delay: var(--d, 0ms); }
+.proto [data-reveal].in { opacity: 1; transform: none; }
+
+/* ---------- blok 3: sectoren ---------- */
+.proto .hp-s3 { position: relative; }
+.proto #sector-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 3; }
+.proto .hp-srow { transition: background-color .25s ease; }
+.proto .hp-srow .ds-iconbtn { transition: background-color .25s ease, color .25s ease, transform .25s ease; }
+.proto .hp-srow.is-hover .ds-iconbtn { transform: translateX(4px); }
+.proto .hp-srows:not(.is-expanded) .proto-more { display: none; }
+.proto .proto-more.is-new { animation: row-in .6s cubic-bezier(.2, .7, .2, 1) both; animation-delay: var(--d, 0ms); }
+@keyframes row-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+.proto .hp-more { transition: opacity .3s ease, transform .3s ease; }
+
+/* ---------- blok 4: product ---------- */
+.proto .hp-acc { transition: box-shadow .3s ease, border-color .3s ease, background-color .2s ease; cursor: pointer; }
+.proto .hp-acc:not(.is-open):hover { background: var(--wf-surface); }
+.proto .hp-acc.is-open .hp-acc-body { animation: acc-in .45s cubic-bezier(.2, .7, .2, 1); }
+@keyframes acc-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+.proto .hp-sticky img { transition: opacity .35s ease, transform .5s cubic-bezier(.2, .7, .2, 1); }
+.proto .hp-sticky img.is-swapping { opacity: 0; transform: translateY(10px) scale(.99); }
+
+/* ---------- blok 5: AI — vraag typt zich uit, antwoord en grafiek bouwen zich op ---------- */
+.proto .hp-tab { transition: background-color .2s ease, color .2s ease, box-shadow .2s ease; cursor: pointer; }
+.proto .hp-cmp--on .hp-msg-q .proto-caret { display: inline-block; width: 2px; height: 1em; margin-left: 2px; vertical-align: -2px; background: currentColor; animation: caret 1s steps(1) infinite; }
+@keyframes caret { 50% { opacity: 0; } }
+.proto .hp-cmp--on .hp-msg-a, .proto .hp-cmp--on .hp-fast { transition: opacity .5s ease, transform .5s cubic-bezier(.2, .7, .2, 1); }
+.proto .hp-cmp--on.is-waiting .hp-msg-a, .proto .hp-cmp--on.is-waiting .hp-fast { opacity: 0; transform: translateY(10px); }
+.proto .hp-cmp--on .hp-rows > * { transition: opacity .4s ease, transform .4s ease; transition-delay: var(--d, 0ms); }
+.proto .hp-cmp--on.is-waiting .hp-rows > * { opacity: 0; transform: translateX(-8px); }
+.proto .hp-cmp--on .hp-bars i { transform-origin: bottom; transition: transform .7s cubic-bezier(.2, .7, .2, 1); transition-delay: var(--d, 0ms); }
+.proto .hp-cmp--on.is-waiting .hp-bars i { transform: scaleY(0); }
+
+/* ---------- blok 6: klantverhaal — tabs lopen vanzelf door ---------- */
+.proto .hp-case-tabs .ds-logo { cursor: pointer; transition: border-color .25s ease; }
+.proto .hp-case-tabs .hp-progress i { width: 0; transition: none; }
+.proto .hp-case-tabs .is-active .hp-progress i.is-running { width: 100%; transition: width var(--dur, 7s) linear; }
+.proto .hp-case { transition: opacity .35s ease; }
+.proto .hp-case.is-swapping { opacity: .15; }
+
+/* ---------- kaarten: kennis, onderwerpen, modules ---------- */
+.proto .hp-acard, .proto .tp-topic, .proto .tp-mod { transition: transform .3s cubic-bezier(.2, .7, .2, 1), box-shadow .3s ease, border-color .25s ease; }
+.proto .hp-acard:hover { transform: translateY(-4px); box-shadow: 0 18px 40px #050f3214; }
+.proto .tp-mod .ds-iconbtn { transition: background-color .25s ease, color .25s ease, transform .25s ease; }
+.proto .tp-table tr.is-hover .tp-mod .ds-iconbtn { transform: translateX(3px); }
+
+/* ---------- tijdlijn (sector + regelgeving) ---------- */
+.proto .cx-tl::after { transition: --progress 1.4s cubic-bezier(.4, 0, .2, 1); }
+.proto .cx-tl.is-idle { --progress: 0 !important; }
+.proto .cx-tl-dot { transition: background-color .3s ease, border-color .3s ease, transform .3s ease; }
+.proto .tp-tl-panel { transition: --arrow .6s cubic-bezier(.2, .7, .2, 1); }
+
+/* ---------- FAQ ---------- */
+.proto .tp-faq-q { cursor: pointer; flex-wrap: wrap; }
+.proto .tp-faq-q svg { transition: transform .3s ease; }
+.proto .tp-faq-q.is-open svg { transform: rotate(180deg); }
+.proto .proto-faq-a { flex-basis: 100%; overflow: hidden; max-height: 0; opacity: 0; transition: max-height .4s ease, opacity .3s ease, margin .3s ease;
+  font-size: 16px; line-height: 1.55; color: var(--wf-text-2); font-weight: 400; }
+.proto .tp-faq-q.is-open .proto-faq-a { max-height: 200px; opacity: 1; margin-top: 12px; }
+
+/* ---------- prototype-label ---------- */
+.proto-badge { position: fixed; right: 16px; bottom: 16px; z-index: 50; padding: 8px 12px; border-radius: 999px; background: #050f32e6; color: #fff;
+  font: 500 11px/1 Inter, system-ui, sans-serif; letter-spacing: .02em; box-shadow: 0 8px 24px #050f3240; }
+.proto-badge a { color: #50e3c2; text-decoration: none; margin-left: 8px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .proto [data-reveal], .proto .proto-intro { opacity: 1 !important; transform: none !important; animation: none !important; transition: none !important; }
+}
