@@ -3,6 +3,10 @@ import * as THREE from 'three';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
 const params = new URLSearchParams(location.search);
+// Tweede ring in de footer-CTA: dezelfde module met ?k=foot (eigen canvassen, geen scroll-drift, intro bij in beeld komen)
+const KEY = new URL(import.meta.url).searchParams.get('k') || '';
+const FOOT = KEY === 'foot';
+const sfx = FOOT ? '-foot' : '';
 const freezeT = parseFloat(params.get('t'));   // ?t=1.2 freezes the timeline, for review
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -28,7 +32,7 @@ const CONFIG = {
   cameraDistance: 12.2,
 };
 
-const canvas = document.getElementById('donut');
+const canvas = document.getElementById('donut' + sfx);
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -202,7 +206,7 @@ const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
 const easeOutBack = t => { const c = 1.3; return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2); };
 const clamp01 = t => Math.min(1, Math.max(0, t));
 
-let introStart = performance.now();
+let introStart = performance.now(), introPlayed = false;
 let spin = 0;
 
 function updateDonut(t, dt) {
@@ -227,7 +231,7 @@ function updateDonut(t, dt) {
   bctx.drawImage(canvas, 0, 0, blurCanvas.width, blurCanvas.height);
 }
 
-const blurCanvas = document.getElementById('donut-blur');
+const blurCanvas = document.getElementById('donut-blur' + sfx);
 const bctx = blurCanvas.getContext('2d');
 function resizeDonut() {
   const w = canvas.clientWidth, h = canvas.clientHeight;
@@ -242,7 +246,7 @@ function resizeDonut() {
 // ============================================================================
 // Dust: tiny white specks drifting down, densest top-right (like Stars.avif)
 // ============================================================================
-const dustCanvas = document.getElementById('dust');
+const dustCanvas = document.getElementById('dust' + sfx);
 const dctx = dustCanvas.getContext('2d');
 let specks = [], dw = 0, dh = 0, dpr = 1;
 
@@ -317,18 +321,25 @@ function updateParallax(dt) {
 
 // Scroll: the ring trails the page (moves down at a fraction of the scroll, so it drifts
 // behind the video), tips back a little, and its discs speed up in the scroll direction.
-const SCROLL = { follow: 0.38, tiltMax: 0.35, tiltPerPx: 0.0006, boostPerPxs: 0.0016, boostMax: 2.2 };
+const SCROLL = FOOT ? { follow: 0, tiltMax: 0, tiltPerPx: 0, boostPerPxs: 0.0016, boostMax: 2.2 }
+                    : { follow: 0.38, tiltMax: 0.35, tiltPerPx: 0.0006, boostPerPxs: 0.0016, boostMax: 2.2 };
+let hoverBoost = 0;
+if (FOOT) {
+  const cta = document.querySelector('.ds-foot-cta');
+  cta.addEventListener('pointerenter', () => { hoverBoost = 1.4; });
+  cta.addEventListener('pointerleave', () => { hoverBoost = 0; });
+}
 const scroll = { y: scrollY, last: scrollY, boost: 0, tilt: 0 };
-const ringWrap = document.querySelector('.proto-ring');
+const ringWrap = document.querySelector(FOOT ? '.proto-ring-foot' : '.proto-ring');
 if (params.has('scrollto')) setTimeout(() => scrollTo(0, +params.get('scrollto')), 300);   // review only
 function updateScroll(dt) {
   const y = scrollY;
   const v = dt > 0 ? (y - scroll.last) / dt : 0;   // px/s, signed
   scroll.last = y;
-  const target = Math.max(-SCROLL.boostMax, Math.min(SCROLL.boostMax, v * SCROLL.boostPerPxs));
+  const target = Math.max(-SCROLL.boostMax, Math.min(SCROLL.boostMax, v * SCROLL.boostPerPxs + hoverBoost));
   scroll.boost += (target - scroll.boost) * (1 - Math.exp(-dt * (Math.abs(target) > Math.abs(scroll.boost) ? 6 : 1.5)));
   scroll.tilt = Math.min(SCROLL.tiltMax, y * SCROLL.tiltPerPx);
-  ringWrap.style.transform = `translate3d(0, ${(y * SCROLL.follow).toFixed(1)}px, 0)`;
+  if (!FOOT) ringWrap.style.transform = `translate3d(0, ${(y * SCROLL.follow).toFixed(1)}px, 0)`;
 }
 
 function frame(now) {
@@ -346,7 +357,9 @@ new IntersectionObserver(([e]) => {
   const was = visible;
   visible = e.isIntersecting;
   if (visible && !was) { last = performance.now(); requestAnimationFrame(frame); }
-}).observe(document.querySelector('.ds-band'));
+  // footer: de intro speelt pas af als de ring voor het eerst in beeld komt
+  if (FOOT && visible && !introPlayed) { introPlayed = true; introStart = performance.now(); spin = 0; }
+}).observe(document.querySelector(FOOT ? '.ds-foot-cta' : '.ds-band'));
 requestAnimationFrame(frame);
 
 

@@ -373,4 +373,7 @@ new IntersectionObserver(([e]) => {
   visible = e.isIntersecting;
   if (visible && !was) { last = performance.now(); resize(); requestAnimationFrame(frame); }
 }).observe(section);
+// 03-11: de sectie groeit als 'Bekijk meer sectoren' de andere drie rijen toont; het canvas moet dan mee,
+// anders tekent het object uitgerekt en op de verkeerde plek
+new ResizeObserver(() => resize()).observe(section);
 

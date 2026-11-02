@@ -31,6 +31,14 @@
     clearTimeout(closeT);
     items.forEach(a => a.classList.toggle('is-open', a.dataset.label === label));
     dds.forEach(d => d.hidden = d.dataset.dd !== label);
+    // onder het menu-item uitlijnen, binnen de container (zelfde rekensom als in de navigatiestaten)
+    const dd = dds.find(d => !d.hidden), a = items.find(x => x.dataset.label === label);
+    if (dd && a) {
+      const panel = $('.cx-dropdown', dd), wrap = dd.getBoundingClientRect();
+      const left = a.getBoundingClientRect().left - wrap.left - 24;
+      const max = wrap.width - panel.offsetWidth - 32;
+      panel.style.left = Math.max(32, Math.min(left, max)) + 'px';
+    }
   };
   const closeDD = () => { closeT = setTimeout(() => openDD(null), 160); };
   items.forEach(a => {
