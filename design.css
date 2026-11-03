@@ -669,3 +669,25 @@ body.ds { background: #fff; font-size: 15px; }
 .ds .cx-col--span { background: var(--wf-surface); border-top-color: transparent; }
 /* Diensten-items op dezelfde x als de twee Product-kolommen erboven (kolom 320 + lijn 1) */
 .ds .cx-col--span .cx-list--row { display: grid; grid-template-columns: 321px 1fr; column-gap: 0; }
+
+/* ---- 03-11: scrollverhaal (homepage blok 4, sector blok 3) — gekozen boven de uitklaplijst ----
+   Ontwerp = beginstand: beeld links, eerste stap actief, de volgende twee gedimd. Het prototype toont alle stappen en wisselt mee. */
+.ds .px-story { display: grid; grid-template-columns: 1.2fr 1fr; gap: 72px; margin-top: 56px; align-items: start; }
+.ds .px-visual { position: sticky; top: 112px; }
+.ds .px-frame { aspect-ratio: 970 / 912; border-radius: 20px; overflow: hidden; box-shadow: 0 24px 48px #050f321f; background: #031033; }
+.ds .px-frame img { width: 100%; height: 100%; object-fit: cover; display: block; box-shadow: none; border-radius: 0; }
+.ds .px-steps { display: flex; flex-direction: column; gap: 72px; padding-top: 24px; }
+.ds .px-step { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
+.ds .px-step:not(.is-active) { opacity: .32; }
+.ds .px-step:nth-child(n+4) { display: none; }
+.ds .px-num { display: inline-flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; letter-spacing: .08em; color: #0a7560; }
+.ds .px-num .cx-tag { margin: 0; background: #ff8a3d; border-color: #ff8a3d; color: var(--ds-ink); font-weight: 600; font-size: 12px;
+  letter-spacing: .02em; line-height: 1.2; padding: 3px 10px; border-radius: 999px; }
+.ds .px-title { display: flex; align-items: center; gap: 16px; }
+.ds .px-title .ds-tile { width: 48px; height: 48px; border-radius: 12px; flex: none; }
+.ds .px-step.is-active .px-title .ds-tile { background: var(--ds-teal); }
+.ds .px-title .ds-tile svg { fill: var(--ds-ink); color: var(--ds-ink); }
+.ds .px-title h3 { margin: 0; font-size: 28px; font-weight: 600; line-height: 1.2; letter-spacing: -.4px; color: var(--ds-ink); }
+.ds .px-step .hp-mod-desc { margin: 0; font-size: 17px; line-height: 1.55; color: var(--wf-text-2); max-width: 46ch; }
+.ds .px-step .hp-usps { margin: 0; }
+.ds .px-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 4px; }
