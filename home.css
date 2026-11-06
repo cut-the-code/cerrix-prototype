@@ -251,3 +251,5 @@
 .hp-wdate span { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; }
 .hp-wcard .wf-img { position: relative; }
 .hp-wmeta { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--wf-text-2); }
+/* 06-11: staartje van de tooltip als echt element; in de wireframe blijft de ::after */
+.hp-tip-tail { display: none; }
