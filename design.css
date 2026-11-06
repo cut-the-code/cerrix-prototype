@@ -803,3 +803,7 @@ body.ds { background: #fff; font-size: 15px; }
 .ds .tp-dark .tp-mod .ds-iconbtn { background: #ffffff14; color: #fff; }
 .ds .tp-dark .tp-table tr.is-hover .tp-mod { border-color: var(--ds-teal); box-shadow: inset 0 0 0 1px var(--ds-teal); }
 .ds .tp-dark .tp-table tr.is-hover .tp-mod .ds-iconbtn { background: var(--ds-teal); color: var(--ds-ink); }
+/* 06-11 (13): zoals "Inzicht met AI": de tabel alleen als omlijning (transparant, lijnen #ffffff26), de modulekaarten
+   gevuld in de bandkleur, zodat de nadruk op de modules ligt */
+.ds .tp-dark .tp-table td, .ds .tp-dark .tp-table tr.is-hover td { background: transparent; border-color: #ffffff26; }
+.ds .tp-dark .tp-mod { background: var(--ds-band); border-color: #ffffff1f; }
