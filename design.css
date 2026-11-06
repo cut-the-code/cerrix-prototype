@@ -807,3 +807,8 @@ body.ds { background: #fff; font-size: 15px; }
    gevuld in de bandkleur, zodat de nadruk op de modules ligt */
 .ds .tp-dark .tp-table td, .ds .tp-dark .tp-table tr.is-hover td { background: transparent; border-color: #ffffff26; }
 .ds .tp-dark .tp-mod { background: var(--ds-band); border-color: #ffffff1f; }
+
+/* 06-11 (14): "Bekijk alle regelgeving" als knop — in de banner onder de regelknoppen (home + sector), in de dropdown
+   Regelgeving onder de lijst (zelfde secundaire knop als in de uitgelichte kaart, uitgelijnd met de items) */
+.ds .hp-regs .hp-regs-all { margin-top: 4px; }
+.ds .cx-dropdown .cx-all-btn { align-self: flex-start; margin: 16px 0 8px 0; }
