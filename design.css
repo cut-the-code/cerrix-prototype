@@ -739,3 +739,7 @@ body.ds { background: #fff; font-size: 15px; }
 /* AI-blok: "AI with human in the loop" onder de visual */
 .ds .hp-ai-hitl { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 24px 0 0; font-size: 15px; font-weight: 500; color: #fff; }
 .ds .hp-ai-hitl svg { fill: var(--ds-teal); }
+/* 06-11 (6): icoontegel boven "Of start bij je regelgeving", zelfde tegel als de actieve stap in het scrollverhaal
+   (48px, radius 12, turquoise, navy icoon 24) — subtiel, maar het groen trekt de aandacht. 16px tot de kop. */
+.ds .hp-regs .hp-regs-tile { width: 48px; height: 48px; border-radius: 12px; background: var(--ds-teal); margin-bottom: -8px; flex: none; }
+.ds .hp-regs .hp-regs-tile svg { fill: var(--ds-ink); color: var(--ds-ink); }
