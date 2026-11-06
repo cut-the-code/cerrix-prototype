@@ -752,3 +752,16 @@ body.ds { background: #fff; font-size: 15px; }
    de hero mee en wordt het canvas in het prototype langwerpig */
 .ds .ds-hero-obj { align-self: center; height: auto; aspect-ratio: 1; }
 .ds .ds-hero-obj img { position: absolute; left: 50%; top: 50%; width: 130%; height: auto; transform: translate(-50%, -50%); }
+
+/* 06-11 (9): sectorpagina — regelgevingsbanner gelijk aan de homepage (home.regs_banner), nu na de tijdlijn */
+.ds .tp-s5b .hp-regs { margin-top: 0; }
+/* tijdlijn klikbaar: navigatie in het paneel ("Fase 2 van 4" + vorige/volgende als ronde icoonknoppen) */
+.ds .tp-tl-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.ds .tp-tl-nav { display: flex; align-items: center; gap: 8px; }
+.ds .tp-tl-nav .wf-small { margin-right: 8px; font-size: 14px; color: var(--wf-text-2); }
+.ds .tp-tl-nav .wf-small b { color: var(--ds-ink); font-weight: 600; }
+.ds .tp-tl-nav .ds-iconbtn { border: 0; padding: 0; cursor: pointer; }
+.ds .tp-tl-nav .ds-iconbtn svg { fill: var(--ds-ink); }
+.ds .tp-tl-nav .tp-tl-next { background: var(--ds-navy); }
+.ds .tp-tl-nav .tp-tl-next svg { fill: #fff; }
+.ds .tp-s5b { padding: 0; }   /* compacte banner tussen twee witte secties: 96px aan beide kanten i.p.v. 192 */

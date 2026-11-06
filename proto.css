@@ -167,3 +167,16 @@
 /* 06-11: 3D-object in de sectorhero (js/hero-obj.js): canvas 130% van het vlak, zodat parallax en zweven niet afsnijden */
 .proto .proto-hero-obj canvas { position: absolute; left: -15%; top: -15%; width: 130%; height: 130%; max-width: none; pointer-events: none; }
 .proto .proto-hero-obj.is-live > img { visibility: hidden; }
+
+/* 06-11: klikbare tijdlijn (proto.js): stappen als knoppen met hoverstaat, paneel wisselt met een korte fade */
+.proto .cx-tl li { cursor: pointer; border-radius: 12px; transition: background-color .2s ease; }
+.proto .cx-tl li:not(.is-selected):hover strong, .proto .cx-tl li:focus-visible strong { color: var(--ds-ink); }
+.proto .cx-tl li:not(.is-selected):hover .cx-tl-dot { border-color: var(--ds-ink); transform: scale(1.08); }
+.proto .cx-tl li:focus-visible { outline: 2px solid var(--ds-teal); outline-offset: 6px; }
+.proto .cx-tl li.is-selected strong { color: var(--ds-ink); }
+.proto .cx-tl li:not(.is-done) .cx-tl-dot svg { display: none; }
+.proto .tp-tl-main > *, .proto .tp-tl-visual { transition: opacity .18s ease, transform .18s ease; }
+.proto .tp-tl-panel.is-swapping .tp-tl-main > :not(.tp-tl-top):not(.tp-tl-consultant), .proto .tp-tl-panel.is-swapping .tp-tl-visual { opacity: 0; transform: translateY(6px); }
+.proto .tp-tl-nav .ds-iconbtn { transition: background-color .2s ease, opacity .2s ease, transform .2s ease; }
+.proto .tp-tl-nav .ds-iconbtn:hover:not(:disabled) { transform: scale(1.06); }
+.proto .tp-tl-nav .ds-iconbtn:disabled { opacity: .35; cursor: default; }

@@ -186,10 +186,55 @@
   }
 
   // ---------- tijdlijn (sector + regelgeving): de lijn loopt vol tot de actieve stap zodra hij in beeld komt.
-  // Stappen zijn (nog) niet klikbaar: er is per stap nog geen eigen inhoud voor de kaart eronder.
   if (!reduce) $$('.cx-tl').forEach(tl => {
     tl.classList.add('is-idle');
     onView([tl], () => setTimeout(() => tl.classList.remove('is-idle'), 250), { threshold: 0.4 });
+  });
+  // 06-11: klikbaar. Klik op een stap of op vorige/volgende in het paneel; inhoud per stap komt uit data-steps
+  // (templates.phases). Sector: de gekozen stap wordt de actieve (lijn en vinkjes lopen mee). Regelgeving (met 'Nu'):
+  // de status blijft staan, alleen de gekozen mijlpaal licht op.
+  $$('.tp-tl-panel[data-steps]').forEach(panel => {
+    const steps = JSON.parse(panel.dataset.steps || '[]');
+    const tl = panel.parentElement.querySelector('.cx-tl');
+    if (!tl || steps.length < 2) return;
+    const lis = $$('li', tl), n = lis.length, status = !!$('.cx-tl-now', tl);
+    const check = ($('.cx-tl-dot svg', tl) || {}).outerHTML || '';
+    if (!status) lis.forEach(li => { const d = $('.cx-tl-dot', li); if (!$('svg', d)) d.insertAdjacentHTML('beforeend', check); });
+    const main = $('.tp-tl-main', panel), img = $('.tp-tl-visual img', panel);
+    const pts = $$('.tp-tl-points li', panel), prev = $('.tp-tl-prev', panel), next = $('.tp-tl-next', panel);
+    let cur = Math.max(0, lis.findIndex(li => li.classList.contains('is-active')));
+    const fill = k => {
+      const st = steps[k];
+      $('.tp-tl-top .cx-tl-label', main).textContent = st.meta;
+      $('.tp-tl-title', main).textContent = st.title;
+      $(':scope > p', main).textContent = st.text;
+      [st.you, st.gain].forEach((pair, i) => { if (pts[i]) { $('.wf-small', pts[i]).textContent = pair[0]; $('p', pts[i]).textContent = pair[1]; } });
+      if (img && st.img) img.src = 'assets/' + st.img;
+      $('.tp-tl-nav b', panel).textContent = k + 1;
+    };
+    const go = (k, animate = true) => {
+      k = Math.max(0, Math.min(n - 1, k));
+      if (k === cur && animate) return;
+      cur = k;
+      panel.style.setProperty('--arrow', (k / n).toFixed(4));
+      lis.forEach((li, i) => {
+        li.classList.toggle('is-selected', i === k);
+        if (!status) { li.classList.toggle('is-done', i < k); li.classList.toggle('is-active', i === k); li.classList.toggle('is-todo', i > k); }
+      });
+      if (!status) tl.style.setProperty('--progress', ((k + 0.5) / n).toFixed(3));
+      prev.disabled = k === 0; next.disabled = k === n - 1;
+      if (!animate || reduce) { fill(k); return; }
+      panel.classList.add('is-swapping');
+      setTimeout(() => { fill(k); panel.classList.remove('is-swapping'); }, 180);
+    };
+    lis.forEach((li, i) => {
+      li.tabIndex = 0; li.setAttribute('role', 'button');
+      li.addEventListener('click', () => go(i));
+      li.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(i); } });
+    });
+    prev.addEventListener('click', () => go(cur - 1));
+    next.addEventListener('click', () => go(cur + 1));
+    go(cur, false);
   });
 
   // ---------- FAQ: vraag klapt open (antwoord = placeholder tot de klant teksten levert) ----------
