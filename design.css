@@ -724,3 +724,18 @@ body.ds { background: #fff; font-size: 15px; }
 .ds .hp-tip em { background: #eff0f3; padding: 18.5px 24px 13.5px; }
 .ds .hp-tip em .hp-tip-cta { border-bottom-color: rgb(5 15 50 / .46); }
 .ds .hp-tip-tail { fill: #eff0f3; }
+
+/* 06-11 (5): homepage-feedback klant */
+/* 3D-object in de sectorrij 20% kleiner (170 → 136) */
+.ds .ds-obj { width: 136px; height: 136px; }
+/* "Of start bij je regelgeving" viel weg en de tags voelden niet klikbaar: kop groter, banner ruimer,
+   tags als knoppen op standaard knopmaat (14/24, 16px) met pijl; geldt ook voor "Regels die gelden voor …" op de sectorpagina */
+.ds .hp-regs { padding: 48px 40px; gap: 24px; }
+.ds .hp-regs .wf-small { font-size: 24px; font-weight: 600; letter-spacing: -.01em; color: var(--ds-ink); }
+.ds .hp-regs .wf-pills, .ds .tp-regs .wf-pills { gap: 12px; }
+.ds .wf-pill.hp-reg-btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 20px 14px 24px; font-size: 16px; font-weight: 500;
+  letter-spacing: .02em; height: auto; line-height: 16px; background: #fff; border: 1px solid var(--ds-gray); color: var(--ds-ink); text-decoration: none; }
+.ds .wf-pill.hp-reg-btn svg { fill: var(--ds-ink); flex: none; }
+/* AI-blok: "AI with human in the loop" onder de visual */
+.ds .hp-ai-hitl { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 24px 0 0; font-size: 15px; font-weight: 500; color: #fff; }
+.ds .hp-ai-hitl svg { fill: var(--ds-teal); }

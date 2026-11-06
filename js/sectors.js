@@ -14,7 +14,7 @@ const canvas = document.getElementById('sector-canvas');
 const rows = [...document.querySelectorAll('.hp-srow')];
 
 const S = {
-  sizePx: 150,           // on-screen size of an object
+  sizePx: 120,           // on-screen size of an object (06-11: 20% kleiner, was 150)
   offset: [56, -8],      // object centre relative to the cursor (px, right / down)
   // lean: the object tilts in the direction the cursor moves and springs back upright
   leanPerPx: 0.0011,     // radians of tilt per px/s of cursor speed

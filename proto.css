@@ -157,3 +157,9 @@
 .ds .hp-logos .hp-logo-tip:hover, .ds .hp-logos .hp-logo-tip:focus-visible { background: #ffffff14; border-color: #ffffff33; outline: none; }
 .ds .hp-logo-tip .hp-tip { opacity: 0; visibility: hidden; transform: translate(-50%, 6px); transition: opacity .2s ease, transform .2s ease, visibility 0s .2s; pointer-events: none; }
 .ds .hp-logo-tip:hover .hp-tip, .ds .hp-logo-tip:focus-visible .hp-tip { opacity: 1; visibility: visible; transform: translate(-50%, 0); transition: opacity .2s ease, transform .2s ease; }
+
+/* 06-11: regelgevingsknoppen (home + sector) met hoverstaat zoals de andere knoppen */
+.ds .wf-pill.hp-reg-btn { transition: background-color .2s ease, border-color .2s ease, color .2s ease; }
+.ds .wf-pill.hp-reg-btn svg { transition: transform .2s ease, fill .2s ease; }
+.ds .wf-pill.hp-reg-btn:hover, .ds .wf-pill.hp-reg-btn:focus-visible { background: var(--ds-navy); border-color: var(--ds-navy); color: #fff; }
+.ds .wf-pill.hp-reg-btn:hover svg, .ds .wf-pill.hp-reg-btn:focus-visible svg { fill: #fff; transform: translateX(3px); }
