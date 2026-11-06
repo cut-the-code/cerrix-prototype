@@ -16,7 +16,7 @@
   // Prototype-label linksonder
   const badge = document.createElement('div');
   badge.className = 'proto-badge';
-  badge.innerHTML = 'Prototype CERRIX · ontwerp 03-11<a href="index.html">Home</a><a href="homepage-alternatief.html">Home (alternatief)</a><a href="sector-pensioenfondsen.html">Sector</a><a href="regelgeving-dora.html">Regelgeving</a>';
+  badge.innerHTML = 'Prototype CERRIX · ontwerp 06-11<a href="index.html">Home</a><a href="homepage-alternatief.html">Home (alternatief)</a><a href="sector-pensioenfondsen.html">Sector</a><a href="regelgeving-dora.html">Regelgeving</a>';
   document.body.append(badge);
 
   // Placeholderlinks (#) springen niet naar boven
