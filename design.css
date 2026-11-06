@@ -710,3 +710,11 @@ body.ds { background: #fff; font-size: 15px; }
 .ds .hp-tip-tail { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); fill: #fff; display: block; }
 /* 06-11: "Bekijk de case" als link met lijn onder tekst én pijl (viel als losse tekst weg) */
 .ds .hp-tip em { align-self: flex-start; padding-bottom: 3px; border-bottom: 1px solid currentColor; }
+/* 06-11 (3): tooltip met meer ademruimte; naam + omschrijving op wit, "Bekijk de case" in een onderste vlak in de
+   hoverkleur (--wf-surface, zoals sectorrijen en menu-items). Onderstreping 45% navy = 3,02:1 op #f4f6fa (WCAG 1.4.11, minimum). */
+.ds .hp-tip { width: 320px; padding: 24px 24px 0; gap: 8px; overflow: visible; }
+.ds .hp-tip strong { font-size: 16px; }
+.ds .hp-tip > span { font-size: 15px; line-height: 1.5; }
+.ds .hp-tip em { align-self: stretch; margin: 12px -24px 0; padding: 16px 24px; border-bottom: 0; background: var(--wf-surface); border-radius: 0 0 12px 12px; }
+.ds .hp-tip em .hp-tip-cta { display: inline-flex; align-items: center; gap: 6px; padding-bottom: 4px; font-size: 15px; font-weight: 600; color: var(--ds-ink); border-bottom: 1px solid rgb(5 15 50 / .45); }
+.ds .hp-tip-tail { fill: var(--wf-surface); }
