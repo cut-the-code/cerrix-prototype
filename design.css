@@ -708,3 +708,5 @@ body.ds { background: #fff; font-size: 15px; }
 .ds .hp-logo-tip > .cx-ic { display: none; }
 .ds .hp-tip::after { display: none; }
 .ds .hp-tip-tail { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); fill: #fff; display: block; }
+/* 06-11: "Bekijk de case" als link met lijn onder tekst én pijl (viel als losse tekst weg) */
+.ds .hp-tip em { align-self: flex-start; padding-bottom: 3px; border-bottom: 1px solid currentColor; }
