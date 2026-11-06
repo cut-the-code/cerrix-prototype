@@ -754,7 +754,7 @@ body.ds { background: #fff; font-size: 15px; }
 .ds .ds-hero-obj img { position: absolute; left: 50%; top: 50%; width: 130%; height: auto; transform: translate(-50%, -50%); }
 
 /* 06-11 (9): sectorpagina — regelgevingsbanner gelijk aan de homepage (home.regs_banner), nu na de tijdlijn */
-.ds .tp-s5b .hp-regs { margin-top: 0; }
+.ds .tp-regbanner .hp-regs { margin-top: 0; }
 /* tijdlijn klikbaar: navigatie in het paneel ("Fase 2 van 4" + vorige/volgende als ronde icoonknoppen) */
 .ds .tp-tl-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 .ds .tp-tl-nav { display: flex; align-items: center; gap: 8px; }
@@ -764,7 +764,7 @@ body.ds { background: #fff; font-size: 15px; }
 .ds .tp-tl-nav .ds-iconbtn svg { fill: var(--ds-ink); }
 .ds .tp-tl-nav .tp-tl-next { background: var(--ds-navy); }
 .ds .tp-tl-nav .tp-tl-next svg { fill: #fff; }
-.ds .tp-s5b { padding: 0; }   /* compacte banner tussen twee witte secties: 96px aan beide kanten i.p.v. 192 */
+.ds .tp-regbanner { padding: 0; }   /* 06-11: eigen klasse (tp-s5b was al de DORA-tijdlijn); compacte banner tussen twee witte secties: 96px aan beide kanten i.p.v. 192 */
 
 /* 06-11 (10): tijdlijn — de stappen zijn de tabs. Gekozen stap: vlak achter label + titel dat met het pijltje op het paneel
    aansluit; de andere stappen krijgen in het prototype een lichter hovervlak. Vervangt de vorige/volgende-navigatie. */
@@ -772,3 +772,18 @@ body.ds { background: #fff; font-size: 15px; }
 .ds .cx-tl li.is-selected::before { background: var(--wf-surface); }
 .ds .cx-tl li.is-selected strong { color: var(--ds-ink); }
 .ds .tp-tl-nav { display: none; }
+
+/* 06-11 (11): tijdlijn — selectie ín de tijdlijn i.p.v. een vlak (vlak stond te dicht op de volgende stap en had te weinig
+   contrast). Gekozen stap: turquoise halo om het bolletje en een turquoise balk onder de titel, waar het paneelpijltje op wijst. */
+.ds .cx-tl li::before { display: none; }
+.ds .cx-tl strong { align-self: flex-start; padding-bottom: 10px; border-bottom: 3px solid transparent; transition: border-color .2s ease, color .2s ease; }
+.ds .cx-tl li.is-selected strong { border-bottom-color: var(--ds-teal); color: var(--ds-ink); }
+.ds .cx-tl li.is-selected .cx-tl-dot { box-shadow: 0 0 0 6px #50e3c247; }
+.ds .cx-tl .cx-tl-dot { transition: box-shadow .2s ease, transform .2s ease, border-color .2s ease; }
+
+/* 06-11 (11): regelgevingspagina minder grijs — groene accenten uit de huisstijl, zoals de tegels in het scrollverhaal */
+.ds .tp-topic .ds-tile, .ds .tp-req .ds-tile { background: #50e3c226; }
+.ds .tp-topic .ds-tile svg, .ds .tp-req .ds-tile svg { fill: #0a7560; color: #0a7560; }
+.ds .tp-facts dt { color: #0a7560; font-weight: 600; letter-spacing: .02em; }
+.ds .tp-table tr.is-hover .tp-req .ds-tile { background: var(--ds-teal); }
+.ds .tp-table tr.is-hover .tp-req .ds-tile svg { fill: var(--ds-ink); color: var(--ds-ink); }

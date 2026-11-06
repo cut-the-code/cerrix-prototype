@@ -182,5 +182,10 @@
 .proto .tp-tl-nav .ds-iconbtn:disabled { opacity: .35; cursor: default; }
 
 /* 06-11 (2): stappen als tabs: lichter vlak bij hover, het gekozen vlak (design.css) schuift mee */
-.proto .cx-tl li:not(.is-selected):hover::before { background: #fafbfd; box-shadow: inset 0 0 0 1px var(--wf-line); }
+/* 06-11 (3): hover = grijze balk onder de titel en lichte halo (de gekozen stap heeft dezelfde vorm in turquoise) */
+.proto .cx-tl li:not(.is-selected):hover strong { border-bottom-color: var(--wf-line-strong); }
+.proto .cx-tl li:not(.is-selected):hover .cx-tl-dot { box-shadow: 0 0 0 6px #050f3212; }
 .proto .cx-tl li:not(.is-selected):hover .cx-tl-dot { transform: none; }
+
+/* 06-11: regelgevingstabel — tegel wordt vol turquoise op de rij waar je hovert (design.css), met overgang */
+.proto .tp-req .ds-tile, .proto .tp-req .ds-tile svg { transition: background-color .2s ease, fill .2s ease; }
