@@ -163,3 +163,7 @@
 .ds .wf-pill.hp-reg-btn svg { transition: transform .2s ease, fill .2s ease; }
 .ds .wf-pill.hp-reg-btn:hover, .ds .wf-pill.hp-reg-btn:focus-visible { background: var(--ds-navy); border-color: var(--ds-navy); color: #fff; }
 .ds .wf-pill.hp-reg-btn:hover svg, .ds .wf-pill.hp-reg-btn:focus-visible svg { fill: #fff; transform: translateX(3px); }
+
+/* 06-11: 3D-object in de sectorhero (js/hero-obj.js): canvas 130% van het vlak, zodat parallax en zweven niet afsnijden */
+.proto .proto-hero-obj canvas { position: absolute; left: -15%; top: -15%; width: 130%; height: 130%; max-width: none; pointer-events: none; }
+.proto .proto-hero-obj.is-live > img { visibility: hidden; }

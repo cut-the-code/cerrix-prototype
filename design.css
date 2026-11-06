@@ -743,3 +743,8 @@ body.ds { background: #fff; font-size: 15px; }
    (48px, radius 12, turquoise, navy icoon 24) — subtiel, maar het groen trekt de aandacht. 16px tot de kop. */
 .ds .hp-regs .hp-regs-tile { width: 48px; height: 48px; border-radius: 12px; background: var(--ds-teal); margin-bottom: -8px; flex: none; }
 .ds .hp-regs .hp-regs-tile svg { fill: var(--ds-ink); color: var(--ds-ink); }
+
+/* 06-11 (7): sectorhero met het 3D-object van de sector (zelfde als de hover op de homepage) in plaats van een productbeeld.
+   Render: assets/hero-obj-<sector>.png uit js/hero-obj.js (?t=0, cursor in het midden). */
+.ds .ds-hero-obj { justify-self: end; width: 100%; max-width: 480px; aspect-ratio: 1; display: grid; place-items: center; position: relative; }
+.ds .ds-hero-obj img { width: 130%; max-width: none; grid-area: 1 / 1; }
