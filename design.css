@@ -812,3 +812,10 @@ body.ds { background: #fff; font-size: 15px; }
    Regelgeving onder de lijst (zelfde secundaire knop als in de uitgelichte kaart, uitgelijnd met de items) */
 .ds .hp-regs .hp-regs-all { margin-top: 4px; }
 .ds .cx-dropdown .cx-all-btn { align-self: flex-start; margin: 16px 0 8px 0; }
+
+/* 06-11 (15): "Bekijk alle regelgeving" als tekstlink. Banner: zelfde vorm als "Bekijk de case" in de logo-tooltip
+   (16/600 navy, pijl, onderstreping 46% navy), zodat hij niet concurreert met de knop "Bekijk meer sectoren".
+   Menu: link met pijl onder de lijst, uitgelijnd met de items. */
+.ds .hp-regs .hp-regs-all { display: inline-flex; align-items: center; gap: 6px; margin-top: 4px; padding-bottom: 4px; font-size: 16px; font-weight: 600; color: var(--ds-ink); border-bottom: 1px solid rgb(5 15 50 / .46); text-decoration: none; }
+.ds .hp-regs .hp-regs-all svg { fill: var(--ds-ink); }
+.ds .cx-dropdown .cx-all { margin: 16px 0 8px 0; font-weight: 600; }
