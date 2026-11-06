@@ -180,3 +180,7 @@
 .proto .tp-tl-nav .ds-iconbtn { transition: background-color .2s ease, opacity .2s ease, transform .2s ease; }
 .proto .tp-tl-nav .ds-iconbtn:hover:not(:disabled) { transform: scale(1.06); }
 .proto .tp-tl-nav .ds-iconbtn:disabled { opacity: .35; cursor: default; }
+
+/* 06-11 (2): stappen als tabs: lichter vlak bij hover, het gekozen vlak (design.css) schuift mee */
+.proto .cx-tl li:not(.is-selected):hover::before { background: #fafbfd; box-shadow: inset 0 0 0 1px var(--wf-line); }
+.proto .cx-tl li:not(.is-selected):hover .cx-tl-dot { transform: none; }

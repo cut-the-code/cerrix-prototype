@@ -765,3 +765,10 @@ body.ds { background: #fff; font-size: 15px; }
 .ds .tp-tl-nav .tp-tl-next { background: var(--ds-navy); }
 .ds .tp-tl-nav .tp-tl-next svg { fill: #fff; }
 .ds .tp-s5b { padding: 0; }   /* compacte banner tussen twee witte secties: 96px aan beide kanten i.p.v. 192 */
+
+/* 06-11 (10): tijdlijn — de stappen zijn de tabs. Gekozen stap: vlak achter label + titel dat met het pijltje op het paneel
+   aansluit; de andere stappen krijgen in het prototype een lichter hovervlak. Vervangt de vorige/volgende-navigatie. */
+.ds .cx-tl li::before { content: ""; position: absolute; z-index: -1; top: 44px; left: -16px; right: 8px; bottom: -14px; border-radius: 14px; background: transparent; transition: background-color .2s ease; }
+.ds .cx-tl li.is-selected::before { background: var(--wf-surface); }
+.ds .cx-tl li.is-selected strong { color: var(--ds-ink); }
+.ds .tp-tl-nav { display: none; }

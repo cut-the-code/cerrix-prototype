@@ -190,7 +190,7 @@
     tl.classList.add('is-idle');
     onView([tl], () => setTimeout(() => tl.classList.remove('is-idle'), 250), { threshold: 0.4 });
   });
-  // 06-11: klikbaar. Klik op een stap of op vorige/volgende in het paneel; inhoud per stap komt uit data-steps
+  // 06-11: klikbaar. De stappen zijn de tabs (vorige/volgende in het paneel is afgekeurd); inhoud per stap komt uit data-steps
   // (templates.phases). Sector: de gekozen stap wordt de actieve (lijn en vinkjes lopen mee). Regelgeving (met 'Nu'):
   // de status blijft staan, alleen de gekozen mijlpaal licht op.
   $$('.tp-tl-panel[data-steps]').forEach(panel => {
@@ -201,7 +201,7 @@
     const check = ($('.cx-tl-dot svg', tl) || {}).outerHTML || '';
     if (!status) lis.forEach(li => { const d = $('.cx-tl-dot', li); if (!$('svg', d)) d.insertAdjacentHTML('beforeend', check); });
     const main = $('.tp-tl-main', panel), img = $('.tp-tl-visual img', panel);
-    const pts = $$('.tp-tl-points li', panel), prev = $('.tp-tl-prev', panel), next = $('.tp-tl-next', panel);
+    const pts = $$('.tp-tl-points li', panel);
     let cur = Math.max(0, lis.findIndex(li => li.classList.contains('is-active')));
     const fill = k => {
       const st = steps[k];
@@ -210,7 +210,6 @@
       $(':scope > p', main).textContent = st.text;
       [st.you, st.gain].forEach((pair, i) => { if (pts[i]) { $('.wf-small', pts[i]).textContent = pair[0]; $('p', pts[i]).textContent = pair[1]; } });
       if (img && st.img) img.src = 'assets/' + st.img;
-      $('.tp-tl-nav b', panel).textContent = k + 1;
     };
     const go = (k, animate = true) => {
       k = Math.max(0, Math.min(n - 1, k));
@@ -222,7 +221,6 @@
         if (!status) { li.classList.toggle('is-done', i < k); li.classList.toggle('is-active', i === k); li.classList.toggle('is-todo', i > k); }
       });
       if (!status) tl.style.setProperty('--progress', ((k + 0.5) / n).toFixed(3));
-      prev.disabled = k === 0; next.disabled = k === n - 1;
       if (!animate || reduce) { fill(k); return; }
       panel.classList.add('is-swapping');
       setTimeout(() => { fill(k); panel.classList.remove('is-swapping'); }, 180);
@@ -232,8 +230,6 @@
       li.addEventListener('click', () => go(i));
       li.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(i); } });
     });
-    prev.addEventListener('click', () => go(cur - 1));
-    next.addEventListener('click', () => go(cur + 1));
     go(cur, false);
   });
 
