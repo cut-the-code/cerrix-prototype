@@ -14,23 +14,31 @@ const canvas = wrap && wrap.querySelector('canvas');
 const C = {
   // schuine stand: top naar de kijker (je ziet het bovenblad), as naar rechts gekanteld, iets gedraaid
   tilt: [0.42, 0.35, -0.38],   // x, y, z in radialen
-  fill: 0.62,                  // objecthoogte als deel van de canvashoogte
+  fill: 0.76,                  // objecthoogte als deel van de canvashoogte (06-11: groter, was 0.62)
+  // licht: zelfde opbouw als de hero-ring (boven, onder, blauw tegenlicht, navy vulling), maar smalle bundels van
+  // rechtsboven en bijna geen vullicht, zodat hals en voet in diepe navy schaduw vallen zoals de schijven van de ring
+  // (06-11: variant E gekozen uit vier; was top 120/bottom 65/angle 0.6/back 1.2/hemi 0.55/env 0.08)
+  light: { top: 170, bottom: 25, angle: 0.3, back: 3.5, hemi: 0.08, env: 0.02, exposure: 1.0,
+           topPos: [2.2, 3.2, 2.2], bottomPos: [-1.6, -3.0, 1.2] },
   bob: { amp: 0.07, period: 5.2 },               // wereldeenheden (~2% van de canvashoogte), seconden per op-en-neer
   parallax: { rotY: 0.12, rotX: 0.08, moveX: 0.12, moveY: 0.09 },   // als de hero-ring, iets meer draai
   follow: 3,                   // hoe snel het object de cursor volgt
 };
+// ?cfg={"fill":0.8,"light":{...}} overschrijft waarden, om varianten te beoordelen
+try { const o = JSON.parse(params.get('cfg') || '{}'); Object.assign(C, o, { light: { ...C.light, ...(o.light || {}) } }); } catch (e) {}
 const UNIT = 2.4;              // vormen zijn gemodelleerd op een kader van ~2,4 eenheden (zie forms.js)
 
 if (canvas) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = C.light.exposure;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.VSMShadowMap;
 
   const scene = new THREE.Scene();
   scene.environment = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), 0.04).texture;
-  scene.environmentIntensity = 0.08;
+  scene.environmentIntensity = C.light.env;
 
   const FOV = 18;
   const camera = new THREE.PerspectiveCamera(FOV, 1, 0.1, 100);
@@ -39,17 +47,17 @@ if (canvas) {
 
   // lichtopstelling van de hero-ring: spot van boven, spot van onder, blauw tegenlicht, navy vulling
   function spot(color, intensity, pos, target) {
-    const l = new THREE.SpotLight(color, intensity, 0, 0.6, 1, 2);
+    const l = new THREE.SpotLight(color, intensity, 0, C.light.angle, 1, 2);
     l.position.set(...pos); l.target.position.set(...target);
     l.castShadow = true;
     l.shadow.mapSize.set(512, 512); l.shadow.bias = -0.0004; l.shadow.radius = 22; l.shadow.blurSamples = 24;
     scene.add(l, l.target);
   }
-  spot(0xd0e3fb, 120, [0.5, 4.0, 3.5], [0, 0.5, 0]);     // boven
-  spot(0xcde0fa, 65, [-0.6, -3.6, 2.4], [0, -0.5, 0]);   // onder
-  const back = new THREE.DirectionalLight(0x8d9cd0, 1.2);
+  spot(0xd0e3fb, C.light.top, C.light.topPos, [0, 0.5, 0]);          // boven
+  spot(0xcde0fa, C.light.bottom, C.light.bottomPos, [0, -0.5, 0]);   // onder
+  const back = new THREE.DirectionalLight(0x8d9cd0, C.light.back);
   back.position.set(-2, -1, -6);
-  scene.add(back, new THREE.HemisphereLight(0x4d64a8, 0x08102a, 0.55));
+  scene.add(back, new THREE.HemisphereLight(0x4d64a8, 0x08102a, C.light.hemi));
 
   const { BUILD } = createForms();
   const { g } = BUILD[FORM_INDEX[wrap.dataset.form] ?? 2]();
