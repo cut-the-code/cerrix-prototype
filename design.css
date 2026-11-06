@@ -819,3 +819,8 @@ body.ds { background: #fff; font-size: 15px; }
 .ds .hp-regs .hp-regs-all { display: inline-flex; align-items: center; gap: 6px; margin-top: 4px; padding-bottom: 4px; font-size: 16px; font-weight: 600; color: var(--ds-ink); border-bottom: 1px solid rgb(5 15 50 / .46); text-decoration: none; }
 .ds .hp-regs .hp-regs-all svg { fill: var(--ds-ink); }
 .ds .cx-dropdown .cx-all { margin: 16px 0 8px 0; font-weight: 600; }
+
+/* 06-11 (16): één stijl voor tekstlinks met pijl (banner home + sector, menu Regelgeving): 16/600 navy, pijl 16px, gap 6,
+   géén onderstreping. Uitzondering: "Bekijk de case" in de logo-tooltip (bewust met onderstreping, .hp-tip-cta). */
+.ds .hp-regs .hp-regs-all, .ds .cx-dropdown .cx-all { display: inline-flex; align-items: center; gap: 6px; font-size: 16px; font-weight: 600; color: var(--ds-ink); border-bottom: 0; padding-bottom: 0; text-decoration: none; }
+.ds .hp-regs .hp-regs-all svg, .ds .cx-dropdown .cx-all svg { fill: var(--ds-ink); }
