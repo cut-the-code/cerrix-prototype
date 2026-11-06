@@ -691,3 +691,9 @@ body.ds { background: #fff; font-size: 15px; }
 .ds .px-step .hp-mod-desc { margin: 0; font-size: 17px; line-height: 1.55; color: var(--wf-text-2); max-width: 46ch; }
 .ds .px-step .hp-usps { margin: 0; }
 .ds .px-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 4px; }
+
+/* 06-11: "Bekijk alle regelgeving" — in de pillenrij (home, sector) als navy knop, in de dropdown als tekstlink */
+.ds .hp-regs .wf-pill.hp-pill-all, .ds .tp-regs .wf-pill.hp-pill-all { background: var(--ds-ink); border-color: var(--ds-ink); color: #fff; font-weight: 500; }
+.ds .wf-pill.hp-pill-all svg { fill: #fff; }
+.ds .cx-dropdown .cx-all { margin: 12px 0 0 0; font-size: 15px; color: var(--ds-ink); gap: 6px; }
+.ds .cx-dropdown .cx-all svg { fill: var(--ds-ink); }
