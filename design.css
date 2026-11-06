@@ -718,3 +718,9 @@ body.ds { background: #fff; font-size: 15px; }
 .ds .hp-tip em { align-self: stretch; margin: 12px -24px 0; padding: 16px 24px; border-bottom: 0; background: var(--wf-surface); border-radius: 0 0 12px 12px; }
 .ds .hp-tip em .hp-tip-cta { display: inline-flex; align-items: center; gap: 6px; padding-bottom: 4px; font-size: 15px; font-weight: 600; color: var(--ds-ink); border-bottom: 1px solid rgb(5 15 50 / .45); }
 .ds .hp-tip-tail { fill: var(--wf-surface); }
+/* 06-11 (4): vlak in de tint van "Of start bij je regelgeving" (#eff0f3, zelfde als de spraakballon) voor meer contrast;
+   tekst + pijl verticaal gecentreerd in het vlak (de 5px onderstreping zit onder het midden, dus 5px meer boven).
+   Onderstreping 46% = 3,07:1 op #eff0f3 (45% haalt daar 2,98). */
+.ds .hp-tip em { background: #eff0f3; padding: 18.5px 24px 13.5px; }
+.ds .hp-tip em .hp-tip-cta { border-bottom-color: rgb(5 15 50 / .46); }
+.ds .hp-tip-tail { fill: #eff0f3; }
