@@ -16,6 +16,13 @@
   --ds-gray: #d0d2d8;          /* --swatch--light-gray */
   --ds-band: #0b1a45;          /* kaarten op de donkere band */
   --ds-band-line: #ffffff1f;
+  /* 16-11: datakleuren uit de productbeelden van cerrix.com (grafieken, risicomatrix); één raster voor alle visuals en labels */
+  --ds-data-red: #ed8687;
+  --ds-data-orange: #eea789;
+  --ds-data-yellow: #ede087;
+  --ds-data-blue: #80c5ed;
+  /* label Nieuw en signalen (afwijking, binnenkort): bewust fel oranje buiten het pastelraster, zodat het opvalt (16-11: rood uit het raster geprobeerd en teruggedraaid) */
+  --ds-new: #ff8a3d;
 
   /* kit-tokens naar de huisstijl */
   --wf-page: #ffffff;
@@ -391,7 +398,7 @@ body.ds { background: #fff; font-size: 15px; }
 .ds .hp-acc.is-open .ds-tile { background: var(--ds-teal); }
 .ds .hp-acc.is-open .ds-tile svg { fill: var(--ds-ink); color: var(--ds-ink); }
 /* label Nieuw: opvallend oranje buiten het palet, donkere tekst (8:1) */
-.ds .hp-acc .cx-tag, .ds .hp-acc-head .cx-tag { background: #ff8a3d; border-color: #ff8a3d; color: var(--ds-ink); font-weight: 600; }
+.ds .hp-acc .cx-tag, .ds .hp-acc-head .cx-tag { background: var(--ds-new); border-color: var(--ds-new); color: var(--ds-ink); font-weight: 600; }
 /* USP's: vinkje in een bolletje, leest als bullet */
 .ds .hp-usps li { grid-template-columns: 24px 1fr; align-items: start; }
 .ds .hp-usps .cx-ic { box-sizing: content-box; width: 14px; height: 14px; padding: 5px; margin-top: 0; border-radius: 50%; background: var(--ds-teal); fill: var(--ds-ink); color: var(--ds-ink); }
@@ -647,9 +654,7 @@ body.ds { background: #fff; font-size: 15px; }
 .ds .tp-mod > .ds-iconbtn { display: grid; flex-direction: initial; gap: 0; margin-right: 0; }
 
 /* 03-11 navigatie: grotere items, hover/actief als afgeronde kaart, kopje + knop in de uitgelichte kaart */
-.ds .cx-panel--sectoren .cx-item strong { font-size: 16px; }
-.ds .cx-panel--sectoren .cx-item strong + span { font-size: 14px; }
-.ds .cx-panel--sectoren .cx-item { height: 64px; }
+/* 13-11: Sectoren had hier eigen, grotere maten (16/14, rij 64); klant: inconsistent → zelfde maten als de andere menu's */
 .ds .cx-item.is-active { border-radius: 12px; border-bottom-color: transparent; }
 .ds .cx-list > .cx-item:has(+ .cx-item.is-active) { border-bottom-color: transparent; }
 .ds .cx-item .cx-ic[data-icon^="sector_"] { fill: none; }
@@ -681,7 +686,7 @@ body.ds { background: #fff; font-size: 15px; }
 .ds .px-step:not(.is-active) { opacity: .32; }
 .ds .px-step:nth-child(n+4) { display: none; }
 .ds .px-num { display: inline-flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; letter-spacing: .08em; color: #0a7560; }
-.ds .px-num .cx-tag { margin: 0; background: #ff8a3d; border-color: #ff8a3d; color: var(--ds-ink); font-weight: 600; font-size: 12px;
+.ds .px-num .cx-tag { margin: 0; background: var(--ds-new); border-color: var(--ds-new); color: var(--ds-ink); font-weight: 600; font-size: 12px;
   letter-spacing: .02em; line-height: 1.2; padding: 3px 10px; border-radius: 999px; }
 .ds .px-title { display: flex; align-items: center; gap: 16px; }
 .ds .px-title .ds-tile { width: 48px; height: 48px; border-radius: 12px; flex: none; }
@@ -824,3 +829,62 @@ body.ds { background: #fff; font-size: 15px; }
    géén onderstreping. Uitzondering: "Bekijk de case" in de logo-tooltip (bewust met onderstreping, .hp-tip-cta). */
 .ds .hp-regs .hp-regs-all, .ds .cx-dropdown .cx-all { display: inline-flex; align-items: center; gap: 6px; font-size: 16px; font-weight: 600; color: var(--ds-ink); border-bottom: 0; padding-bottom: 0; text-decoration: none; }
 .ds .hp-regs .hp-regs-all svg, .ds .cx-dropdown .cx-all svg { fill: var(--ds-ink); }
+
+/* 13-11: logo-tooltip (klant: "onopgemaakt"). Kop = donker klantlogo, de feiten als kerncijfers zoals in het klantverhaal
+   (cijfer 28/600 navy, label 13 grijs, tussen dunne lijnen), onderbalk "Bekijk de case" ongewijzigd. */
+.ds .hp-tip { gap: 12px; padding-top: 22px; }
+/* logo-png is 280×140 met 44px lucht boven en onder: 58px hoog geeft een zichtbaar logo van 22px, negatieve marge haalt de lucht weg */
+.ds .hp-tip-logo { display: block; height: 58px; width: auto; align-self: flex-start; margin: -18px 0 -16px; }
+.ds .ds-logo .hp-tip-logo { max-height: none; max-width: none; opacity: 1; }  /* niet de logostrip-begrenzing (40×120, 85%) */
+.ds .hp-tip > span:not(.hp-tip-stats) { font-size: 15px; line-height: 1.5; color: #4b5470; }
+.ds .hp-tip-stats { display: grid; grid-template-columns: 1fr 1fr; margin-top: 2px; border-top: 1px solid var(--ds-gray); }
+.ds .hp-tip-stats > span { display: flex; flex-direction: column; gap: 2px; padding: 14px 0 2px; font-size: 13px; line-height: 1.35; color: #4b5470; }
+.ds .hp-tip-stats > span + span { padding-left: 20px; border-left: 1px solid var(--ds-gray); }
+.ds .hp-tip-stats b { font-size: 28px; line-height: 1.1; font-weight: 600; letter-spacing: -0.5px; color: var(--ds-ink); }
+.ds .hp-tip em { margin-top: 14px; }
+
+/* 13-11: homepage-blok 4 = modulegrid (klant koos experiment C, Figma 14418:2; home.module_grid). Maten van het experiment
+   (x-product.css), hier onder eigen klassen. Sectorpagina houdt het scrollverhaal (.px-story). */
+.ds .hp-mg-feature { display: grid; grid-template-columns: 1fr 1.1fr; gap: 56px; align-items: stretch; margin-top: 56px; padding: 40px;
+  border-radius: 24px; background: #fff; border: 1px solid var(--wf-line); }
+.ds .hp-mg-copy { display: flex; flex-direction: column; justify-content: space-between; gap: 16px; align-items: flex-start; padding: 8px 0; }
+.ds .hp-mg-top { display: flex; flex-direction: column; gap: 16px; align-items: flex-start; }
+.ds .hp-mg-copy .px-actions { margin-top: 24px; }
+.ds .hp-mg-feature .px-title .ds-tile { background: var(--ds-teal); }
+.ds .hp-mg-feature .hp-mod-desc { margin: 0; font-size: 16px; line-height: 1.6; color: var(--wf-text-2); }  /* zoals goedgekeurd in experiment C */
+.ds .hp-mg-img img { width: 100%; display: block; border-radius: 16px; box-shadow: 0 20px 40px #050f321f; }
+.ds .hp-mg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px; }
+.ds .hp-mg-card { position: relative; display: grid; grid-template-columns: 48px 1fr; grid-template-rows: auto 1fr; align-content: start;
+  column-gap: 16px; row-gap: 2px; align-items: start; padding: 20px 56px 20px 20px; border: 1px solid var(--wf-line); border-radius: 16px;
+  background: #fff; text-decoration: none; }
+.ds .hp-mg-card .ds-tile { grid-row: span 2; align-self: start; width: 48px; height: 48px; border-radius: 12px; }
+.ds .hp-mg-card .ds-tile svg { fill: var(--ds-ink); }
+.ds .hp-mg-card strong { align-self: start; font-size: 17px; font-weight: 600; line-height: 1.3; color: var(--ds-ink); }
+.ds .hp-mg-card > span:not(.ds-tile):not(.hp-mg-go) { align-self: start; font-size: 14px; color: var(--wf-text-2); }
+.ds .hp-mg-go { position: absolute; right: 20px; top: 31px; transform: translateY(-50%); }
+.ds .hp-mg-go svg { fill: var(--ds-ink); }
+
+/* 13-11 (2), Jorrit: modulegrid rechttrekken.
+   - "Uitgelicht" als gewone eyebrow (hoofdletters, zoals op andere secties); label Nieuw ernaast in de oranje stijl van .px-num .cx-tag
+   - geen extra 8px in de tekstkolom: knoppen onderaan en titel bovenaan op dezelfde 40px als het beeld
+   - kaartomschrijving altijd één regel: mag onder de pijl doorlopen (die staat op de titelregel), dus 36px breder (239 → 275) */
+.ds .hp-mg-label { display: flex; align-items: center; gap: 10px; }
+.ds .hp-mg-label .wf-eyebrow { margin: 0; }
+.ds .hp-mg-label .cx-tag { margin: 0; background: var(--ds-new); border-color: var(--ds-new); color: var(--ds-ink); font-weight: 600; font-size: 12px;
+  letter-spacing: .02em; line-height: 1.2; padding: 3px 10px; border-radius: 999px; }
+.ds .hp-mg-copy { padding: 0; }
+.ds .hp-mg-card > span:not(.ds-tile):not(.hp-mg-go) { margin-right: -36px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* 13-11 (2), Jorrit: tooltip — onderbalk: tekst links, pijl rechts, geen onderstreping; geen lijn boven de cijfers; logo iets groter */
+.ds .hp-tip em .hp-tip-cta { display: flex; justify-content: space-between; width: 100%; padding-bottom: 0; border-bottom: 0; }
+.ds .hp-tip em { padding: 16px 24px; }
+.ds .hp-tip-stats { border-top: 0; margin-top: 4px; }  /* 16px onder de zin (gap 12 + 4) */
+.ds .hp-tip-stats > span { padding-top: 0; }
+.ds .hp-tip-logo { height: 68px; margin: -21px 0 -19px; }
+
+/* 13-11 (3), Jorrit: te veel ruimte tussen "Zo werken klanten" en "Beveiliging" (202px: 96 onder + 106 boven, beide wit).
+   Regel dubbele marge: tweede sectie zonder bovenruimte → 96px, gelijk aan de ruimte vóór de AI-band. */
+.ds .hp-s7 { padding-top: 0; margin-top: -10px; }  /* -10: de band begint 10px onder de bovenkant van het live-blok */
+
+/* 16-11 (klant): uitgelichte module krijgt drie USP's met vinkjes onder de omschrijving (lijst als in het scrollverhaal) */
+.ds .hp-mg-top .hp-usps { align-self: stretch; margin: 0; }

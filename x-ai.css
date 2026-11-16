@@ -1,0 +1,139 @@
+/* 12-11: AI-blok met vijf tabs (generator _build/ai_tabs.py). Bouwt op het AI-blok F in design.css (.hp-s5, .hp-tabs, .hp-cmp).
+   Kleuren alleen uit de huisstijl: navy-band, kaart #0b1a45, antwoord #13265c, turquoise #50e3c2, oranje #ff8a3d (= --ds-new) voor Binnenkort en afwijkingen; 16-11 pasteloranje geprobeerd en teruggedraaid: signalen moeten opvallen. */
+.xa-frame { background: #fff; padding: 16px 0; }
+.ds .xa { margin: 0 16px; }
+.ds .xa .hp-ai-wrap { gap: 14px; }
+.ds .xa .wf-h2 { max-width: 900px; text-wrap: balance; }
+.ds .xa .hp-ai-lead { max-width: 640px; text-wrap: balance; min-height: 2lh; }  /* kop even hoog bij een intro van één regel */
+.ds .xa .hp-compare { width: 1180px; grid-template-columns: 1fr 1.45fr; }
+
+/* alle tabs even hoog, zodat het blok niet verspringt bij het wisselen */
+.ds .xa .hp-cmp { min-height: 520px; }
+.ds .xa-on { gap: 20px; }
+.ds .xa-on-head { display: flex; align-items: center; justify-content: space-between; }
+.ds .xa-on .wf-eyebrow { color: var(--ds-teal); margin: 0; }
+.ds .xa-stage { display: flex; flex-direction: column; gap: 14px; margin-block: auto; }
+.ds .xa-on .hp-fast { margin: 0; font-size: 15px; }
+.ds .xa .hp-msg-q { max-width: 86%; font-size: 15px; line-height: 1.5; }
+.ds .xa-soon { background: #ff8a3d; color: var(--ds-ink); font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+  padding: 5px 10px; border-radius: 999px; line-height: 1; }
+
+/* antwoordkaart, gedeeld door de tabs */
+.ds .xa-ans { background: #13265c; border-radius: 16px 16px 16px 4px; padding: 20px 22px; display: flex; flex-direction: column; gap: 14px; }
+.ds .xa-ans-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.ds .xa-ans-head strong, .ds .xa-ans-title { font-size: 16px; font-weight: 600; color: #fff; }
+.ds .xa-assist { display: flex; align-items: center; gap: 6px; margin: 0; font-size: 13px; font-weight: 600; color: #b9bfd0; }
+.ds .xa-assist svg { fill: var(--ds-teal); }
+
+/* 1 · beschrijving: onderdelen gemarkeerd, labels eronder */
+.ds .xa-desc { margin: 0; font-size: 15px; line-height: 1.75; color: #c9cfdf; }
+.ds .xa-labels { display: flex; flex-wrap: wrap; gap: 6px; }
+.ds .xa-label { font-size: 13px; font-weight: 500; color: var(--ds-teal); border: 1px solid #50e3c266; border-radius: 999px; padding: 4px 11px; line-height: 1.2; }
+
+/* 2 · document naar register */
+.ds .xa-file { align-self: flex-end; display: flex; align-items: center; gap: 12px; background: #fff; color: var(--ds-ink); border-radius: 16px 16px 4px 16px; padding: 12px 18px 12px 12px; min-width: 300px; }
+.ds .xa-file-ic { width: 36px; height: 36px; border-radius: 10px; background: #eff0f3; display: grid; place-items: center; flex: none; }
+.ds .xa-file-ic svg { fill: var(--ds-ink); }
+.ds .xa-file-t { display: flex; flex-direction: column; gap: 8px; flex: 1; font-size: 15px; }
+.ds .xa-file-t i { height: 4px; border-radius: 2px; background: var(--ds-teal); }
+.ds .xa-tree { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.ds .xa-item { display: grid; grid-template-columns: 76px 1fr auto; align-items: center; gap: 12px; padding: 11px 14px; border: 1px solid #ffffff26; border-radius: 12px; font-size: 14px; color: #fff; }
+.ds .xa-item--sub { margin-left: 24px; }
+.ds .xa-type { justify-self: start; font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; padding: 4px 8px; border-radius: 6px; line-height: 1; }
+.ds .xa-type--risk { background: #fff; color: var(--ds-ink); }
+.ds .xa-type--ctrl { border: 1px solid var(--ds-teal); color: var(--ds-teal); }
+.ds .xa-src { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; color: #b9bfd0; }
+.ds .xa-src svg { fill: #8d94ab; }
+
+/* 3 · evidence review */
+.ds .xa-context { margin: 0; font-size: 14px; color: #b9bfd0; }
+.ds .xa-checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+/* 13-11: statuskolom vast (112) en kolommen minmax(0, …), anders schuift de bevinding per rij op (Voldoet vs Afwijking) */
+.ds .xa-check { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr) 112px; align-items: center; gap: 16px; padding: 12px 16px; background: #13265c; border-radius: 12px; font-size: 14px; }
+.ds .xa-check-t { color: #fff; font-weight: 500; }
+.ds .xa-check-f { color: #b9bfd0; font-size: 13px; line-height: 1.4; }
+.ds .xa-st { justify-self: end; display: inline-flex; align-items: center; gap: 5px; font-size: 13px; font-weight: 600; white-space: nowrap; }
+.ds .xa-st--ok { color: var(--ds-teal); } .ds .xa-st--ok svg { fill: var(--ds-teal); }
+.ds .xa-st--dev { color: #ff8a3d; } .ds .xa-st--dev svg { fill: #ff8a3d; }
+.ds .xa-draft { display: flex; align-items: center; gap: 16px; padding: 16px 18px; border: 1px solid #ff8a3d80; border-radius: 12px; }
+.ds .xa-draft p { margin: 0; font-size: 15px; line-height: 1.5; color: #c9cfdf; }
+.ds .xa-draft strong { color: #fff; }
+.ds .xa-draft-tag { flex: none; font-size: 12px; font-weight: 600; color: #ff8a3d; border: 1px solid #ff8a3d; border-radius: 999px; padding: 4px 10px; line-height: 1.2; }
+
+/* 4 · datakwaliteit */
+.ds .xa-fixes { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.ds .xa-fix { display: flex; align-items: center; gap: 14px; padding: 8px 14px 8px 8px; border: 1px solid #ffffff26; border-radius: 12px; font-size: 15px; color: #fff; }
+.ds .xa-num { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; background: #ff8a3d; color: var(--ds-ink); font-weight: 700; font-size: 16px; flex: none; }
+
+/* 5 · bestuursrapport: antwoord met een dia */
+.ds .xa-ans--report { flex-direction: row; align-items: center; gap: 24px; }
+.ds .xa-ans--report > div:first-child { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.ds .xa-sub { margin: 0; font-size: 15px; line-height: 1.5; color: #c9cfdf; }
+.ds .xa-slide { width: 270px; flex: none; background: #fff; border-radius: 10px; padding: 16px 16px 18px; box-shadow: 0 12px 32px #00000059; aspect-ratio: 16 / 10; display: flex; flex-direction: column; gap: 10px; }
+.ds .xa-slide strong { font-size: 13px; font-weight: 700; color: var(--ds-ink); }
+.ds .xa-slide ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.ds .xa-slide li { display: grid; gap: 4px; font-size: 11px; color: #4b5470; }
+.ds .xa-slide i { display: block; height: 5px; border-radius: 3px; background: #e8ecf3; }
+.ds .xa-slide b { display: block; height: 100%; border-radius: 3px; background: var(--ds-ink); }
+
+/* human in the loop */
+.ds .xa .hp-ai-hitl { font-weight: 400; color: #b9bfd0; }
+.ds .xa .hp-ai-hitl strong { color: #fff; font-weight: 600; }
+
+/* ---------- 16-11: opbouw en beweging letterlijker van het klantprototype ----------
+   Lijst links bovenaan onder de eyebrow (niet verticaal gecentreerd); geen pijltjes bij "1 van 5"; arcering in plaats van
+   onderstreping; sparkle-knop naast de vraag; Copilot als gewoon label; nummers bij datakwaliteit als oranje cijfer;
+   AI-concept als gevulde kaart; balken in de dia allemaal navy. Beweging: x-ai.js zet per stap (500 ms) de klassen hieronder. */
+.ds .xa .hp-cmp--off { gap: 20px; }
+.ds .xa .hp-cmp--off ol { margin-block: 0; }
+.ds .xa-head { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.ds .xa-head[hidden], .ds .xa-panel[hidden] { display: none; }
+.ds .xa-count { font-size: 13px; color: #b9bfd0; white-space: nowrap; }
+.ds .xa-q-row { align-self: flex-end; display: flex; align-items: center; gap: 10px; max-width: 92%; }
+.ds .xa-q-row .hp-msg-q { max-width: none; }
+.ds .xa-spark { flex: none; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; color: #fff;
+  border: 1px solid #ffffff40; transition: background .3s ease, color .3s ease, border-color .3s ease; }
+.ds .xa-spark.is-on { background: var(--ds-teal); border-color: var(--ds-teal); color: var(--ds-ink); }
+/* arcering zonder eigen ruimte (geen horizontale padding): tekst verspringt niet en de Figma-capture houdt de regels heel */
+.ds .xa-seg { transition: background-color .35s ease, box-shadow .35s ease; }
+.ds .xa-seg.is-hl { background-color: #50e3c240; box-shadow: -3px 0 0 #50e3c240, 3px 0 0 #50e3c240; border-radius: 3px; color: #fff; }
+.ds .xa-label { color: #8d94ab; border-color: #ffffff26; transition: all .4s ease; }
+.ds .xa-label.is-on { color: var(--ds-teal); border-color: #50e3c266; background: #50e3c21f; }
+
+/* 2 · bestand als bericht, voortgangsbalk eronder */
+.ds .xa-file { flex-direction: column; align-items: stretch; gap: 10px; min-width: 0; width: 300px; padding: 12px 16px; }
+.ds .xa-file-name { display: flex; align-items: center; gap: 8px; font-size: 15px; }
+.ds .xa-file-name svg { fill: var(--ds-ink); }
+.ds .xa-bar { display: flex; height: 4px; border-radius: 2px; background: #e3e7ef; overflow: hidden; }
+.ds .xa-bar i { height: 100%; border-radius: 2px; background: var(--ds-ink); transition: width .45s linear; }
+
+/* 3 · review: rij die AI nu leest is actief, daarna klaar; oordeel verschijnt erna */
+.ds .xa-check { background: transparent; border: 1px solid #ffffff1f; transition: border-color .35s ease, background .35s ease; }
+.ds .xa-check.is-act { border-color: #ffffff73; background: #1a3170; }
+.ds .xa-check.is-done { background: #13265c; border-color: #13265c; }
+.ds .xa-st[data-on] { opacity: 0; transition: opacity .35s ease; }
+.ds .xa-st.is-on { opacity: 1; }
+.ds .xa-draft { border: 0; background: #13265c; }
+
+/* 4 · datakwaliteit: cijfer in plaats van tegel */
+.ds .xa-fix { padding: 11px 14px; }
+.ds .xa-num { width: 18px; height: auto; border-radius: 0; background: none; color: #ff8a3d; justify-content: end; font-size: 15px; }
+
+/* 5 · rapport: balken groeien */
+.ds .xa-slide b { width: 0; transition: width .9s cubic-bezier(.2,.6,.2,1); }
+.ds .xa-slide b.is-on { width: var(--w); }
+
+/* verschijnen */
+.ds .xa [data-in] { opacity: 0; transform: translateY(8px); transition: opacity .5s ease, transform .5s ease; }
+.ds .xa [data-in].is-in { opacity: 1; transform: none; }
+.ds .xa .xa-item[data-in], .ds .xa .xa-fix[data-in] { transition-duration: .4s; }
+@media (prefers-reduced-motion: reduce) { .ds .xa *, .ds .xa *::before { transition: none !important; } }
+/* statische versie (Figma-capture): arcering als los vlak achter de tekst, zie FLATTEN in ai_tabs.py */
+.ds .xa-desc { position: relative; }
+.ds .xa-hlbox { position: absolute; border-radius: 3px; background: #50e3c240; }
+.ds .xa-desc-t { position: relative; }
+/* 16-11 (2), Jorrit + klant: balken in de dia met eigen kleur, zodat ze te lezen zijn. Eerste balk groen (zoals voor 16-11),
+   tweede oranje (signaal, = --ds-new), derde navy. Donkergroen #0a7560 i.p.v. turquoise: leesbaar op de witte dia. */
+.ds .xa-slide li:nth-child(1) b { background: #0a7560; }
+.ds .xa-slide li:nth-child(2) b { background: #ff8a3d; }
+.ds .xa-slide li:nth-child(3) b { background: var(--ds-ink); }

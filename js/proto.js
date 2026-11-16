@@ -16,7 +16,7 @@
   // Prototype-label linksonder
   const badge = document.createElement('div');
   badge.className = 'proto-badge';
-  badge.innerHTML = 'Prototype CERRIX · ontwerp 06-11<a href="index.html">Home</a><a href="homepage-alternatief.html">Home (alternatief)</a><a href="sector-pensioenfondsen.html">Sector</a><a href="regelgeving-dora.html">Regelgeving</a>';
+  badge.innerHTML = 'Prototype CERRIX · ontwerp 16-11<a href="index.html">Home</a><a href="homepage-alternatief.html">Home (alternatief)</a><a href="sector-pensioenfondsen.html">Sector</a><a href="regelgeving-dora.html">Regelgeving</a>';
   document.body.append(badge);
 
   // Placeholderlinks (#) springen niet naar boven
@@ -60,7 +60,7 @@
       '.hp-ai-wrap > .wf-h2', '.hp-ai-lead', '.hp-tabs', '.hp-compare', '.hp-s6 .wf-h2', '.hp-case', '.hp-case-tabs', '.tp-proof',
       '.tp-facts', '.tp-regs', '.tp-faq', '.cx-tl', '.tp-tl-panel', '.tp-table', '.tp-ruler',
     ];
-    const els = $$(groups.join(',')).filter(el => !el.closest('.hp-s1, .tp-s1, .cx-header, .proto-dd'));
+    const els = $$(groups.join(',')).filter(el => !el.closest('.hp-s1, .tp-s1, .cx-header, .proto-dd') && !el.matches('.xa-panel'));   // 16-11: verborgen AI-tabs niet
     els.forEach(el => el.setAttribute('data-reveal', ''));
     // kaarten in een rij komen kort na elkaar
     const staggered = ['.hp-srow:not(.proto-more)', '.hp-acard', '.tp-topic', '.lv .enterprise-security .w-layout-grid > *'];
@@ -134,7 +134,7 @@
   }
 
   // ---------- blok 5: AI — vraag typt zich uit, antwoord en grafiek bouwen zich op; tabs spelen opnieuw af ----------
-  const on = $('.hp-cmp--on');
+  const on = $('.hp-s5:not(.xa) .hp-cmp--on');   // 16-11: het nieuwe AI-blok (.xa) speelt zelf af via js/x-ai.js
   if (on) {
     const q = $('.hp-msg-q', on), full = q.textContent;
     $$('.hp-rows > *', on).forEach((el, i) => el.style.setProperty('--d', `${200 + i * 120}ms`));
@@ -156,9 +156,9 @@
       on.classList.remove('is-waiting');
     };
     if (reduce) { q.textContent = full; } else { on.classList.add('is-waiting'); onView([on], play, { threshold: 0.5 }); }
-    $$('.hp-tab').forEach(t => t.addEventListener('click', e => {
+    $$('.hp-s5:not(.xa) .hp-tab').forEach(t => t.addEventListener('click', e => {
       e.preventDefault();
-      $$('.hp-tab').forEach(x => x.classList.toggle('is-active', x === t));
+      $$('.hp-s5:not(.xa) .hp-tab').forEach(x => x.classList.toggle('is-active', x === t));
       if (!reduce) play();
     }));
   }
