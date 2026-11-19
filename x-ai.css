@@ -137,3 +137,8 @@
 .ds .xa-slide li:nth-child(1) b { background: #0a7560; }
 .ds .xa-slide li:nth-child(2) b { background: #ff8a3d; }
 .ds .xa-slide li:nth-child(3) b { background: var(--ds-ink); }
+
+/* 19-11 (2), klant: 'Human in the loop' gestapeld — kop (met icoon) boven, iets groter; de zin eronder blijft zoals hij was (17px) */
+.ds .xa .hp-ai-hitl.xa-hitl { flex-direction: column; gap: 4px; text-align: center; }
+.ds .xa-hitl strong { display: inline-flex; align-items: center; gap: 8px; font-size: 20px; font-weight: 600; color: #fff; }
+.ds .xa-hitl strong svg { fill: var(--ds-teal); }

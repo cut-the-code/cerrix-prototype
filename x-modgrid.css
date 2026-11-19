@@ -14,7 +14,7 @@
   letter-spacing: .02em; line-height: 1.2; padding: 3px 10px; border-radius: 999px; font-style: normal; }
 .ds .xm-card strong { font-size: 16px; font-weight: 600; line-height: 1.3; color: var(--ds-ink); }
 .ds .xm-card > span:last-child { font-size: 14px; line-height: 1.45; color: var(--wf-text-2); }
-/* gekozen kaart: navy rand (als de actieve rij op de regelgevingspagina), turquoise tegel en een pijltje omhoog naar het vlak */
+/* gekozen kaart: navy rand (als de actieve rij op de regelgevingspagina) en turquoise tegel; geen pijltje (19-11) */
 .ds .xm-card.is-selected { border-color: var(--ds-ink); box-shadow: inset 0 0 0 1px var(--ds-ink); }
 .ds .xm-card.is-selected .ds-tile { background: var(--ds-teal); }
 .ds .xm-caret { position: absolute; top: -10px; left: 50%; margin-left: -10px; fill: var(--ds-ink); opacity: 0; transition: opacity .2s ease; }
