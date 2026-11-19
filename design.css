@@ -898,3 +898,22 @@ body.ds { background: #fff; font-size: 15px; }
 .ds .hp-logos-track > .wf-logo { flex: 0 0 156px; }
 .ds .hp-logos-track > .hp-logo-tip { margin-inline: 0; }   /* de negatieve marge van het tooltip-vlak zou de rij laten verspringen */
 .ds .hp-logos-track > .wf-logo:nth-child(1), .ds .hp-logos-track > .wf-logo:nth-child(8) { opacity: .35; }
+
+/* 19-11: homepage-blok 4 = modulegrid als tabs (home.module_tabs; experiment 14555:2 goedgekeurd). Kaart = tab, geen pijl. */
+.ds .xm-panel[hidden] { display: none; }
+.ds .xm-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-top: 24px; }
+/* kaart = tab: geen pijl (die zegt 'ga naar een pagina'), tegel boven, titel en korte omschrijving eronder */
+.ds .xm-card { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: 18px 18px 20px;
+  border: 1px solid var(--wf-line); border-radius: 16px; background: #fff; font: inherit; text-align: left; cursor: pointer;
+  transition: border-color .2s ease, box-shadow .2s ease; }
+.ds .xm-card:hover { border-color: var(--wf-line-strong); }
+.ds .xm-card-top { display: flex; align-items: center; justify-content: space-between; align-self: stretch; margin-bottom: 8px; }
+.ds .xm-card .ds-tile { width: 44px; height: 44px; border-radius: 12px; }
+.ds .xm-card .ds-tile svg { fill: var(--ds-ink); }
+.ds .xm-card .cx-tag { margin: 0; background: var(--ds-new); border-color: var(--ds-new); color: var(--ds-ink); font-weight: 600; font-size: 12px;
+  letter-spacing: .02em; line-height: 1.2; padding: 3px 10px; border-radius: 999px; font-style: normal; }
+.ds .xm-card strong { font-size: 16px; font-weight: 600; line-height: 1.3; color: var(--ds-ink); }
+.ds .xm-card > span:last-child { font-size: 14px; line-height: 1.45; color: var(--wf-text-2); }
+/* gekozen kaart: navy rand (als de actieve rij op de regelgevingspagina) en turquoise tegel; geen pijltje (19-11) */
+.ds .xm-card.is-selected { border-color: var(--ds-ink); box-shadow: inset 0 0 0 1px var(--ds-ink); }
+.ds .xm-card.is-selected .ds-tile { background: var(--ds-teal); }

@@ -163,6 +163,15 @@
     }));
   }
 
+  // ---------- blok 4 (19-11): modulegrid als tabs — een klik op een kaart wisselt het vlak erboven ----------
+  $$('.xm[data-live]').forEach(s => {
+    const cards = $$('.xm-card', s), panels = $$('.xm-panel', s);
+    cards.forEach(c => c.addEventListener('click', () => {
+      cards.forEach(k => { k.classList.toggle('is-selected', k === c); k.setAttribute('aria-selected', k === c); });
+      panels.forEach(p => { p.hidden = p.dataset.mod !== c.dataset.mod; });
+    }));
+  });
+
   // ---------- blok 6: klantverhaal — logo-tabs lopen vanzelf door ----------
   const tabsWrap = $('.hp-case-tabs'), caseCard = $('.hp-case');
   if (tabsWrap && caseCard) {
