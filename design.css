@@ -742,7 +742,7 @@ body.ds { background: #fff; font-size: 15px; }
   letter-spacing: .02em; height: auto; line-height: 16px; background: #fff; border: 1px solid var(--ds-gray); color: var(--ds-ink); text-decoration: none; }
 .ds .wf-pill.hp-reg-btn svg { fill: var(--ds-ink); flex: none; }
 /* AI-blok: "AI with human in the loop" onder de visual */
-.ds .hp-ai-hitl { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 24px 0 0; font-size: 15px; font-weight: 500; color: #fff; }
+.ds .hp-ai-hitl { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 24px 0 0; font-size: 17px; font-weight: 500; color: #fff; }
 .ds .hp-ai-hitl svg { fill: var(--ds-teal); }
 /* 06-11 (6): icoontegel boven "Of start bij je regelgeving", zelfde tegel als de actieve stap in het scrollverhaal
    (48px, radius 12, turquoise, navy icoon 24) — subtiel, maar het groen trekt de aandacht. 16px tot de kop. */
@@ -888,3 +888,13 @@ body.ds { background: #fff; font-size: 15px; }
 
 /* 16-11 (klant): uitgelichte module krijgt drie USP's met vinkjes onder de omschrijving (lijst als in het scrollverhaal) */
 .ds .hp-mg-top .hp-usps { align-self: stretch; margin: 0; }
+
+/* 19-11 (klant): logostrip als marquee. Rij = 2x dezelfde zeven logo's (cel 156 + 12 = 168, 7 cellen = precies de containerbreedte 1176). Statisch een halve
+   cel naar links: het eerste logo valt half weg aan de linkerrand, het achtste half aan de rechterrand, en beide zijn gedimd
+   (afsnijding = beweging). Geen overlay of mask: die komen niet goed door de capture en een mask zou de tooltip wegsnijden.
+   overflow-x: clip houdt de tooltip boven de rij zichtbaar. Beweging en vervaagde randen: proto.css. */
+.ds .hp-logos.hp-marquee { display: block; position: relative; overflow-x: clip; overflow-y: visible; }
+.ds .hp-logos-track { display: flex; gap: 12px; width: max-content; transform: translateX(-78px); }
+.ds .hp-logos-track > .wf-logo { flex: 0 0 156px; }
+.ds .hp-logos-track > .hp-logo-tip { margin-inline: 0; }   /* de negatieve marge van het tooltip-vlak zou de rij laten verspringen */
+.ds .hp-logos-track > .wf-logo:nth-child(1), .ds .hp-logos-track > .wf-logo:nth-child(8) { opacity: .35; }

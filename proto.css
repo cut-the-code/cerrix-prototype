@@ -189,3 +189,14 @@
 
 /* 06-11: regelgevingstabel — tegel wordt vol turquoise op de rij waar je hovert (design.css), met overgang */
 .proto .tp-req .ds-tile, .proto .tp-req .ds-tile svg { transition: background-color .2s ease, fill .2s ease; }
+
+/* ---------- 19-11: logostrip loopt door (marquee). Rij = 2x dezelfde logo's; na één set (50% + halve gap) begint hij naadloos opnieuw.
+   Randen vervagen met een mask; zolang de muis op de strip staat stopt hij en valt de mask weg (anders snijdt die de tooltip af). ---------- */
+.proto .hp-logos-track > .wf-logo:nth-child(n) { opacity: 1; }
+.proto .hp-logos.hp-marquee { -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); }
+.proto .hp-logos.hp-marquee:hover, .proto .hp-logos.hp-marquee:focus-within { -webkit-mask-image: none; mask-image: none; }
+.proto .hp-logos-track { transform: none; animation: proto-marquee 38s linear infinite; }
+.proto .hp-logos.hp-marquee:hover .hp-logos-track, .proto .hp-logos.hp-marquee:focus-within .hp-logos-track { animation-play-state: paused; }
+@keyframes proto-marquee { to { transform: translateX(calc(-50% - 6px)); } }
+@media (prefers-reduced-motion: reduce) { .proto .hp-logos-track { animation: none; transform: translateX(-78px); } }
